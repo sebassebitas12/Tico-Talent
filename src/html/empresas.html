@@ -4,28 +4,159 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tico Talent - Empresas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
 </head>
 <body class="main-page">
-  <header class="main__header" id="mainHeader">
-    <a class="main__brand" href="principal.html">Tico Talent</a>
-    <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
-      <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link" href="principal.html">Inicio</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="vacantes.html">Vacantes</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="empresas.html" aria-current="page">Empresas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="entrevistas.html">Entrevistas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
-      </ul>
+
+  <!-- ========== SIDEBAR LATERAL IZQUIERDO ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">
+        <span>💼 Tico Talent</span>
+      </a>
+      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+    </div>
+
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Principal</span>
+        <a href="principal.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Explorar</span>
+        </a>
+      </div>
+
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Gestión de Talento</span>
+        <a href="vacantes.html" class="nav-link">
+          <span class="nav-icon">💼</span>
+          <span class="nav-text">Vacantes</span>
+          <span class="nav-badge">51</span>
+        </a>
+        <a href="candidatos.html" class="nav-link">
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">Candidatos</span>
+        </a>
+        <a href="empresas.html" class="nav-link nav-link--active">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-text">Empresas</span>
+        </a>
+        <a href="postulaciones.html" class="nav-link">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Mis Postulaciones</span>
+        </a>
+      </div>
+
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Seguimiento</span>
+        <a href="entrevistas.html" class="nav-link">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Entrevistas</span>
+        </a>
+        <a href="tareas.html" class="nav-link">
+          <span class="nav-icon">✅</span>
+          <span class="nav-text">Tareas</span>
+          <span class="nav-badge nav-badge--warning">1</span>
+        </a>
+      </div>
     </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual"><span class="main__user-name" id="userName">Usuario</span><span class="main__user-role" id="userRole">Reclutador</span></div>
-  </header>
-  <main class="main" id="main"><section class="main__content" id="mainContent" aria-labelledby="viewTitle"><header class="main__content-header"><h1 class="main__title" id="viewTitle">Empresas</h1><p class="main__description">Listado y gestión de empresas.</p></header><div class="main__content-body" id="contentArea"><section class="companies" aria-labelledby="companiesListTitle"><h2 id="companiesListTitle">Listado de empresas</h2><div class="companies__list" id="companiesList"></div></section></div></section></main>
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card">
+        <div class="sidebar__user-avatar">E</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name">Emily Salazar</span>
+          <span class="sidebar__user-role">Reclutadora Senior</span>
+        </div>
+      </div>
+      <a href="login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+      <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+        <header class="main__content-header">
+          <h1 class="main__title" id="viewTitle">Empresas Aliadas</h1>
+          <p class="main__description">Organizaciones líderes que contratan talento calificado a través de Tico Talent.</p>
+        </header>
+
+        <div class="main__content-body" id="contentArea">
+          <section class="companies" aria-labelledby="companiesListTitle">
+            <div class="job-list" id="companiesList">
+              <!-- Empresa 1 -->
+              <article class="job-card">
+                <div class="job-card__header">
+                  <div class="job-card__company-logo">🏢</div>
+                  <div class="job-card__title-area">
+                    <h3 class="job-card__title">TechCR Solutions</h3>
+                    <div class="job-card__company-name">
+                      <span>Tecnología y Software</span> • <span>San José, Costa Rica</span>
+                    </div>
+                  </div>
+                  <span class="badge-match" style="background-color: #f0ebf5; color: var(--primary-purple); border-color: rgba(83, 16, 104, 0.2);">⭐ Empresa Verificada</span>
+                </div>
+                <div class="job-card__details">
+                  <span class="job-tag">👥 250+ Colaboradores</span>
+                  <span class="job-tag">💼 8 Vacantes Activas</span>
+                  <span class="job-tag">🏆 Top Employer 2026</span>
+                </div>
+                <div class="job-card__footer">
+                  <div>
+                    <span class="job-card__date">Miembro desde 2023</span>
+                  </div>
+                  <div class="job-card__actions">
+                    <a href="vacantes.html" class="btn btn-cta" style="text-decoration: none;">Ver Vacantes (8)</a>
+                  </div>
+                </div>
+              </article>
+
+              <!-- Empresa 2 -->
+              <article class="job-card">
+                <div class="job-card__header">
+                  <div class="job-card__company-logo">🌐</div>
+                  <div class="job-card__title-area">
+                    <h3 class="job-card__title">Innovatech Pura Vida</h3>
+                    <div class="job-card__company-name">
+                      <span>Servicios Cloud y DevOps</span> • <span>Heredia, Costa Rica</span>
+                    </div>
+                  </div>
+                  <span class="badge-match" style="background-color: #f0ebf5; color: var(--primary-purple); border-color: rgba(83, 16, 104, 0.2);">⭐ Empresa Verificada</span>
+                </div>
+                <div class="job-card__details">
+                  <span class="job-tag">👥 120+ Colaboradores</span>
+                  <span class="job-tag">💼 5 Vacantes Activas</span>
+                  <span class="job-tag">🚀 Trabajo 100% Flexible</span>
+                </div>
+                <div class="job-card__footer">
+                  <div>
+                    <span class="job-card__date">Miembro desde 2024</span>
+                  </div>
+                  <div class="job-card__actions">
+                    <a href="vacantes.html" class="btn btn-cta" style="text-decoration: none;">Ver Vacantes (5)</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main__footer" id="mainFooter">
+      <p class="main__footer-text">© 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    </footer>
+  </div>
+
 </body>
 </html>
