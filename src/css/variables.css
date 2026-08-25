@@ -1,44 +1,54 @@
 /* ==========================================================================
-   TICO TALENT — VARIABLES DE DISEÑO (Premium Redesign)
+   TICO TALENT — VARIABLES DE DISEÑO (Identidad Institucional Stitch)
    Archivo: variables.css
-   --------------------------------------------------------------------------
-   Único punto de definición de la paleta de marca.
    ========================================================================== */
 
 :root {
   /* ========================================================================
-     IDENTIDAD DE MARCA (Premium)
+     IDENTIDAD DE MARCA (Paleta Oficial)
      ======================================================================== */
-  --primary-purple: #6a11cb; /* Morado neón vibrante */
-  --secondary-navy: #0f172a; /* Slate oscuro / navy profundo */
-  --accent-green: #10b981;   /* Verde esmeralda moderno */
+  --primary-purple: #531068;     /* Morado Mora: navegación y branding */
+  --secondary-navy: #0C2340;     /* Azul Marino: títulos y textos de alta jerarquía */
+  --action-pink: #D8006E;        /* Rosa Magenta: exclusivo botones de acción principal (CTA) */
+  --color-success: #00A35C;      /* Verde Éxito: indicadores de match, porcentajes y estados */
+  --accent-green: #00A35C;       /* Alias compatibilidad */
 
   /* ========================================================================
-     ACCIONES / INTERACTIVIDAD
+     SUPERFICIES, FONDOS Y BORDES
      ======================================================================== */
-  --action-pink: #f43f5e;    /* Rosa coral vibrante */
-
-  /* ========================================================================
-     SUPERFICIES Y FONDOS
-     ======================================================================== */
-  --bg-main: #f8fafc;        /* Fondo general ultra claro y limpio */
-  --surface-card: rgba(255, 255, 255, 0.7); /* Transparente para glassmorphism */
-  --surface-solid: #ffffff;  /* Superficies sólidas cuando se necesiten */
-  --border-subtle: rgba(15, 23, 42, 0.08); /* Bordes sutiles transparentes */
+  --bg-main: #F9F9F9;            /* Fondo gris suave */
+  --surface-solid: #FFFFFF;      /* Blanco Puro para contenedores */
+  --surface-card: #FFFFFF;       /* Contenedores de tarjetas y paneles */
+  --border-subtle: #DADADA;      /* Borde sutil institucional */
+  --border-light: #EBEBEB;       /* Separadores muy suaves */
+  --bg-success-subtle: #E6F6EE;  /* Fondo suave para badges de match */
 
   /* ========================================================================
      TIPOGRAFÍA
      ======================================================================== */
-  --text-main: #0f172a;      /* Texto principal */
-  --text-light: #ffffff;     /* Texto sobre fondos de color */
+  --text-main: #0C2340;          /* Texto principal en Azul Marino */
+  --text-muted: #5A6A80;         /* Texto secundario / subtítulos */
+  --text-light: #FFFFFF;         /* Texto sobre fondos de color */
   --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bodoni Moda', Georgia, serif;
 
   /* ========================================================================
-     EFECTOS PREMIUM (Glassmorphism & Shadows)
+     RADIOS DE BORDE (Consistencia Round 8 / Full)
      ======================================================================== */
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-sm: 6px;
+  --radius-md: 8px;              /* Round 8 estándar componentes */
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;         /* Full redondeado para píldoras y avatares */
+
+  /* ========================================================================
+     SOMBRAS Y EFECTOS
+     ======================================================================== */
+  --shadow-sm: 0 2px 4px rgba(12, 35, 64, 0.04);
+  --shadow-md: 0 4px 12px rgba(12, 35, 64, 0.06);
+  --shadow-lg: 0 10px 24px rgba(12, 35, 64, 0.08);
+  --shadow-cta: 0 4px 14px rgba(216, 0, 110, 0.35);
   --glass-blur: blur(12px);
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+

@@ -3,52 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tico Talent - Vacantes</title>
+  <title>Tico Talent - Vacantes y Empleos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
 </head>
 <body class="main-page">
-  <header class="main__header" id="mainHeader">
-    <a class="main__brand" href="principal.html">Tico Talent</a>
-    <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
-      <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link" href="principal.html">Inicio</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="vacantes.html" aria-current="page">Vacantes</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="empresas.html">Empresas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="entrevistas.html">Entrevistas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
-      </ul>
-    </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual">
-      <div class="main__user-info">
-        <span class="main__user-name" id="userName"></span>
-        <span class="main__user-role" id="userRole"></span>
-      </div>
-      <button class="btn btn--sm btn--secondary" id="btnLogout" style="margin-left: 1rem;">🚪 Salir</button>
+
+  <!-- ========== SIDEBAR LATERAL IZQUIERDO ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">
+        <span>💼 Tico Talent</span>
+      </a>
+      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
     </div>
-  </header>
 
-  <main class="main" id="main">
-    <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-      <header class="main__content-header">
-        <h1 class="main__title" id="viewTitle">Vacantes</h1>
-        <p class="main__description">Listado y gestión de vacantes.</p>
-      </header>
-      <div class="main__content-body" id="contentArea">
-        <section class="vacancies" aria-labelledby="vacanciesListTitle">
-          <h2 id="vacanciesListTitle" class="sr-only">Listado de vacantes</h2>
-          <div id="vacantesList"></div>
-        </section>
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Principal</span>
+        <a href="principal.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Explorar</span>
+        </a>
       </div>
-    </section>
-  </main>
 
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Gestión de Talento</span>
+        <a href="vacantes.html" class="nav-link nav-link--active">
+          <span class="nav-icon">💼</span>
+          <span class="nav-text">Vacantes</span>
+          <span class="nav-badge">51</span>
+        </a>
+        <a href="candidatos.html" class="nav-link">
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">Candidatos</span>
+        </a>
+        <a href="empresas.html" class="nav-link">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-text">Empresas</span>
+        </a>
+        <a href="postulaciones.html" class="nav-link">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Mis Postulaciones</span>
+        </a>
+      </div>
 
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Seguimiento</span>
+        <a href="entrevistas.html" class="nav-link">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Entrevistas</span>
+        </a>
+        <a href="tareas.html" class="nav-link">
+          <span class="nav-icon">✅</span>
+          <span class="nav-text">Tareas</span>
+          <span class="nav-badge nav-badge--warning">1</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
+        </div>
+      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+
+      <!-- HERO & BUSCADOR REDONDEADO -->
+      <section class="hero" aria-labelledby="heroTitle">
+        <h1 class="hero__title" id="heroTitle">Encuentra el empleo ideal en Costa Rica</h1>
+        <p class="hero__subtitle">Conectamos a los mejores profesionales con empresas líderes del país con inteligencia de compatibilidad.</p>
+        
+        <form class="hero-search" id="heroSearchForm" role="search">
+          <div class="hero-search__group">
+            <span class="hero-search__icon">🔍</span>
+            <input 
+              type="text" 
+              class="hero-search__input" 
+              id="searchRole" 
+              placeholder="Cargo, habilidad o empresa..." 
+              aria-label="Buscar cargo"
+            >
+          </div>
+          <div class="hero-search__group">
+            <span class="hero-search__icon">📍</span>
+            <input 
+              type="text" 
+              class="hero-search__input" 
+              id="searchLocation" 
+              placeholder="San José, Heredia, Remoto..." 
+              aria-label="Ubicación"
+            >
+          </div>
+          <button type="submit" class="hero-search__btn" id="btnHeroSearch">
+            Buscar Empleos
+          </button>
+        </form>
+      </section>
+
+      <!-- LAYOUT DE DOS COLUMNAS (SIDEBAR FILTROS + FEED DE EMPLEOS) -->
+      <div class="job-layout">
+        
+        <!-- SIDEBAR DE FILTROS -->
+        <aside class="filter-sidebar" aria-label="Filtros de búsqueda">
+          <div class="filter-card">
+            <div class="filter-card__header">
+              <h2 class="filter-card__title">Filtros</h2>
+              <button type="button" class="filter-card__reset" id="btnResetFilters">Limpiar</button>
+            </div>
+
+            <!-- Filtro Modalidad -->
+            <div class="filter-group">
+              <span class="filter-group__label">Modalidad</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="remoto" checked>
+                  <span>Remoto</span>
+                  <span class="filter-count">18</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="hibrido">
+                  <span>Híbrido</span>
+                  <span class="filter-count">24</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="presencial">
+                  <span>Presencial</span>
+                  <span class="filter-count">9</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro Nivel de Experiencia -->
+            <div class="filter-group">
+              <span class="filter-group__label">Nivel de Experiencia</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="junior">
+                  <span>Junior</span>
+                  <span class="filter-count">12</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="mid" checked>
+                  <span>Mid / Semi-Senior</span>
+                  <span class="filter-count">29</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="senior" checked>
+                  <span>Senior</span>
+                  <span class="filter-count">15</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="lead">
+                  <span>Lead / Manager</span>
+                  <span class="filter-count">5</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro Tipo de Jornada -->
+            <div class="filter-group">
+              <span class="filter-group__label">Tipo de Jornada</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="full-time" checked>
+                  <span>Tiempo Completo</span>
+                  <span class="filter-count">42</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="part-time">
+                  <span>Medio Tiempo</span>
+                  <span class="filter-count">6</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- LISTA DE VACANTES / JOB CARDS (renderizada por vacantes.js) -->
+        <section class="job-list-container" aria-labelledby="vacanciesListTitle">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <h2 id="vacanciesListTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Vacantes Disponibles <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);" id="vacanteCount"></span></h2>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Ordenado por: <strong>Mayor Compatibilidad</strong></span>
+          </div>
+
+          <div class="job-list" id="vacantesList">
+            <!-- Las vacantes son renderizadas dinámicamente por vacantes.js -->
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="main__footer" id="mainFooter">
+      <p class="main__footer-text">© 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    </footer>
+  </div>
+
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>

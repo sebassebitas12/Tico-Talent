@@ -4,51 +4,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tico Talent - Empresas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
 </head>
 <body class="main-page">
-  <header class="main__header" id="mainHeader">
-    <a class="main__brand" href="principal.html">Tico Talent</a>
-    <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
-      <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link" href="principal.html">Inicio</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="vacantes.html">Vacantes</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="empresas.html" aria-current="page">Empresas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="entrevistas.html">Entrevistas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
-      </ul>
-    </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual">
-      <div class="main__user-info">
-        <span class="main__user-name" id="userName"></span>
-        <span class="main__user-role" id="userRole"></span>
-      </div>
-      <button class="btn btn--sm btn--secondary" id="btnLogout" style="margin-left: 1rem;">🚪 Salir</button>
+
+  <!-- ========== SIDEBAR LATERAL IZQUIERDO ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">
+        <span>💼 Tico Talent</span>
+      </a>
+      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
     </div>
-  </header>
 
-  <main class="main" id="main">
-    <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-      <header class="main__content-header">
-        <h1 class="main__title" id="viewTitle">Empresas</h1>
-        <p class="main__description">Listado y gestión de empresas clientes.</p>
-      </header>
-      <div class="main__content-body" id="contentArea">
-        <section class="companies" aria-labelledby="companiesListTitle">
-          <h2 id="companiesListTitle" class="sr-only">Listado de empresas</h2>
-          <div id="companiesList"></div>
-        </section>
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Principal</span>
+        <a href="principal.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Explorar</span>
+        </a>
       </div>
-    </section>
-  </main>
 
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Gestión de Talento</span>
+        <a href="vacantes.html" class="nav-link">
+          <span class="nav-icon">💼</span>
+          <span class="nav-text">Vacantes</span>
+          <span class="nav-badge">51</span>
+        </a>
+        <a href="candidatos.html" class="nav-link">
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">Candidatos</span>
+        </a>
+        <a href="empresas.html" class="nav-link nav-link--active">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-text">Empresas</span>
+        </a>
+        <a href="postulaciones.html" class="nav-link">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Mis Postulaciones</span>
+        </a>
+      </div>
 
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Seguimiento</span>
+        <a href="entrevistas.html" class="nav-link">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Entrevistas</span>
+        </a>
+        <a href="tareas.html" class="nav-link">
+          <span class="nav-icon">✅</span>
+          <span class="nav-text">Tareas</span>
+          <span class="nav-badge nav-badge--warning">1</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
+        </div>
+      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+      <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+        <header class="main__content-header">
+          <h1 class="main__title" id="viewTitle">Empresas Aliadas</h1>
+          <p class="main__description">Organizaciones líderes que contratan talento calificado a través de Tico Talent.</p>
+        </header>
+
+        <div class="main__content-body" id="contentArea">
+          <section class="companies" aria-labelledby="companiesListTitle">
+            <h2 id="companiesListTitle" class="sr-only">Listado de empresas</h2>
+            <div class="job-list" id="companiesList">
+              <!-- Las empresas son renderizadas dinámicamente por empresas.js -->
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main__footer" id="mainFooter">
+      <p class="main__footer-text">© 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    </footer>
+  </div>
+
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>

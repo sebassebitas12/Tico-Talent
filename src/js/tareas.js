@@ -1,5 +1,6 @@
 // src/js/tareas.js
-// CRUD Tareas del reclutador → /todos de DummyJSON
+// CRUD Tareas del reclutador → /todos de DummyJSON con diseño Stitch (job-card)
+// RF-05 al RF-10
 
 import { requireAuth, getUser, logout } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
@@ -9,8 +10,12 @@ requireAuth();
 
 const user = getUser();
 if (user) {
-  document.getElementById("userName").textContent = `${user.firstName} ${user.lastName}`;
-  document.getElementById("userRole").textContent = user.email;
+  const nameEl = document.getElementById("userName");
+  const roleEl = document.getElementById("userRole");
+  const avatarEl = document.getElementById("userAvatar");
+  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
+  if (roleEl) roleEl.textContent = user.email;
+  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
 }
 document.getElementById("btnLogout")?.addEventListener("click", (e) => {
   e.preventDefault();
@@ -19,66 +24,83 @@ document.getElementById("btnLogout")?.addEventListener("click", (e) => {
 
 let tareas = [];
 
-function renderTabla(lista) {
+function renderCards(lista) {
   const contenedor = document.getElementById("tasksList");
   if (!contenedor) return;
 
   if (lista.length === 0) {
-    contenedor.innerHTML = `<p class="empty-msg">No hay tareas registradas.</p>`;
+    contenedor.innerHTML = `
+      <div style="text-align: center; padding: 2.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">No hay tareas pendientes.</p>
+        <button class="btn btn-cta" id="btnNuevaEmpty">+ Crear primera tarea</button>
+      </div>
+    `;
+    document.getElementById("btnNuevaEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
   const pendientes = lista.filter((t) => !t.completed).length;
 
   contenedor.innerHTML = `
-    <div class="toolbar">
-      <button class="btn btn--primary" id="btnNuevo">+ Nueva tarea</button>
-      <span class="toolbar__info">${pendientes} pendiente${pendientes !== 1 ? "s" : ""}</span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%;">
+      <span style="font-size: 0.95rem; color: var(--text-muted);">
+        Pendientes: <strong style="color: var(--action-pink);">${pendientes}</strong> de ${lista.length} tareas totales
+      </span>
+      <button class="btn btn-cta" id="btnNuevaTarea">+ Nueva Tarea</button>
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Tarea</th>
-          <th>Responsable (userId)</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${lista.map((t) => `
-          <tr class="${t.completed ? "row--done" : ""}">
-            <td>${t.id}</td>
-            <td>${t.todo}</td>
-            <td>${t.userId}</td>
-            <td>
-              <span class="badge badge--${t.completed ? "success" : "warning"}">
-                ${t.completed ? "✅ Completada" : "⏳ Pendiente"}
-              </span>
-            </td>
-            <td class="actions">
-              <button class="btn btn--sm btn--secondary" onclick="editarTarea(${t.id})">✏️ Editar</button>
-              <button class="btn btn--sm btn--${t.completed ? "warning" : "success"}"
-                onclick="toggleTarea(${t.id}, ${t.completed})">
-                ${t.completed ? "↩️ Reabrir" : "✔️ Completar"}
-              </button>
-              <button class="btn btn--sm btn--danger" onclick="eliminarTarea(${t.id})">🗑️ Eliminar</button>
-            </td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
+    <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
+      ${lista.map((t) => {
+        const badgeBg = t.completed ? "#E6F6EE" : "#fff3e0";
+        const badgeColor = t.completed ? "var(--color-success)" : "#e65100";
+        const badgeBorder = t.completed ? "rgba(0, 163, 92, 0.2)" : "#ffe0b2";
+        const badgeText = t.completed ? "✅ Completada" : "⚠️ Pendiente";
+
+        return `
+          <article class="job-card" style="${t.completed ? "opacity: 0.85; border-left: 4px solid var(--color-success);" : "border-left: 4px solid var(--action-pink);"}">
+            <div class="job-card__header">
+              <div class="job-card__company-logo">📋</div>
+              <div class="job-card__title-area">
+                <h3 class="job-card__title" style="${t.completed ? "text-decoration: line-through; color: var(--text-muted);" : ""}">${t.todo}</h3>
+                <div class="job-card__company-name">
+                  <span>Asignado a: Usuario #${t.userId}</span> • <span>Prioridad ${t.completed ? "Baja" : "Alta"}</span>
+                </div>
+              </div>
+              <span class="badge-match" style="background-color: ${badgeBg}; color: ${badgeColor}; border-color: ${badgeBorder};">${badgeText}</span>
+            </div>
+
+            <div class="job-card__details">
+              <span class="job-tag">📅 Vencimiento: Próximamente</span>
+              <span class="job-tag">🆔 Tarea #${t.id}</span>
+              <span class="job-tag">👤 Reclutamiento Tico Talent</span>
+            </div>
+
+            <div class="job-card__footer">
+              <div>
+                <span class="job-card__date">${t.completed ? "Estado: Resuelta" : "Estado: En seguimiento activo"}</span>
+              </div>
+              <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                <button type="button" class="btn ${t.completed ? "btn-secondary" : "btn-cta"}" onclick="toggleTarea(${t.id}, ${t.completed})">
+                  ${t.completed ? "↩️ Reabrir" : "Completar Tarea"}
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="editarTarea(${t.id})">✏️</button>
+                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarTarea(${t.id})">🗑️</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
   `;
 
-  document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
+  document.getElementById("btnNuevaTarea")?.addEventListener("click", () => abrirFormulario());
 }
 
 async function cargarTareas() {
   mostrarLoading();
   try {
     const data = await getAll("todos");
-    tareas = data.todos ?? data;
-    renderTabla(tareas);
+    tareas = data.todos ?? (Array.isArray(data) ? data : []);
+    renderCards(tareas);
   } catch {
     mostrarToast("Error al cargar tareas.", "error");
   } finally {
@@ -90,11 +112,11 @@ function formularioHTML(t = {}) {
   return `
     <div class="form-group">
       <label>Descripción de la tarea</label>
-      <input class="form-control" id="fTodo" value="${t.todo ?? ""}" placeholder="Ej: Llamar a candidato Juan" required>
+      <input class="form-control" id="fTodo" value="${t.todo ?? ""}" placeholder="Ej: Llamar a candidato Juan para entrevista técnica" required>
     </div>
     <div class="form-group">
-      <label>Responsable (userId)</label>
-      <input class="form-control" type="number" id="fUserId" value="${t.userId ?? ""}" placeholder="1">
+      <label>ID Usuario / Responsable</label>
+      <input class="form-control" type="number" id="fUserId" value="${t.userId ?? 1}" placeholder="1">
     </div>
     <div class="form-group">
       <label>Estado</label>
@@ -126,13 +148,16 @@ function abrirFormulario(id = null) {
     try {
       if (id) {
         await patch("todos", id, datos);
+        const idx = tareas.findIndex((t) => t.id === id);
+        if (idx !== -1) tareas[idx] = { ...tareas[idx], ...datos };
         mostrarToast("Tarea actualizada.", "success");
       } else {
-        await create("todos", datos);
+        const nueva = await create("todos", datos);
+        tareas.unshift({ ...nueva, ...datos, id: Date.now() });
         mostrarToast("Tarea creada.", "success");
       }
       cerrarModal();
-      await cargarTareas();
+      renderCards(tareas);
     } catch {
       mostrarToast("Error al guardar.", "error");
     } finally {
@@ -145,8 +170,10 @@ async function toggleTareaEstado(id, completadoActual) {
   mostrarLoading();
   try {
     await patch("todos", id, { completed: !completadoActual });
-    mostrarToast(completadoActual ? "Tarea reabierta." : "Tarea completada. ✅", "success");
-    await cargarTareas();
+    const idx = tareas.findIndex((t) => t.id === id);
+    if (idx !== -1) tareas[idx].completed = !completadoActual;
+    mostrarToast(completadoActual ? "Tarea reabierta." : "¡Tarea completada con éxito! ✅", "success");
+    renderCards(tareas);
   } catch {
     mostrarToast("Error al actualizar estado.", "error");
   } finally {
@@ -158,8 +185,9 @@ async function eliminarTareaConfirmada(id) {
   mostrarLoading();
   try {
     await remove("todos", id);
+    tareas = tareas.filter((t) => t.id !== id);
     mostrarToast("Tarea eliminada.", "success");
-    await cargarTareas();
+    renderCards(tareas);
   } catch {
     mostrarToast("Error al eliminar.", "error");
   } finally {

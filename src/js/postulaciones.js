@@ -1,5 +1,6 @@
 // src/js/postulaciones.js
-// CRUD Postulaciones → /posts de DummyJSON
+// CRUD Postulaciones → /posts de DummyJSON con diseño Stitch (job-card)
+// RF-05 al RF-10
 
 import { requireAuth, getUser, logout } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
@@ -9,8 +10,12 @@ requireAuth();
 
 const user = getUser();
 if (user) {
-  document.getElementById("userName").textContent = `${user.firstName} ${user.lastName}`;
-  document.getElementById("userRole").textContent = user.email;
+  const nameEl = document.getElementById("userName");
+  const roleEl = document.getElementById("userRole");
+  const avatarEl = document.getElementById("userAvatar");
+  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
+  if (roleEl) roleEl.textContent = user.email;
+  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
 }
 document.getElementById("btnLogout")?.addEventListener("click", (e) => {
   e.preventDefault();
@@ -19,59 +24,85 @@ document.getElementById("btnLogout")?.addEventListener("click", (e) => {
 
 let postulaciones = [];
 
-const ESTADOS = ["Recibida", "En revisión", "Entrevista", "Oferta", "Rechazada"];
+const estados = [
+  { texto: "🟢 En Revisión Técnica", bg: "#E6F6EE", color: "var(--color-success)" },
+  { texto: "⚡ Entrevista Agendada", bg: "#fff3e0", color: "#e65100" },
+  { texto: "📄 CV Recibido", bg: "#f0ebf5", color: "var(--primary-purple)" },
+  { texto: "🎯 Oferta Final", bg: "#E6F6EE", color: "var(--color-success)" }
+];
 
-function renderTabla(lista) {
+function renderCards(lista) {
   const contenedor = document.getElementById("applicationsList");
   if (!contenedor) return;
 
   if (lista.length === 0) {
-    contenedor.innerHTML = `<p class="empty-msg">No hay postulaciones registradas.</p>`;
+    contenedor.innerHTML = `
+      <div style="text-align: center; padding: 2.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">No hay postulaciones registradas.</p>
+        <button class="btn btn-cta" id="btnNuevaEmpty">+ Crear postulación</button>
+      </div>
+    `;
+    document.getElementById("btnNuevaEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
   contenedor.innerHTML = `
-    <div class="toolbar">
-      <button class="btn btn--primary" id="btnNuevo">+ Nueva postulación</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%;">
+      <span style="font-size: 0.95rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> postulaciones en seguimiento</span>
+      <button class="btn btn-cta" id="btnNuevaPostulacion">+ Nueva Postulación</button>
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Título</th>
-          <th>Candidato (userId)</th>
-          <th>Estado</th>
-          <th>Reacciones</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${lista.map((p) => `
-          <tr>
-            <td>${p.id}</td>
-            <td>${p.title}</td>
-            <td>${p.userId}</td>
-            <td><span class="badge">${p.tags?.[0] ?? "Recibida"}</span></td>
-            <td>👍${p.reactions?.likes ?? 0}</td>
-            <td class="actions">
-              <button class="btn btn--sm btn--secondary" onclick="editarPostulacion(${p.id})">✏️ Editar</button>
-              <button class="btn btn--sm btn--danger"    onclick="eliminarPostulacion(${p.id})">🗑️ Eliminar</button>
-            </td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
+    <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
+      ${lista.map((p, idx) => {
+        const est = estados[idx % estados.length];
+        const match = 90 + ((p.id * 5) % 10);
+        const tags = Array.isArray(p.tags) ? p.tags.slice(0, 3) : ["tech", "developer", "remoto"];
+        const salary = `$${(3000 + (p.id * 80) % 3000).toLocaleString()} - $${(5500 + (p.id * 90) % 2500).toLocaleString()} USD / mes`;
+
+        return `
+          <article class="job-card">
+            <div class="job-card__header">
+              <div class="job-card__company-logo">💻</div>
+              <div class="job-card__title-area">
+                <h3 class="job-card__title">${p.title}</h3>
+                <div class="job-card__company-name">
+                  <span>TechCR Solutions & Partners</span> • <span>Postulado recientemente</span>
+                </div>
+              </div>
+              <span class="badge-match" style="background-color: ${est.bg}; color: ${est.color};">${est.texto}</span>
+            </div>
+
+            <div class="job-card__details">
+              <span class="job-tag">🏠 Remoto</span>
+              <span class="job-tag">⚡ ${match}% Match</span>
+              ${tags.map((t) => `<span class="job-tag">🏷️ ${t}</span>`).join("")}
+              <span class="job-tag">🆔 Folio #${p.id}</span>
+            </div>
+
+            <div class="job-card__footer">
+              <div>
+                <span class="job-card__salary">${salary}</span>
+              </div>
+              <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="verDetallePostulacion(${p.id})">Ver Detalles</button>
+                <button type="button" class="btn btn-secondary" onclick="editarPostulacion(${p.id})">✏️</button>
+                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarPostulacion(${p.id})">🗑️</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
   `;
 
-  document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
+  document.getElementById("btnNuevaPostulacion")?.addEventListener("click", () => abrirFormulario());
 }
 
 async function cargarPostulaciones() {
   mostrarLoading();
   try {
     const data = await getAll("posts");
-    postulaciones = data.posts ?? data;
-    renderTabla(postulaciones);
+    postulaciones = data.posts ?? (Array.isArray(data) ? data : []);
+    renderCards(postulaciones);
   } catch {
     mostrarToast("Error al cargar postulaciones.", "error");
   } finally {
@@ -80,31 +111,28 @@ async function cargarPostulaciones() {
 }
 
 function formularioHTML(p = {}) {
-  const estadoActual = p.tags?.[0] ?? "Recibida";
   return `
     <div class="form-group">
-      <label>Título / Vacante</label>
-      <input class="form-control" id="fTitulo" value="${p.title ?? ""}" placeholder="Ej: Postulación para Desarrollador" required>
+      <label>Título / Cargo Postulado</label>
+      <input class="form-control" id="fTitulo" value="${p.title ?? ""}" placeholder="Ej: Senior Frontend Developer" required>
     </div>
     <div class="form-group">
-      <label>Cuerpo / Descripción</label>
-      <textarea class="form-control" id="fBody" rows="3" placeholder="Detalles de la postulación...">${p.body ?? ""}</textarea>
+      <label>Descripción / Observaciones</label>
+      <textarea class="form-control" id="fBody" rows="3" placeholder="Detalles de la postulación">${p.body ?? ""}</textarea>
     </div>
     <div class="form-group">
-      <label>ID del candidato (userId)</label>
-      <input class="form-control" type="number" id="fUserId" value="${p.userId ?? ""}" placeholder="1">
+      <label>ID Candidato (userId)</label>
+      <input class="form-control" type="number" id="fUserId" value="${p.userId ?? 1}" placeholder="1">
     </div>
     <div class="form-group">
-      <label>Estado</label>
-      <select class="form-control" id="fEstado">
-        ${ESTADOS.map((e) => `<option value="${e}" ${e === estadoActual ? "selected" : ""}>${e}</option>`).join("")}
-      </select>
+      <label>Etiquetas (separadas por coma)</label>
+      <input class="form-control" id="fTags" value="${(p.tags ?? []).join(", ")}" placeholder="react, typescript, remoto">
     </div>
   `;
 }
 
 function abrirFormulario(id = null) {
-  const post   = id ? postulaciones.find((p) => p.id === id) : {};
+  const post = id ? postulaciones.find((p) => p.id === id) : {};
   const titulo = id ? "Editar postulación" : "Nueva postulación";
 
   abrirModal(titulo, formularioHTML(post), async () => {
@@ -112,7 +140,7 @@ function abrirFormulario(id = null) {
       title:  document.getElementById("fTitulo").value.trim(),
       body:   document.getElementById("fBody").value.trim(),
       userId: Number(document.getElementById("fUserId").value),
-      tags:   [document.getElementById("fEstado").value],
+      tags:   document.getElementById("fTags").value.split(",").map((t) => t.trim()).filter(Boolean),
     };
 
     if (!datos.title) {
@@ -124,13 +152,16 @@ function abrirFormulario(id = null) {
     try {
       if (id) {
         await patch("posts", id, datos);
+        const idx = postulaciones.findIndex((p) => p.id === id);
+        if (idx !== -1) postulaciones[idx] = { ...postulaciones[idx], ...datos };
         mostrarToast("Postulación actualizada.", "success");
       } else {
-        await create("posts", datos);
-        mostrarToast("Postulación creada.", "success");
+        const nueva = await create("posts", datos);
+        postulaciones.unshift({ ...nueva, ...datos, id: Date.now() });
+        mostrarToast("Postulación registrada.", "success");
       }
       cerrarModal();
-      await cargarPostulaciones();
+      renderCards(postulaciones);
     } catch {
       mostrarToast("Error al guardar.", "error");
     } finally {
@@ -143,8 +174,9 @@ async function eliminarPostulacionConfirmada(id) {
   mostrarLoading();
   try {
     await remove("posts", id);
+    postulaciones = postulaciones.filter((p) => p.id !== id);
     mostrarToast("Postulación eliminada.", "success");
-    await cargarPostulaciones();
+    renderCards(postulaciones);
   } catch {
     mostrarToast("Error al eliminar.", "error");
   } finally {
@@ -153,6 +185,13 @@ async function eliminarPostulacionConfirmada(id) {
 }
 
 window.editarPostulacion   = (id) => abrirFormulario(id);
-window.eliminarPostulacion = (id) => confirmar("¿Eliminar esta postulación?", () => eliminarPostulacionConfirmada(id));
+window.eliminarPostulacion = (id) =>
+  confirmar("¿Eliminar esta postulación?", () => eliminarPostulacionConfirmada(id));
+window.verDetallePostulacion = (id) => {
+  const p = postulaciones.find((item) => item.id === id);
+  if (p) {
+    mostrarToast(`Detalle: ${p.title} - ${p.body ? p.body.substring(0, 40) + '...' : 'Sin observaciones'}`, "info", 4000);
+  }
+};
 
 cargarPostulaciones();
