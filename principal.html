@@ -1,0 +1,45 @@
+<!--
+  Fragmento estructural basado en index.html.
+  No es una página nueva: se conserva aparte para integrarlo sin modificar index.html.
+-->
+<header class="main__header" id="mainHeader">
+  <div class="main__header-left">
+    <h1 class="main__title" id="viewTitle">Dashboard</h1>
+  </div>
+
+  <nav class="main__navigation" id="mainNavigation" aria-label="Navegación del contenido">
+    <ul class="main__navigation-list">
+      <li class="main__navigation-item">
+        <a class="main__navigation-link main__navigation-link--active" href="#/dashboard" aria-current="page">Dashboard</a>
+      </li>
+      <li class="main__navigation-item">
+        <a class="main__navigation-link" href="#/candidatos">Candidatos</a>
+      </li>
+      <li class="main__navigation-item">
+        <a class="main__navigation-link" href="#/vacantes">Vacantes</a>
+      </li>
+      <li class="main__navigation-item">
+        <a class="main__navigation-link" href="#/empresas">Empresas</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="main__header-right">
+    <div class="main__user" id="currentUser">
+      <span class="main__user-name" id="userName"></span>
+      <span class="main__user-role" id="userRole"></span>
+    </div>
+  </div>
+</header>
+
+<main class="main" id="main">
+  <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+    <!-- El contenido dinámico de cada sección se insertará aquí mediante JavaScript. -->
+  </section>
+</main>
+
+<footer class="main__footer" id="mainFooter">
+  <p class="main__footer-text">
+    <span id="currentYear"></span> Tico Talent
+  </p>
+</footer>
