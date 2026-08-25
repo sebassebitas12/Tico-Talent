@@ -256,3 +256,112 @@
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   5. MODALES Y BOTONES (Premium)
+   ========================================================================== */
+.modal-overlay, .confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal, .confirm {
+  background: var(--surface-solid);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal__header {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.modal__title {
+  font-size: 1.25rem;
+  color: var(--secondary-navy);
+}
+
+.modal__close {
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+.modal__close:hover {
+  background: rgba(244, 63, 94, 0.1);
+  color: var(--action-pink);
+  transform: rotate(90deg);
+}
+
+.modal__body {
+  padding: 1.5rem;
+}
+
+.modal__footer {
+  padding: 1.5rem;
+  background: var(--bg-main);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+.btn--primary {
+  background: var(--primary-purple);
+  color: white;
+}
+.btn--primary:hover {
+  background: var(--action-pink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+}
+.btn--secondary {
+  background: white;
+  border: 1px solid var(--border-subtle);
+  color: var(--secondary-navy);
+}
+.btn--secondary:hover {
+  background: var(--bg-main);
+}
+.btn--danger {
+  background: var(--action-pink);
+  color: white;
+}
+.btn--danger:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+}
+
+.confirm { max-width: 400px; padding: 2rem; text-align: center; }
+.confirm__icon { font-size: 3rem; margin-bottom: 1rem; }
+.confirm__title { font-size: 1.25rem; color: var(--secondary-navy); margin-bottom: 0.5rem; }
+.confirm__message { color: var(--secondary-navy); opacity: 0.7; margin-bottom: 1.5rem; }
+.confirm__actions { display: flex; gap: 1rem; justify-content: center; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }

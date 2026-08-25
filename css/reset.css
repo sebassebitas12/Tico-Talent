@@ -68,8 +68,7 @@ button {
    de descargas externas.
 */
 body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
   line-height: 1.5;
   color: var(--text-main);
@@ -91,8 +90,14 @@ h6 {
 }
 
 /* --------------------------------------------------------------------------
-   3. ACCESIBILIDAD (FOCUS VISIBLE)
+   3. UTILIDADES Y ACCESIBILIDAD
    -------------------------------------------------------------------------- */
+
+/* Oculta cualquier elemento etiquetado como .d-none (usado por el login,
+   el panel y los modales para alternar visibilidad sin JavaScript). */
+.d-none {
+  display: none !important;
+}
 
 /*
    Anillo de foco consistente con la marca para navegación por teclado.
