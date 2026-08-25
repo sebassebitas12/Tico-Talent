@@ -1,0 +1,44 @@
+/* ==========================================================================
+   TICO TALENT — VARIABLES DE DISEÑO (Premium Redesign)
+   Archivo: variables.css
+   --------------------------------------------------------------------------
+   Único punto de definición de la paleta de marca.
+   ========================================================================== */
+
+:root {
+  /* ========================================================================
+     IDENTIDAD DE MARCA (Premium)
+     ======================================================================== */
+  --primary-purple: #6a11cb; /* Morado neón vibrante */
+  --secondary-navy: #0f172a; /* Slate oscuro / navy profundo */
+  --accent-green: #10b981;   /* Verde esmeralda moderno */
+
+  /* ========================================================================
+     ACCIONES / INTERACTIVIDAD
+     ======================================================================== */
+  --action-pink: #f43f5e;    /* Rosa coral vibrante */
+
+  /* ========================================================================
+     SUPERFICIES Y FONDOS
+     ======================================================================== */
+  --bg-main: #f8fafc;        /* Fondo general ultra claro y limpio */
+  --surface-card: rgba(255, 255, 255, 0.7); /* Transparente para glassmorphism */
+  --surface-solid: #ffffff;  /* Superficies sólidas cuando se necesiten */
+  --border-subtle: rgba(15, 23, 42, 0.08); /* Bordes sutiles transparentes */
+
+  /* ========================================================================
+     TIPOGRAFÍA
+     ======================================================================== */
+  --text-main: #0f172a;      /* Texto principal */
+  --text-light: #ffffff;     /* Texto sobre fondos de color */
+  --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+
+  /* ========================================================================
+     EFECTOS PREMIUM (Glassmorphism & Shadows)
+     ======================================================================== */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --glass-blur: blur(12px);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
