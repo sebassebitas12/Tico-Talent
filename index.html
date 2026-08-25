@@ -1,13 +1,149 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ticotalent</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobConnect - Panel</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="app">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    
+    <div class="sidebar__header">
+      <span class="sidebar__logo-text">💼 JobConnect</span>
+      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+    </div>
+
+    <nav class="sidebar__nav">
+      
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Principal</span>
+        <a href="#/dashboard" class="nav-link nav-link--active" data-view="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </div>
+
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Gestión</span>
+        
+        <a href="#/candidatos" class="nav-link" data-view="candidatos">
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">Candidatos</span>
+          <span class="nav-badge" id="badgeCandidatos"></span>
+        </a>
+
+        <a href="#/vacantes" class="nav-link" data-view="vacantes">
+          <span class="nav-icon">💼</span>
+          <span class="nav-text">Vacantes</span>
+          <span class="nav-badge" id="badgeVacantes"></span>
+        </a>
+
+        <a href="#/empresas" class="nav-link" data-view="empresas">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-text">Empresas</span>
+        </a>
+
+        <a href="#/postulaciones" class="nav-link" data-view="postulaciones">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Postulaciones</span>
+        </a>
+      </div>
+
+      <div class="sidebar__nav-section">
+        <span class="sidebar__nav-title">Seguimiento</span>
+        
+        <a href="#/entrevistas" class="nav-link" data-view="entrevistas">
+          <span class="nav-icon">📅</span>
+          <span class="nav-text">Entrevistas</span>
+        </a>
+
+        <a href="#/tareas" class="nav-link" data-view="tareas">
+          <span class="nav-icon">✅</span>
+          <span class="nav-text">Tareas</span>
+          <span class="nav-badge nav-badge--warning" id="badgeTareas"></span>
+        </a>
+      </div>
+
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="sidebar__logout" id="btnLogout">
+        <span class="nav-icon">🚪</span>
+        <span class="nav-text">Cerrar Sesión</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main" id="main">
+    
+    <header class="main__header">
+      <div class="main__header-left">
+        <h1 class="main__title" id="viewTitle">Dashboard</h1>
+      </div>
+      <div class="main__header-right">
+        <div class="main__user">
+          <div class="main__user-avatar" id="userAvatar">E</div>
+          <div class="main__user-info">
+            <span class="main__user-name" id="userName">Emily</span>
+            <span class="main__user-role" id="userRole">Reclutador</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="main__content" id="mainContent">
+      <!-- Contenido dinámico -->
+    </section>
+
+  </main>
+
+  <!-- ========== MODAL GENÉRICO ========== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header" id="modalHeader">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody">
+        <!-- Formulario dinámico -->
+      </div>
+      <div class="modal__footer" id="modalFooter">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL CONFIRMACIÓN ========== -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger" id="confirmIcon">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TOASTS ========== -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+
+  <!-- ========== LOADING FULL ========== -->
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
 </html>
