@@ -23,9 +23,71 @@
         <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
       </ul>
     </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual"><span class="main__user-name" id="userName">Usuario</span><span class="main__user-role" id="userRole">Reclutador</span></div>
+    <div class="main__user" id="currentUser" aria-label="Usuario actual">
+      <div class="main__user-info">
+        <span class="main__user-name" id="userName"></span>
+        <span class="main__user-role" id="userRole"></span>
+      </div>
+      <button class="btn btn--sm btn--secondary" id="btnLogout" style="margin-left: 1rem;">🚪 Salir</button>
+    </div>
   </header>
-  <main class="main" id="main"><section class="main__content" id="mainContent" aria-labelledby="viewTitle"><header class="main__content-header"><h1 class="main__title" id="viewTitle">Candidatos</h1><p class="main__description">Listado y gestión de candidatos.</p></header><div class="main__content-body" id="contentArea"><section class="candidates" aria-labelledby="candidatesListTitle"><h2 id="candidatesListTitle">Listado de candidatos</h2><div class="candidates__list" id="candidatesList"></div></section></div></section></main>
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+
+  <main class="main" id="main">
+    <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+      <header class="main__content-header">
+        <h1 class="main__title" id="viewTitle">Candidatos</h1>
+        <p class="main__description">Listado y gestión de candidatos.</p>
+      </header>
+      <div class="main__content-body" id="contentArea">
+        <section class="candidates" aria-labelledby="candidatesListTitle">
+          <h2 id="candidatesListTitle" class="sr-only">Listado de candidatos</h2>
+          <div id="candidatesList"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main__footer" id="mainFooter">
+    <p class="main__footer-text">Tico Talent</p>
+  </footer>
+
+  <!-- Toast para candidatos.js -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+
+  <!-- Loading -->
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+
+  <!-- Modal genérico -->
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm -->
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/candidatos.js"></script>
 </body>
 </html>

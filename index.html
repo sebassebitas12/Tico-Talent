@@ -76,7 +76,7 @@
     </nav>
 
     <div class="sidebar__footer">
-      <a href="src/html/login.html" class="sidebar__logout" id="btnLogout">
+      <a href="login.html" class="sidebar__logout" id="btnLogout">
         <span class="nav-icon">🚪</span>
         <span class="nav-text">Cerrar Sesión</span>
       </a>
@@ -94,10 +94,12 @@
       <div class="main__header-right">
         <div class="main__user" id="currentUser" aria-label="Usuario actual">
           <div class="main__user-info-text">
-            <span class="main__user-name" id="userName">Emily</span>
-            <span class="main__user-role" id="userRole">Reclutadora</span>
+            <span class="main__user-name" id="userName"></span>
+            <span class="main__user-role" id="userRole"></span>
           </div>
-          <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-purple), var(--action-pink)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; box-shadow: var(--shadow-sm);">E</div>
+          <div class="main__user-avatar" id="userAvatar"
+            style="width:40px;height:40px;background:linear-gradient(135deg,var(--primary-purple),var(--action-pink));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;box-shadow:var(--shadow-sm);">
+          </div>
         </div>
       </div>
     </header>
@@ -126,7 +128,7 @@
   </div>
 
   <!-- ========== MODAL CONFIRMACIÓN ========== -->
-  <div class="confirm-overlay d-none" id="confirmOverlay" >
+  <div class="confirm-overlay d-none" id="confirmOverlay">
     <div class="confirm" id="confirmContainer">
       <div class="confirm__icon confirm__icon--danger" id="confirmIcon">⚠️</div>
       <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
@@ -147,5 +149,21 @@
     <p class="loading__text">Cargando...</p>
   </div>
 
-  </body>
+  <script type="module">
+    import { requireAuth, getUser, logout } from './src/js/auth.js';
+    requireAuth();
+    const user = getUser();
+    if (user) {
+      document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+      document.getElementById('userRole').textContent = user.email;
+      // Inicial del avatar dinámico
+      document.getElementById('userAvatar').textContent = user.firstName.charAt(0).toUpperCase();
+    }
+    document.getElementById('btnLogout')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  </script>
+
+</body>
 </html>

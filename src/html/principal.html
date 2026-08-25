@@ -23,7 +23,13 @@
         <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
       </ul>
     </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual"><span class="main__user-name" id="userName">Usuario</span><span class="main__user-role" id="userRole">Reclutador</span></div>
+    <div class="main__user" id="currentUser" aria-label="Usuario actual">
+      <div class="main__user-info">
+        <span class="main__user-name" id="userName">Usuario</span>
+        <span class="main__user-role" id="userRole">Reclutador</span>
+      </div>
+      <button class="btn btn--sm btn--secondary" id="btnLogout" style="margin-left: 1rem;">🚪 Salir</button>
+    </div>
   </header>
   <main class="main" id="main">
     <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
@@ -32,14 +38,25 @@
         <section class="summary" aria-labelledby="summaryTitle">
           <h2 id="summaryTitle">Resumen</h2>
           <dl class="summary-list">
-            <div class="summary-item"><dt>Candidatos</dt><dd id="candidatesTotal">0</dd></div>
-            <div class="summary-item"><dt>Vacantes activas</dt><dd id="vacanciesTotal">0</dd></div>
-            <div class="summary-item"><dt>Empresas</dt><dd id="companiesTotal">0</dd></div>
+            <div class="summary-item"><dt>Candidatos</dt><dd id="candidatesTotal">...</dd></div>
+            <div class="summary-item"><dt>Vacantes</dt><dd id="vacanciesTotal">...</dd></div>
+            <div class="summary-item"><dt>Empresas</dt><dd id="companiesTotal">...</dd></div>
+            <div class="summary-item"><dt>Postulaciones</dt><dd id="applicationsTotal">...</dd></div>
+            <div class="summary-item"><dt>Tareas Registradas</dt><dd id="tasksTotal">...</dd></div>
           </dl>
         </section>
       </div>
     </section>
   </main>
   <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+
+  <!-- Toasts y Loading -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando métricas...</p>
+  </div>
+
+  <script type="module" src="../js/principal.js"></script>
 </body>
 </html>

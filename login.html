@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JobConnect - Iniciar Sesión</title>
-  <link rel="stylesheet" href="../css/variables.css">
-  <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/main.css">
-  <link rel="stylesheet" href="../css/components.css">
+  <title>TicoTalent - Iniciar Sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/variables.css">
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/components.css">
 </head>
 <body id="loginPage">
 
@@ -16,7 +19,7 @@
       
       <div class="login__logo">
         <span class="login__logo-img">💼</span>
-        <h1 class="login__title">JobConnect</h1>
+        <h1 class="login__title">TicoTalent</h1>
         <p class="login__subtitle">Panel de Administración</p>
       </div>
 
@@ -29,7 +32,7 @@
             type="text" 
             id="loginEmail" 
             name="username"
-            placeholder="ej: emilys"
+            placeholder="Tu usuario"
             autocomplete="username"
             required
           >
@@ -42,7 +45,7 @@
             type="password" 
             id="loginPassword" 
             name="password"
-            placeholder="ej: emilyspass"
+            placeholder="Tu contraseña"
             autocomplete="current-password"
             required
           >
@@ -57,14 +60,11 @@
 
       </form>
 
-      <div class="login__footer">
-        <p class="login__text">Demo: <strong>emilys</strong> / <strong>emilyspass</strong></p>
-      </div>
-
     </div>
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
 
-  </body>
+  <script type="module" src="src/js/login.js"></script>
+</body>
 </html>
