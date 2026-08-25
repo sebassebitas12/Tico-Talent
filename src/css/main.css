@@ -1,0 +1,192 @@
+/* ==========================================================================
+   TICO TALENT — ESTRUCTURA GLOBAL Y NAVEGACIÓN
+   Línea gráfica institucional estilo Experian
+   Archivo: main.css
+   ========================================================================== */
+
+/*
+   Todas las páginas del panel usan <body class="main-page">.
+   Las reglas de layout y navegación están acotadas a ese contexto para
+   no interferir con otras vistas de la aplicación.
+*/
+
+/* ==========================================================================
+   1. ESTRUCTURA GLOBAL DEL DOCUMENTO
+   ========================================================================== */
+
+/* Página completa en columna: navegación + contenido + pie de página. */
+.main-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+/* Área principal: crece para empujar el footer al fondo de la ventana. */
+.main-page .main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Encabezado interno de cada vista (título + descripción). */
+.main-page .main__content-header {
+  margin-bottom: 2rem;
+}
+
+.main-page .main__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--secondary-navy);
+}
+
+.main-page .main__description {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  color: var(--secondary-navy);
+  opacity: 0.72;
+}
+
+/* Cuerpo del contenido: separación sutil con el encabezado. */
+.main-page .main__content-body {
+  padding-top: 0.25rem;
+}
+
+/* Pie de página: superficie blanca con división superior sutil. */
+.main-page .main__footer {
+  flex-shrink: 0;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  background-color: var(--surface-card);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.main-page .main__footer-text {
+  font-size: 0.875rem;
+  color: var(--secondary-navy);
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   2. NAVEGACIÓN SUPERIOR (header / nav)
+   ========================================================================== */
+
+/*
+   Barra superior: fondo blanco puro con borde inferior sutil.
+   Sticky para que la navegación permanezca visible al hacer scroll.
+*/
+.main-page .main__header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 64px;
+  padding: 0 1.5rem;
+  background-color: var(--surface-card);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Marca / logo: destaca en morado institucional. */
+.main-page .main__brand {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--primary-purple);
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.main-page .main__brand:hover,
+.main-page .main__brand:focus-visible {
+  color: var(--action-pink);
+}
+
+/* Navegación principal: lista horizontal de enlaces. */
+.main-page .main__navigation-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* Enlaces del menú: sin subrayado, texto navy institucional. */
+.main-page .main__navigation-link {
+  display: block;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--secondary-navy);
+  border-radius: 6px;
+  transition: color 0.25s ease;
+}
+
+/* Hover suave: transición hacia el rosa de acción. */
+.main-page .main__navigation-link:hover,
+.main-page .main__navigation-link:focus-visible {
+  color: var(--action-pink);
+}
+
+/* Enlace activo de la página actual: morado y mayor peso. */
+.main-page .main__navigation-link--active {
+  color: var(--primary-purple);
+  font-weight: 700;
+}
+
+/* Bloque de usuario: separado de la navegación con un divisor. */
+.main-page .main__user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--border-subtle);
+}
+
+.main-page .main__user-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--secondary-navy);
+}
+
+.main-page .main__user-role {
+  font-size: 0.75rem;
+  color: var(--secondary-navy);
+  opacity: 0.65;
+}
+
+/* ==========================================================================
+   3. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* La navegación pasa a una fila con scroll horizontal bajo la marca. */
+  .main-page .main__header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .main-page .main__navigation-list {
+    order: 3;
+    width: 100%;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .main-page .main {
+    padding: 1.5rem 1rem;
+  }
+
+  .main-page .main__user {
+    padding-left: 0.75rem;
+  }
+}

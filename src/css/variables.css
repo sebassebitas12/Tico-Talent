@@ -1,0 +1,35 @@
+/* ==========================================================================
+   TICO TALENT — VARIABLES DE DISEÑO
+   Línea gráfica institucional estilo Experian
+   Archivo: variables.css
+   --------------------------------------------------------------------------
+   Único punto de definición de la paleta de marca.
+   Todos los estilos del sistema consumen estas variables.
+   ========================================================================== */
+
+:root {
+  /* ========================================================================
+     IDENTIDAD DE MARCA
+     ======================================================================== */
+  --primary-purple: #531068; /* Morado institucional (fondos de impacto)      */
+  --secondary-navy: #0C2340; /* Azul marino (textos y superficies de color)   */
+  --accent-green: #00A35C;   /* Verde de acento (éxito / refuerzo)           */
+
+  /* ========================================================================
+     ACCIONES / INTERACTIVIDAD
+     ======================================================================== */
+  --action-pink: #D8006E;    /* Rosa de acción (CTAs, hovers, estados)       */
+
+  /* ========================================================================
+     SUPERFICIES Y FONDOS
+     ======================================================================== */
+  --bg-main: #F9F9F9;        /* Fondo general de la aplicación               */
+  --surface-card: #FFFFFF;   /* Tarjetas, headers, superficies elevadas      */
+  --border-subtle: #DADADA;  /* Bordes finos y divisores                     */
+
+  /* ========================================================================
+     TIPOGRAFÍA
+     ======================================================================== */
+  --text-main: #0C2340;      /* Texto principal                               */
+  --text-light: #FFFFFF;     /* Texto sobre fondos de color                   */
+}
