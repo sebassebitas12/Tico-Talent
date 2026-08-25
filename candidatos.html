@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tico Talent - Dashboard</title>
+  <title>Tico Talent - Candidatos</title>
 </head>
 <body class="main-page">
   <header class="main__header" id="mainHeader">
     <a class="main__brand" href="principal.html">Tico Talent</a>
     <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
       <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="principal.html" aria-current="page">Dashboard</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
+        <li class="main__navigation-item"><a class="main__navigation-link" href="principal.html">Dashboard</a></li>
+        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="candidatos.html" aria-current="page">Candidatos</a></li>
         <li class="main__navigation-item"><a class="main__navigation-link" href="vacantes.html">Vacantes</a></li>
         <li class="main__navigation-item"><a class="main__navigation-link" href="empresas.html">Empresas</a></li>
         <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
@@ -21,21 +21,7 @@
     </nav>
     <div class="main__user" id="currentUser" aria-label="Usuario actual"><span class="main__user-name" id="userName">Usuario</span><span class="main__user-role" id="userRole">Reclutador</span></div>
   </header>
-  <main class="main" id="main">
-    <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-      <header class="main__content-header"><h1 class="main__title" id="viewTitle">Dashboard</h1><p class="main__description">Resumen general de Tico Talent.</p></header>
-      <div class="main__content-body" id="contentArea">
-        <section class="dashboard__summary" aria-labelledby="summaryTitle">
-          <h2 id="summaryTitle">Resumen</h2>
-          <dl class="dashboard__summary-list">
-            <div class="dashboard__summary-item"><dt>Candidatos</dt><dd id="candidatesTotal">0</dd></div>
-            <div class="dashboard__summary-item"><dt>Vacantes activas</dt><dd id="vacanciesTotal">0</dd></div>
-            <div class="dashboard__summary-item"><dt>Empresas</dt><dd id="companiesTotal">0</dd></div>
-          </dl>
-        </section>
-      </div>
-    </section>
-  </main>
+  <main class="main" id="main"><section class="main__content" id="mainContent" aria-labelledby="viewTitle"><header class="main__content-header"><h1 class="main__title" id="viewTitle">Candidatos</h1><p class="main__description">Listado y gestión de candidatos.</p></header><div class="main__content-body" id="contentArea"><section class="candidates" aria-labelledby="candidatesListTitle"><h2 id="candidatesListTitle">Listado de candidatos</h2><div class="candidates__list" id="candidatesList"></div></section></div></section></main>
   <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
 </body>
 </html>
