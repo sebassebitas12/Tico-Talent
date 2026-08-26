@@ -26,27 +26,12 @@ toggleBtn.addEventListener("click", () => {
   eyeClosed.classList.toggle("d-none", isPassword);
 });
 
-document.querySelectorAll(".role-card[data-role]").forEach(card => {
-  card.addEventListener("click", () => {
-    document.querySelectorAll(".role-card[data-role]").forEach(c => c.classList.remove("role-card--active"));
-    card.classList.add("role-card--active");
-    const role = card.dataset.role;
-    const creds = DEMO_CREDS[role];
-    inputUser.value = creds.username;
-    inputPass.value = creds.password;
-    hideError();
-  });
-});
-
 document.querySelectorAll(".login__demo-user").forEach(demo => {
   demo.addEventListener("click", () => {
     const role = demo.dataset.role;
     const creds = DEMO_CREDS[role];
     inputUser.value = creds.username;
     inputPass.value = creds.password;
-    document.querySelectorAll(".role-card[data-role]").forEach(c => c.classList.remove("role-card--active"));
-    const targetCard = document.querySelector(`.role-card[data-role="${role}"]`);
-    if (targetCard) targetCard.classList.add("role-card--active");
     hideError();
   });
 });

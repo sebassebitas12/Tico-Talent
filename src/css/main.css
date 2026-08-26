@@ -550,6 +550,19 @@ body.main-page, body.app {
   color: var(--action-pink);
 }
 
+.login__link--register {
+  background: var(--primary-purple);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+}
+
+.login__link--register:hover {
+  background: var(--action-pink);
+  color: white;
+}
+
 .login__links-divider {
   color: var(--border-subtle);
   font-size: 0.8rem;
