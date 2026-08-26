@@ -821,8 +821,7 @@ body.main-page, body.app {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 6rem 2rem 4rem;
+  padding: 6rem 4rem 4rem;
   background: linear-gradient(135deg, var(--secondary-navy) 0%, #1a1a3e 40%, var(--primary-purple) 100%);
   overflow: hidden;
 }
@@ -835,12 +834,72 @@ body.main-page, body.app {
   pointer-events: none;
 }
 
-.landing-hero__content {
+.landing-hero__container {
   position: relative;
   z-index: 1;
-  text-align: center;
-  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1200px;
   width: 100%;
+  margin: 0 auto;
+}
+
+.landing-hero__content {
+  flex: 1;
+  text-align: left;
+}
+
+.landing-hero__visual {
+  flex: 0 0 420px;
+  position: relative;
+}
+
+.landing-hero__image-wrapper {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.landing-hero__img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.landing-hero__img-accent {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(83, 16, 104, 0.2) 0%, rgba(216, 0, 110, 0.15) 100%);
+  pointer-events: none;
+}
+
+.landing-hero__stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.landing-hero__stat {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.landing-hero__stat-number {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+}
+
+.landing-hero__stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .landing-hero__badge {
@@ -872,9 +931,7 @@ body.main-page, body.app {
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
   margin-bottom: 2.5rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 520px;
 }
 
 .landing-hero__search {
@@ -885,6 +942,7 @@ body.main-page, body.app {
   padding: 0.4rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   margin-bottom: 1.5rem;
+  max-width: 540px;
 }
 
 .landing-hero__search-group {
@@ -941,7 +999,7 @@ body.main-page, body.app {
 
 .landing-hero__tags {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-bottom: 2.5rem;
@@ -966,7 +1024,7 @@ body.main-page, body.app {
 
 .landing-hero__ctas {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
 }
 
@@ -1121,7 +1179,17 @@ body.main-page, body.app {
 .landing-benefits__container {
   max-width: 1100px;
   margin: 0 auto;
-  text-align: center;
+}
+
+.landing-benefits__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.landing-benefits__text {
+  padding-right: 2rem;
 }
 
 .landing-benefits__badge {
@@ -1141,33 +1209,25 @@ body.main-page, body.app {
   font-weight: 800;
   font-style: italic;
   color: var(--secondary-navy);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
-.landing-benefits__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.landing-benefits__list {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
-.landing-benefit-card {
-  background: var(--bg-main);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  transition: all 0.3s;
+.landing-benefit-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
 }
 
-.landing-benefit-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-
-.landing-benefit-card__icon {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 1rem;
+.landing-benefit-item__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   background: #f3e8f7;
   border-radius: 50%;
   display: flex;
@@ -1176,17 +1236,36 @@ body.main-page, body.app {
   color: var(--primary-purple);
 }
 
-.landing-benefit-card__title {
+.landing-benefit-item__title {
   font-size: 1rem;
   font-weight: 700;
   color: var(--secondary-navy);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
-.landing-benefit-card__desc {
+.landing-benefit-item__desc {
   font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.5;
+}
+
+.landing-benefits__visual {
+  display: flex;
+  justify-content: center;
+}
+
+.landing-benefits__image-wrapper {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  max-width: 450px;
+}
+
+.landing-benefits__img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
 }
 
 /* ==========================================================================
@@ -1319,13 +1398,33 @@ body.main-page, body.app {
     display: none;
   }
 
+  .landing-hero {
+    padding: 6rem 2rem 4rem;
+  }
+
+  .landing-hero__container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .landing-hero__content {
+    text-align: center;
+  }
+
   .landing-hero__title {
     font-size: 2.2rem;
+  }
+
+  .landing-hero__subtitle {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .landing-hero__search {
     flex-direction: column;
     border-radius: var(--radius-lg);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .landing-hero__search-divider {
@@ -1337,6 +1436,24 @@ body.main-page, body.app {
     width: 100%;
   }
 
+  .landing-hero__tags {
+    justify-content: center;
+  }
+
+  .landing-hero__ctas {
+    justify-content: center;
+  }
+
+  .landing-hero__visual {
+    flex: none;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .landing-hero__stats {
+    justify-content: center;
+  }
+
   .landing-steps__grid {
     grid-template-columns: 1fr;
     max-width: 400px;
@@ -1344,7 +1461,23 @@ body.main-page, body.app {
   }
 
   .landing-benefits__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .landing-benefits__text {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .landing-benefits__list {
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .landing-benefits__image-wrapper {
+    max-width: 350px;
   }
 
   .landing-companies__grid {
