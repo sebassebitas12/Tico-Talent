@@ -1,45 +1,82 @@
-// src/js/login.js
-// Controlador de la página login.html
-// Conecta el formulario con auth.js
+﻿import { login, isAuthenticated, register, forgotPassword } from "./auth.js";
 
-import { login, isAuthenticated } from "./auth.js";
-
-// Si ya está autenticado, redirigir al panel
 if (isAuthenticated()) {
   window.location.href = "/src/html/principal.html";
 }
 
-const form       = document.getElementById("loginForm");
-const inputUser  = document.getElementById("loginEmail");
-const inputPass  = document.getElementById("loginPassword");
-const errorBox   = document.getElementById("loginError");
-const btnLogin   = document.getElementById("btnLogin");
-const btnText    = btnLogin.querySelector(".btn__text");
-const spinner    = btnLogin.querySelector(".login__spinner");
+const form = document.getElementById("loginForm");
+const inputUser = document.getElementById("loginUser");
+const inputPass = document.getElementById("loginPassword");
+const errorBox = document.getElementById("loginError");
+const btnLogin = document.getElementById("btnLogin");
+const loader = document.getElementById("loginLoader");
+const toggleBtn = document.getElementById("togglePassword");
+const eyeOpen = toggleBtn.querySelector(".eye-icon--open");
+const eyeClosed = toggleBtn.querySelector(".eye-icon--closed");
+
+const DEMO_CREDS = {
+  empleador: { username: "carlos", password: "carlos123" },
+  solicitante: { username: "maria", password: "maria123" }
+};
+
+toggleBtn.addEventListener("click", () => {
+  const isPassword = inputPass.type === "password";
+  inputPass.type = isPassword ? "text" : "password";
+  eyeOpen.classList.toggle("d-none", !isPassword);
+  eyeClosed.classList.toggle("d-none", isPassword);
+});
+
+document.querySelectorAll(".role-card[data-role]").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll(".role-card[data-role]").forEach(c => c.classList.remove("role-card--active"));
+    card.classList.add("role-card--active");
+    const role = card.dataset.role;
+    const creds = DEMO_CREDS[role];
+    inputUser.value = creds.username;
+    inputPass.value = creds.password;
+    hideError();
+  });
+});
+
+document.querySelectorAll(".login__demo-user").forEach(demo => {
+  demo.addEventListener("click", () => {
+    const role = demo.dataset.role;
+    const creds = DEMO_CREDS[role];
+    inputUser.value = creds.username;
+    inputPass.value = creds.password;
+    document.querySelectorAll(".role-card[data-role]").forEach(c => c.classList.remove("role-card--active"));
+    const targetCard = document.querySelector(`.role-card[data-role="${role}"]`);
+    if (targetCard) targetCard.classList.add("role-card--active");
+    hideError();
+  });
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  setLoading(true);
   hideError();
-
   const username = inputUser.value.trim();
   const password = inputPass.value.trim();
-
+  if (!username || !password) {
+    showError("Por favor completa todos los campos.");
+    return;
+  }
+  setLoading(true);
   try {
     await login(username, password);
-    // Redirigir al panel principal
     window.location.href = "/src/html/principal.html";
   } catch (error) {
-    showError(error.message || "Usuario o contraseña incorrectos.");
+    showError(error.message || "Usuario o contrasena incorrectos.");
   } finally {
     setLoading(false);
   }
 });
 
 function setLoading(loading) {
+  btnLogin.classList.toggle("d-none", loading);
+  loader.classList.toggle("d-none", !loading);
   btnLogin.disabled = loading;
-  btnText.classList.toggle("d-none", loading);
-  spinner.classList.toggle("d-none", !loading);
+  inputUser.disabled = loading;
+  inputPass.disabled = loading;
 }
 
 function showError(msg) {
@@ -51,3 +88,98 @@ function hideError() {
   errorBox.textContent = "";
   errorBox.classList.add("d-none");
 }
+
+function showToast(message, type = "success") {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = `toast toast--${type}`;
+  toast.innerHTML = `
+    <span>${message}</span>
+    <button class="toast__close" onclick="this.parentElement.remove()">&#x2715;</button>
+  `;
+  container.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add("toast--visible"));
+  setTimeout(() => {
+    toast.classList.remove("toast--visible");
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+const forgotModal = document.getElementById("forgotModal");
+const registerModal = document.getElementById("registerModal");
+
+document.getElementById("forgotPasswordLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  forgotModal.classList.remove("d-none");
+});
+
+document.getElementById("registerLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  registerModal.classList.remove("d-none");
+});
+
+document.getElementById("closeForgotModal").addEventListener("click", () => {
+  forgotModal.classList.add("d-none");
+});
+
+document.getElementById("closeRegisterModal").addEventListener("click", () => {
+  registerModal.classList.add("d-none");
+});
+
+forgotModal.addEventListener("click", (e) => {
+  if (e.target === forgotModal) forgotModal.classList.add("d-none");
+});
+
+registerModal.addEventListener("click", (e) => {
+  if (e.target === registerModal) registerModal.classList.add("d-none");
+});
+
+document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("forgotEmail").value.trim();
+  if (!email) return;
+  try {
+    await forgotPassword(email);
+    showToast("Se enviaron las instrucciones de recuperacion a tu correo");
+    forgotModal.classList.add("d-none");
+    document.getElementById("forgotForm").reset();
+  } catch (err) {
+    showToast(err.message, "error");
+  }
+});
+
+document.querySelectorAll("[data-reg-role]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-reg-role]").forEach(b => b.classList.remove("role-card--active"));
+    btn.classList.add("role-card--active");
+    document.getElementById("regRole").value = btn.dataset.regRole;
+  });
+});
+
+document.getElementById("registerForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("regName").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const username = document.getElementById("regUser").value.trim();
+  const password = document.getElementById("regPass").value.trim();
+  const rol = document.getElementById("regRole").value;
+  if (!name || !email || !username || !password) {
+    showToast("Completa todos los campos", "error");
+    return;
+  }
+  if (password.length < 6) {
+    showToast("La contrasena debe tener al menos 6 caracteres", "error");
+    return;
+  }
+  try {
+    register({ name, email, username, password, rol });
+    showToast("Cuenta creada exitosamente. Ya puedes iniciar sesion.");
+    registerModal.classList.add("d-none");
+    document.getElementById("registerForm").reset();
+    inputUser.value = username;
+    inputPass.value = "";
+    inputPass.focus();
+  } catch (err) {
+    showToast(err.message, "error");
+  }
+});

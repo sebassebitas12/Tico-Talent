@@ -1,92 +1,130 @@
-// src/js/auth.js
-// Manejo de autenticación contra DummyJSON /auth/login
-// RF-01, RF-02, RF-03, RF-04
-
-const BASE_URL = "https://dummyjson.com";
-
-/**
- * Realiza el login contra DummyJSON.
- * Guarda el token y los datos del usuario en localStorage.
- * @param {string} username
- * @param {string} password
- * @returns {Promise<object>} datos del usuario
- */
-export async function login(username, password) {
-  try {
-    const response = await fetch(`${BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, expiresInMins: 60 }),
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.message || "Credenciales incorrectas");
-    }
-
-    const data = await response.json();
-
-    // Guardar token y datos de sesión
-    localStorage.setItem("token", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    localStorage.setItem("user", JSON.stringify({
-      id: data.id,
-      username: data.username,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      image: data.image,
-    }));
-
-    return data;
-  } catch (error) {
-    console.error("[auth.js] Error en login:", error.message);
-    throw error;
+const DEMO_USERS = [
+  {
+    id: 1,
+    username: "carlos",
+    password: "carlos123",
+    firstName: "Carlos",
+    lastName: "Rodriguez",
+    email: "carlos@ticotalent.com",
+    rol: "empleador"
+  },
+  {
+    id: 2,
+    username: "maria",
+    password: "maria123",
+    firstName: "Maria",
+    lastName: "Garcia",
+    email: "maria@ticotalent.com",
+    rol: "solicitante"
   }
+];
+
+function getUsers() {
+  const stored = localStorage.getItem("tt_users");
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return [];
+    }
+  }
+  return [];
 }
 
-/**
- * Elimina el token y redirige al login.
- * RF-04
- */
+function saveUsers(users) {
+  localStorage.setItem("tt_users", JSON.stringify(users));
+}
+
+function findUser(username) {
+  const builtIn = DEMO_USERS.find(u => u.username === username);
+  if (builtIn) return builtIn;
+  const custom = getUsers().find(u => u.username === username);
+  return custom || null;
+}
+
+export async function login(username, password) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const user = findUser(username);
+      if (!user || user.password !== password) {
+        reject(new Error("Usuario o contrasena incorrectos"));
+        return;
+      }
+      const token = "tt_" + btoa(Date.now() + "_" + user.username);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify({
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        rol: user.rol
+      }));
+      localStorage.setItem("rol", user.rol);
+      resolve(user);
+    }, 800);
+  });
+}
+
+export function register({ name, email, username, password, rol }) {
+  const allUsers = [...DEMO_USERS, ...getUsers()];
+  const exists = allUsers.find(u => u.username === username || u.email === email);
+  if (exists) {
+    throw new Error("El usuario o correo ya esta registrado");
+  }
+  const newUser = {
+    id: Date.now(),
+    username,
+    password,
+    firstName: name.split(" ")[0],
+    lastName: name.split(" ").slice(1).join(" ") || "",
+    email,
+    rol: rol || "solicitante"
+  };
+  const users = getUsers();
+  users.push(newUser);
+  saveUsers(users);
+  return newUser;
+}
+
+export function forgotPassword(email) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const allUsers = [...DEMO_USERS, ...getUsers()];
+      const user = allUsers.find(u => u.email === email);
+      if (!user) {
+        reject(new Error("No se encontro una cuenta con ese correo"));
+        return;
+      }
+      resolve({ message: "Se enviaron las instrucciones a tu correo" });
+    }, 1000);
+  });
+}
+
 export function logout() {
   localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
   localStorage.removeItem("user");
+  localStorage.removeItem("rol");
   window.location.href = "/login.html";
 }
 
-/**
- * Verifica si hay un token válido en localStorage.
- * RF-03
- * @returns {boolean}
- */
 export function isAuthenticated() {
   return !!localStorage.getItem("token");
 }
 
-/**
- * Devuelve el token almacenado.
- * @returns {string|null}
- */
 export function getToken() {
   return localStorage.getItem("token");
 }
 
-/**
- * Devuelve los datos del usuario almacenado.
- * @returns {object|null}
- */
 export function getUser() {
   const raw = localStorage.getItem("user");
   return raw ? JSON.parse(raw) : null;
 }
 
-/**
- * Protege una página: si no hay token, redirige al login.
- * Llamar al inicio de cada página protegida.
- * RF-03
- */
+export function getRole() {
+  return localStorage.getItem("rol") || "solicitante";
+}
+
 export function requireAuth() {
   if (!isAuthenticated()) {
     window.location.href = "/login.html";
