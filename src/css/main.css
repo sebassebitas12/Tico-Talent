@@ -315,6 +315,35 @@ body.main-page, body.app {
   min-height: 100vh;
   padding: 1.25rem;
   background: linear-gradient(135deg, var(--primary-purple) 0%, #2f063b 100%);
+  position: relative;
+}
+
+/* Video de fondo a pantalla completa detrás de la tarjeta */
+#loginPage .login__video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Overlay morado para mantener la legibilidad de la tarjeta y atenuar el video */
+#loginPage::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(83, 16, 104, 0.80) 0%, rgba(47, 6, 59, 0.82) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* La tarjeta de login y el toast quedan por encima del video */
+#loginPage .login,
+#loginPage .toast-container {
+  position: relative;
+  z-index: 1;
 }
 
 #loginPage .login {
