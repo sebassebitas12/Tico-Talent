@@ -14,106 +14,139 @@
 </head>
 <body id="loginPage">
 
-  <div class="login">
-    <div class="login__container">
+  <div class="login-split">
 
-      <div class="login__header">
-        <a href="index.html" class="login__back-link">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Volver
+    <!-- ========== LADO IZQUIERDO - ILUSTRACION ========== -->
+    <div class="login-split__left">
+      <div class="login-split__brand">
+        <a href="index.html" class="login-split__logo">Tico Talent</a>
+      </div>
+      <div class="login-split__illustration">
+        <div class="login-split__graphic">
+          <svg class="login-split__svg" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="150" r="120" fill="rgba(255,255,255,0.08)"/>
+            <circle cx="200" cy="150" r="80" fill="rgba(255,255,255,0.05)"/>
+            <rect x="140" y="100" width="120" height="100" rx="12" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <circle cx="170" cy="135" r="15" fill="rgba(216,0,110,0.4)"/>
+            <rect x="195" y="125" width="50" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+            <rect x="195" y="140" width="35" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+            <rect x="150" y="165" width="100" height="10" rx="5" fill="rgba(255,255,255,0.08)"/>
+            <rect x="150" y="180" width="70" height="8" rx="4" fill="rgba(255,255,255,0.06)"/>
+          </svg>
+        </div>
+        <h2 class="login-split__tagline">Encuentra tu proximo empleo ideal</h2>
+        <p class="login-split__tagline-desc"> Miles de oportunidades laborales en Costa Rica te esperan</p>
+      </div>
+      <div class="login-split__footer-text">
+        &copy; 2026 Tico Talent
+      </div>
+    </div>
+
+    <!-- ========== LADO DERECHO - FORMULARIO ========== -->
+    <div class="login-split__right">
+      <div class="login-split__form-wrapper">
+
+        <a href="index.html" class="login-split__back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Volver al inicio
         </a>
-        <h1 class="login__title">Tico Talent</h1>
-        <p class="login__subtitle">Plataforma de Empleo Costa Rica</p>
-      </div>
 
-      <div class="login__roles" id="roleSelector">
-        <button class="role-card" data-role="empleador" id="roleEmpleador">
-          <span class="role-card__emoji">&#x1F4BC;</span>
-          <span class="role-card__title">Empleador</span>
-          <span class="role-card__desc">Gestiona vacantes y candidatos</span>
-        </button>
-        <button class="role-card" data-role="solicitante" id="roleSolicitante">
-          <span class="role-card__emoji">&#x1F464;</span>
-          <span class="role-card__title">Solicitante</span>
-          <span class="role-card__desc">Busca oportunidades laborales</span>
-        </button>
-      </div>
-
-      <form class="login__form" id="loginForm" autocomplete="off">
-
-        <div class="login__field">
-          <label class="login__label" for="loginUser">Usuario</label>
-          <input
-            class="login__input"
-            type="text"
-            id="loginUser"
-            name="username"
-            placeholder="Tu usuario"
-            autocomplete="username"
-            required
-          >
+        <div class="login-split__header">
+          <h1 class="login-split__title">Bienvenido de nuevo</h1>
+          <p class="login-split__subtitle">Inicia sesion en tu cuenta para continuar</p>
         </div>
 
-        <div class="login__field">
-          <label class="login__label" for="loginPassword">Contrasena</label>
-          <div class="login__input-wrapper">
+        <!-- Role Cards -->
+        <div class="login__roles" id="roleSelector">
+          <button class="role-card" data-role="empleador" id="roleEmpleador">
+            <span class="role-card__emoji">&#x1F4BC;</span>
+            <span class="role-card__title">Empleador</span>
+            <span class="role-card__desc">Gestiona vacantes</span>
+          </button>
+          <button class="role-card" data-role="solicitante" id="roleSolicitante">
+            <span class="role-card__emoji">&#x1F464;</span>
+            <span class="role-card__title">Solicitante</span>
+            <span class="role-card__desc">Busca empleo</span>
+          </button>
+        </div>
+
+        <form class="login__form" id="loginForm" autocomplete="off">
+
+          <div class="login__field">
+            <label class="login__label" for="loginUser">Usuario</label>
             <input
-              class="login__input login__input--password"
-              type="password"
-              id="loginPassword"
-              name="password"
-              placeholder="Tu contrasena"
-              autocomplete="current-password"
+              class="login__input"
+              type="text"
+              id="loginUser"
+              name="username"
+              placeholder="Tu usuario"
+              autocomplete="username"
               required
             >
-            <button type="button" class="login__toggle-password" id="togglePassword" aria-label="Mostrar contrasena">
-              <svg class="eye-icon eye-icon--open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-              <svg class="eye-icon eye-icon--closed d-none" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
-              </svg>
+          </div>
+
+          <div class="login__field">
+            <label class="login__label" for="loginPassword">Contrasena</label>
+            <div class="login__input-wrapper">
+              <input
+                class="login__input login__input--password"
+                type="password"
+                id="loginPassword"
+                name="password"
+                placeholder="Tu contrasena"
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="login__toggle-password" id="togglePassword" aria-label="Mostrar contrasena">
+                <svg class="eye-icon eye-icon--open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg class="eye-icon eye-icon--closed d-none" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="login__error d-none" id="loginError"></div>
+
+          <div class="login__btn-wrapper">
+            <button class="btn btn--login" type="submit" id="btnLogin">
+              <span class="btn__text">Iniciar Sesion</span>
             </button>
+            <div class="loader-wrapper d-none" id="loginLoader">
+              <div class="loader-ring"></div>
+              <span class="loader-text">Ingresando...</span>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="login__links">
+          <a href="#" class="login__link" id="forgotPasswordLink">Olvidaste tu contrasena?</a>
+          <span class="login__links-divider">|</span>
+          <a href="#" class="login__link" id="registerLink">Registrate aqui</a>
+        </div>
+
+        <div class="login__footer">
+          <p class="login__demo-title">Demo - Click para auto-rellenar</p>
+          <div class="login__demo-users">
+            <div class="login__demo-user" data-role="empleador" id="demoEmpleador">
+              <span class="login__demo-role">&#x1F4BC; Empleador</span>
+              <code>carlos</code> / <code>carlos123</code>
+            </div>
+            <div class="login__demo-user" data-role="solicitante" id="demoSolicitante">
+              <span class="login__demo-role">&#x1F464; Solicitante</span>
+              <code>maria</code> / <code>maria123</code>
+            </div>
           </div>
         </div>
 
-        <div class="login__error d-none" id="loginError"></div>
-
-        <div class="login__btn-wrapper">
-          <button class="btn btn--login" type="submit" id="btnLogin">
-            <span class="btn__text">Iniciar Sesion</span>
-          </button>
-          <div class="loader-wrapper d-none" id="loginLoader">
-            <div class="loader-ring"></div>
-            <span class="loader-text">Ingresando...</span>
-          </div>
-        </div>
-
-      </form>
-
-      <div class="login__links">
-        <a href="#" class="login__link" id="forgotPasswordLink">Olvidaste tu contrasena?</a>
-        <span class="login__links-divider">|</span>
-        <a href="#" class="login__link" id="registerLink">No tienes cuenta? Registrate</a>
       </div>
-
-      <div class="login__footer">
-        <p class="login__demo-title">Credenciales de demostracion</p>
-        <div class="login__demo-users">
-          <div class="login__demo-user" data-role="empleador" id="demoEmpleador">
-            <span class="login__demo-role">Empleador</span>
-            <code>carlos</code> / <code>carlos123</code>
-          </div>
-          <div class="login__demo-user" data-role="solicitante" id="demoSolicitante">
-            <span class="login__demo-role">Solicitante</span>
-            <code>maria</code> / <code>maria123</code>
-          </div>
-        </div>
-      </div>
-
     </div>
+
   </div>
 
   <!-- ========== MODAL OLVIDO CONTRASENA ========== -->
