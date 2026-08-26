@@ -1,149 +1,257 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JobConnect - Panel</title>
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/components.css">
+  <title>Tico Talent - Tu plataforma de empleo en Costa Rica</title>
+  <meta name="description" content="Tico Talent conecta el talento costarricense con las mejores empresas. Miles de vacantes de empleo. Crea tu perfil gratis.">
+  <meta property="og:title" content="Tico Talent - Tu plataforma de empleo en Costa Rica">
+  <meta property="og:description" content="Conectamos talento costarricense con las mejores empresas. Miles de ofertas de empleo esperandote.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ticotalent.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/variables.css">
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/components.css">
 </head>
-<body class="app">
+<body id="landingPage">
 
-  <!-- ========== SIDEBAR ========== -->
-  <aside class="sidebar" id="sidebar">
-    
-    <div class="sidebar__header">
-      <span class="sidebar__logo-text">💼 JobConnect</span>
-      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+  <!-- ========== NAVBAR ========== -->
+  <nav class="landing-nav">
+    <div class="landing-nav__container">
+      <a href="index.html" class="landing-nav__brand">
+        <span class="landing-nav__logo">Tico Talent</span>
+      </a>
+      <div class="landing-nav__links">
+        <a href="#como-funciona" class="landing-nav__link">Como Funciona</a>
+        <a href="#empresas" class="landing-nav__link">Empresas</a>
+        <a href="#beneficios" class="landing-nav__link">Beneficios</a>
+      </div>
+      <div class="landing-nav__actions">
+        <a href="login.html" class="landing-nav__btn landing-nav__btn--outline">Iniciar Sesion</a>
+        <a href="login.html" class="landing-nav__btn landing-nav__btn--primary">Crear CV Gratis</a>
+      </div>
     </div>
+  </nav>
 
-    <nav class="sidebar__nav">
-      
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Principal</span>
-        <a href="principal.html" class="nav-link nav-link--active" data-view="dashboard">
-          <span class="nav-icon">📊</span>
-          <span class="nav-text">Dashboard</span>
-        </a>
+  <!-- ========== HERO ========== -->
+  <section class="landing-hero">
+    <div class="landing-hero__bg"></div>
+    <div class="landing-hero__container">
+      <div class="landing-hero__content">
+        <span class="landing-hero__badge">La plataforma #1 en empleo</span>
+        <h1 class="landing-hero__title">Encuentra tu proximo empleo ideal</h1>
+        <p class="landing-hero__subtitle">Conectamos talento costarricense con las mejores empresas. Miles de ofertas de empleo esperandote en todo el pais.</p>
+
+        <div class="landing-hero__search">
+          <div class="landing-hero__search-group">
+            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="landing-hero__search-input" placeholder="Puesto, empresa o palabra clave" id="heroSearchJob">
+          </div>
+          <div class="landing-hero__search-divider"></div>
+          <div class="landing-hero__search-group">
+            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <input type="text" class="landing-hero__search-input" placeholder="San Jose, Heredia, Alajuela..." id="heroSearchLocation">
+          </div>
+          <button class="landing-hero__search-btn" id="heroSearchBtn">Buscar</button>
+        </div>
+
+        <div class="landing-hero__tags">
+          <span class="landing-hero__tag">Desarrollador</span>
+          <span class="landing-hero__tag">Marketing</span>
+          <span class="landing-hero__tag">Contabilidad</span>
+          <span class="landing-hero__tag">Diseño</span>
+          <span class="landing-hero__tag">Recursos Humanos</span>
+        </div>
+
+        <div class="landing-hero__ctas">
+          <a href="login.html?rol=solicitante" class="landing-hero__cta landing-hero__cta--primary">Soy Candidato</a>
+          <a href="login.html?rol=empleador" class="landing-hero__cta landing-hero__cta--secondary">Soy Empleador</a>
+        </div>
       </div>
 
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Gestión</span>
-        
-        <a href="candidatos.html" class="nav-link" data-view="candidatos">
-          <span class="nav-icon">👤</span>
-          <span class="nav-text">Candidatos</span>
-          <span class="nav-badge" id="badgeCandidatos"></span>
-        </a>
-
-        <a href="vacantes.html" class="nav-link" data-view="vacantes">
-          <span class="nav-icon">💼</span>
-          <span class="nav-text">Vacantes</span>
-          <span class="nav-badge" id="badgeVacantes"></span>
-        </a>
-
-        <a href="empresas.html" class="nav-link" data-view="empresas">
-          <span class="nav-icon">🏢</span>
-          <span class="nav-text">Empresas</span>
-        </a>
-
-        <a href="postulaciones.html" class="nav-link" data-view="postulaciones">
-          <span class="nav-icon">📄</span>
-          <span class="nav-text">Postulaciones</span>
-        </a>
-      </div>
-
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Seguimiento</span>
-        
-        <a href="entrevistas.html" class="nav-link" data-view="entrevistas">
-          <span class="nav-icon">📅</span>
-          <span class="nav-text">Entrevistas</span>
-        </a>
-
-        <a href="tareas.html" class="nav-link" data-view="tareas">
-          <span class="nav-icon">✅</span>
-          <span class="nav-text">Tareas</span>
-          <span class="nav-badge nav-badge--warning" id="badgeTareas"></span>
-        </a>
-      </div>
-
-    </nav>
-
-    <div class="sidebar__footer">
-      <button class="sidebar__logout" id="btnLogout">
-        <span class="nav-icon">🚪</span>
-        <span class="nav-text">Cerrar Sesión</span>
-      </button>
-    </div>
-
-  </aside>
-
-  <!-- ========== MAIN ========== -->
-  <main class="main" id="main">
-    
-    <header class="main__header">
-      <div class="main__header-left">
-        <h1 class="main__title" id="viewTitle">Dashboard</h1>
-      </div>
-      <div class="main__header-right">
-        <div class="main__user">
-          <div class="main__user-avatar" id="userAvatar">E</div>
-          <div class="main__user-info">
-            <span class="main__user-name" id="userName">Emily</span>
-            <span class="main__user-role" id="userRole">Reclutador</span>
+      <div class="landing-hero__visual">
+        <div class="landing-hero__image-wrapper">
+          <img src="https://media.istockphoto.com/id/1822009439/es/foto/hombre-negro-de-negocios-feliz-y-caminando-en-el-viaje-de-la-ciudad-viaje-diario-y-sonrisa-del.jpg?s=612x612&w=0&k=20&c=Jri03cjkGdTzxsL4KLMZGlPS0DvmXKRhaaReRKrFUBs=" alt="Profesional feliz en la ciudad" class="landing-hero__img">
+          <div class="landing-hero__img-accent"></div>
+        </div>
+        <div class="landing-hero__stats">
+          <div class="landing-hero__stat">
+            <span class="landing-hero__stat-number">5,000+</span>
+            <span class="landing-hero__stat-label">Vacantes activas</span>
+          </div>
+          <div class="landing-hero__stat">
+            <span class="landing-hero__stat-number">200+</span>
+            <span class="landing-hero__stat-label">Empresas aliadas</span>
           </div>
         </div>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <section class="main__content" id="mainContent">
-      <!-- Contenido dinámico -->
-    </section>
+  <!-- ========== COMO FUNCIONA ========== -->
+  <section class="landing-steps" id="como-funciona">
+    <div class="landing-steps__container">
+      <span class="landing-steps__badge">Proceso simple</span>
+      <h2 class="landing-steps__title">Como funciona Tico Talent</h2>
+      <p class="landing-steps__subtitle">En 3 pasos sencillos puedes encontrar el empleo perfecto</p>
 
-  </main>
+      <div class="landing-steps__grid">
+        <div class="landing-step-card">
+          <div class="landing-step-card__number">1</div>
+          <div class="landing-step-card__icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3 class="landing-step-card__title">Crea tu perfil</h3>
+          <p class="landing-step-card__desc">Registrate gratis y crea tu perfil profesional con experiencia, habilidades y educacion.</p>
+        </div>
 
-  <!-- ========== MODAL GENÉRICO ========== -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modalContainer">
-      <div class="modal__header" id="modalHeader">
-        <h2 class="modal__title" id="modalTitle">Título</h2>
-        <button class="modal__close" id="modalClose">✕</button>
-      </div>
-      <div class="modal__body" id="modalBody">
-        <!-- Formulario dinámico -->
-      </div>
-      <div class="modal__footer" id="modalFooter">
-        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
-        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+        <div class="landing-step-card">
+          <div class="landing-step-card__number">2</div>
+          <div class="landing-step-card__icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <h3 class="landing-step-card__title">Postulate facil</h3>
+          <p class="landing-step-card__desc">Explora miles de vacantes y postulate con un solo clic. Recibe alertas de nuevas oportunidades.</p>
+        </div>
+
+        <div class="landing-step-card">
+          <div class="landing-step-card__number">3</div>
+          <div class="landing-step-card__icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3 class="landing-step-card__title">Consigue el trabajo</h3>
+          <p class="landing-step-card__desc">Conecta directamente con reclutadores y consigue tu empleo soñado en Costa Rica.</p>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ========== MODAL CONFIRMACIÓN ========== -->
-  <div class="confirm-overlay" id="confirmOverlay">
-    <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger" id="confirmIcon">⚠️</div>
-      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
-      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
-      <div class="confirm__actions">
-        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
-        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+  <!-- ========== BENEFICIOS ========== -->
+  <section class="landing-benefits" id="beneficios">
+    <div class="landing-benefits__container">
+      <div class="landing-benefits__grid">
+        <div class="landing-benefits__text">
+          <span class="landing-benefits__badge">Por que Tico Talent</span>
+          <h2 class="landing-benefits__title">Beneficios para candidatos y empresas</h2>
+          <div class="landing-benefits__list">
+            <div class="landing-benefit-item">
+              <div class="landing-benefit-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <h4 class="landing-benefit-item__title">100% Seguro</h4>
+                <p class="landing-benefit-item__desc">Tus datos estan protegidos con la mejor seguridad.</p>
+              </div>
+            </div>
+            <div class="landing-benefit-item">
+              <div class="landing-benefit-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <h4 class="landing-benefit-item__title">Rapido y Directo</h4>
+                <p class="landing-benefit-item__desc">Postulate en segundos y recibe respuestas rapidas.</p>
+              </div>
+            </div>
+            <div class="landing-benefit-item">
+              <div class="landing-benefit-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div>
+                <h4 class="landing-benefit-item__title">Red de Empresas</h4>
+                <p class="landing-benefit-item__desc">Accede a las mejores empresas costarricenses.</p>
+              </div>
+            </div>
+            <div class="landing-benefit-item">
+              <div class="landing-benefit-item__icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <div>
+                <h4 class="landing-benefit-item__title">Gratuito</h4>
+                <p class="landing-benefit-item__desc">Crear perfil y postularse es completamente gratis.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="landing-benefits__visual">
+          <div class="landing-benefits__image-wrapper">
+            <img src="https://img.magnific.com/foto-gratis/sonriendo-feliz-indio-trabajar-oficina-detras-el-edificio-moderno_496169-2880.jpg?semt=ais_hybrid&w=740&q=80" alt="Profesional sonriendo en oficina" class="landing-benefits__img">
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ========== TOASTS ========== -->
-  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <!-- ========== EMPRESAS ========== -->
+  <section class="landing-companies" id="empresas">
+    <div class="landing-companies__container">
+      <h2 class="landing-companies__title">Empresas que confian en nosotros</h2>
+      <div class="landing-companies__grid">
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">Nacion</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">BAC</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">Amazon</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">IBM</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">HP</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">Intel</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">Procter</span>
+        </div>
+        <div class="landing-company-logo">
+          <span class="landing-company-logo__text">CLARO</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- ========== LOADING FULL ========== -->
-  <div class="loading loading--full d-none" id="loadingSpinner">
-    <div class="loading__spinner loading__spinner--lg"></div>
-    <p class="loading__text">Cargando...</p>
-  </div>
+  <!-- ========== FOOTER ========== -->
+  <footer class="landing-footer">
+    <div class="landing-footer__container">
+      <div class="landing-footer__grid">
+        <div class="landing-footer__brand">
+          <span class="landing-footer__logo">Tico Talent</span>
+          <p class="landing-footer__desc">La plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
+        </div>
+        <div class="landing-footer__col">
+          <h4 class="landing-footer__col-title">Candidatos</h4>
+          <a href="login.html?rol=solicitante" class="landing-footer__link">Buscar empleo</a>
+          <a href="login.html?rol=solicitante" class="landing-footer__link">Crear perfil</a>
+          <a href="#como-funciona" class="landing-footer__link">Como funciona</a>
+        </div>
+        <div class="landing-footer__col">
+          <h4 class="landing-footer__col-title">Empresas</h4>
+          <a href="login.html?rol=empleador" class="landing-footer__link">Publicar vacante</a>
+          <a href="#empresas" class="landing-footer__link">Empresas aliadas</a>
+          <a href="#beneficios" class="landing-footer__link">Beneficios</a>
+        </div>
+        <div class="landing-footer__col">
+          <h4 class="landing-footer__col-title">Contacto</h4>
+          <a href="#" class="landing-footer__link">info@ticotalent.com</a>
+          <a href="#" class="landing-footer__link">+506 2222-3333</a>
+          <a href="#" class="landing-footer__link">San Jose, Costa Rica</a>
+        </div>
+      </div>
+      <div class="landing-footer__bottom">
+        <p>&copy; 2026 Tico Talent. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="src/js/landing.js"></script>
+
 </body>
 </html>

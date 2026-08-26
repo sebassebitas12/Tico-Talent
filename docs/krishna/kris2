@@ -1,0 +1,20 @@
+**principal.html (Dashboard)**
+Maquetación del panel principal, KPIs globales y estadísticas de reclutamiento.
+
+**candidatos.html (Candidatos)**
+Implementación del contenedor #candidatesList y perfil del reclutador en el header.
+
+**empresas.html (Empresas)**
+Estructuración del directorio de empresas clientes y perfiles corporativos.
+
+**vacantes.html (Vacantes)**
+Creación de la interfaz para listar, filtrar y gestionar ofertas de empleo.
+
+**postulaciones.html (Postulaciones)**
+Configuración del tablero y lista para el seguimiento de candidatos por vacante.
+
+**entrevistas.html (Entrevistas)**
+Maquetación de la agenda de entrevistas y estatus de agendas de reclutadores.
+
+**tareas.html (Tareas)**
+Creación del módulo de pendientes, recordatorios y flujo operativo diario.
