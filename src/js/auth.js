@@ -233,7 +233,7 @@ function getDefaultPerfil(user, rol) {
       tamanoEmpresa: "1,000+ colaboradores",
       emailCorporativo: user.email || "carlos.recruiter@intelcr.com",
       telefonoEmpresa: "+506 2298-6000",
-      reclutadorCargo: "Senior Technical Recruiter",
+      reclutadorCargo: "Reclutador Técnico Senior",
       descripcionEmpresa: "Líder global en innovación tecnológica y diseño de microarquitecturas presente en Costa Rica.",
       beneficios: "Seguro médico privado, Asociación Solidarista, Bono de conectividad, Trabajo híbrido flexible, Fondo de retiro."
     };
@@ -244,7 +244,7 @@ function getDefaultPerfil(user, rol) {
     email: user.email || "maria.dev@gmail.com",
     telefono: "+506 8899-3344",
     ubicacion: "San José, Costa Rica",
-    titular: "Senior Full Stack Developer (React / Node.js)",
+    titular: "Desarrollador Full Stack Senior (React / Node.js)",
     experienciaAnos: "5 años",
     pretensionSalarial: "$3,500 - $4,800 USD",
     modalidadPreferida: "Remoto 100% o Híbrido",

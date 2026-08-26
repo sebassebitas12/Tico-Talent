@@ -61,13 +61,13 @@ function renderCards(lista) {
             <div class="job-card__footer" style="margin-top: 0.75rem;">
               <div>
                 <span class="job-tag" style="background: ${t.completada ? "#dcfce7" : "#fef3c7"}; color: ${t.completada ? "#16a34a" : "#d97706"}; font-weight: 600;">
-                  ${t.completada ? "✅ Completada" : "⏳ Pendiente"}
+                  ${t.completada ? "Completada" : "Pendiente"}
                 </span>
-                <span class="job-tag">👤 Responsable ID: #${t.userId}</span>
+                <span class="job-tag">Responsable ID: #${t.userId}</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${t.id}">✏️ Editar</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${t.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${t.id}">Editar</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${t.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Eliminar</button>
               </div>
             </div>
           </article>

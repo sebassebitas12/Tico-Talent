@@ -86,9 +86,9 @@ function renderCards(lista) {
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">📅 Fecha: ${p.fechaPostulacion}</span>
-              <span class="job-tag">⚡ Afinidad: ${p.match}% Match</span>
-              <span class="job-tag">👤 Candidato ID: #${p.userId}</span>
+              <span class="job-tag">Fecha: ${p.fechaPostulacion}</span>
+              <span class="job-tag">Afinidad: ${p.match}% Match</span>
+              <span class="job-tag">Candidato ID: #${p.userId}</span>
               ${p.tags.map(t => `<span class="job-tag">#${escapeHTML(t)}</span>`).join("")}
             </div>
 
@@ -102,11 +102,11 @@ function renderCards(lista) {
 
               <div class="job-card__actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 ${esEmpleador ? `
-                  <button type="button" class="btn btn-secondary btn-cambiar-estado" data-id="${p.id}">🔄 Cambiar Estado</button>
-                  <button type="button" class="btn btn-secondary btn-editar" data-id="${p.id}">✏️ Editar</button>
-                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${p.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.9rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                  <button type="button" class="btn btn-secondary btn-cambiar-estado" data-id="${p.id}">Cambiar Estado</button>
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${p.id}">Editar</button>
+                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${p.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.9rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Eliminar</button>
                 ` : `
-                  <button type="button" class="btn btn-secondary btn-editar" data-id="${p.id}">📝 Ver / Editar Nota</button>
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${p.id}">Ver / Editar Nota</button>
                   <button type="button" class="btn btn--danger btn-eliminar" data-id="${p.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.9rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Retirar</button>
                 `}
               </div>

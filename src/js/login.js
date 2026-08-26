@@ -68,7 +68,12 @@ form.addEventListener("submit", async (e) => {
   setLoading(true);
   try {
     await login(username, password, currentSelectedRole);
-    window.location.href = "/src/html/principal.html";
+    const action = urlParams.get("action");
+    if (action === "crearcv") {
+      window.location.href = "/src/html/perfil.html";
+    } else {
+      window.location.href = "/src/html/principal.html";
+    }
   } catch (error) {
     showError(error.message || "Usuario o contraseña incorrectos.");
   } finally {

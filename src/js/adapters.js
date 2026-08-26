@@ -37,24 +37,24 @@ const UBICACIONES_CR = [
 ];
 
 const MODALIDADES = ["Remoto 100%", "Híbrido (2 días oficina)", "Híbrido (1 día oficina)", "Presencial"];
-const NIVELES = ["Junior Developer", "Mid-Level Engineer", "Senior Specialist", "Tech Lead / Architect"];
+const NIVELES = ["Desarrollador Junior", "Ingeniero Semi-Senior", "Especialista Senior", "Líder Técnico / Arquitecto"];
 
 const TITULOS_TECNICOS = [
-  "Senior Full Stack Developer (React / Node)",
-  "Frontend Engineer (React / TypeScript)",
-  "Cloud & DevOps Architect (AWS / Kubernetes)",
-  "QA Automation Lead (Cypress / Playwright)",
-  "UI/UX Product Designer",
-  "Backend Go & Microservices Engineer",
-  "Data Scientist & AI Specialist",
-  "Mobile Developer (Flutter / React Native)"
+  "Desarrollador Full Stack Senior (React / Node)",
+  "Ingeniero Frontend (React / TypeScript)",
+  "Arquitecto Cloud & DevOps (AWS / Kubernetes)",
+  "Líder de Automatización QA (Cypress / Playwright)",
+  "Diseñador de Producto UI/UX",
+  "Ingeniero Backend (Go / Microservicios)",
+  "Científico de Datos & Especialista en IA",
+  "Desarrollador Móvil (Flutter / React Native)"
 ];
 
 const ESTADOS_POSTULACION = [
-  { texto: "📄 CV Recibido", bg: "#f0ebf5", color: "#531068", paso: 1 },
-  { texto: "🟢 En Revisión Técnica", bg: "#e6f6ee", color: "#00875a", paso: 2 },
-  { texto: "⚡ Entrevista Agendada", bg: "#fff3e0", color: "#e65100", paso: 3 },
-  { texto: "🎯 Oferta Final", bg: "#e0f2fe", color: "#0369a1", paso: 4 }
+  { texto: "CV Recibido", bg: "#f0ebf5", color: "#531068", paso: 1 },
+  { texto: "En Revisión Técnica", bg: "#e6f6ee", color: "#00875a", paso: 2 },
+  { texto: "Entrevista Agendada", bg: "#fff3e0", color: "#e65100", paso: 3 },
+  { texto: "Oferta Final", bg: "#e0f2fe", color: "#0369a1", paso: 4 }
 ];
 
 /**
@@ -78,22 +78,57 @@ export function adaptarVacante(p, index = 0) {
     ? p.tags.slice(0, 4)
     : ["JavaScript", "React", "Node.js", "Git"];
 
+  // Categorías traducidas al español si vienen en inglés de DummyJSON
+  const categoriasTraducidas = {
+    "beauty": "Belleza & Cuidado",
+    "fragrances": "Fragancias & Retail",
+    "furniture": "Mobiliario & Espacios",
+    "groceries": "Consumo Masivo",
+    "home-decoration": "Diseño & Decoración",
+    "kitchen-accessories": "Accesorios & Equipamiento",
+    "laptops": "Tecnología & Hardware",
+    "mens-shirts": "Textil & Moda",
+    "mens-shoes": "Calzado & Manufactura",
+    "mens-watches": "Joyería & Retail",
+    "mobile-accessories": "Telecomunicaciones",
+    "motorcycle": "Automotriz & Logística",
+    "skin-care": "Salud & Cuidado Personal",
+    "smartphones": "Dispositivos Móviles",
+    "sports-accessories": "Deportes & Bienestar",
+    "sunglasses": "Óptica & Salud Visual",
+    "tablets": "Tecnología Digital",
+    "tops": "Comercio & Textil",
+    "vehicle": "Transporte & Movilidad",
+    "womens-bags": "Moda & Accesorios",
+    "womens-dresses": "Diseño Textil",
+    "womens-jewellery": "Joyería Fina",
+    "womens-shoes": "Calzado Femenino",
+    "womens-watches": "Relojería de Precisión"
+  };
+
+  const categoriaOriginal = (p.category || "").toLowerCase();
+  const categoriaEsp = categoriasTraducidas[categoriaOriginal] || p.category || "Tecnología";
+
+  // Generar título profesional en español coherente para la vacante
+  const tituloVacante = TITULOS_TECNICOS[(p.id + index) % TITULOS_TECNICOS.length];
+
   return {
     id: p.id,
-    titulo: p.title || "Desarrollador de Software",
-    descripcion: p.description || "Buscamos un profesional talentoso para integrarse al equipo de desarrollo en modalidad flexible.",
-    empresa: p.brand || empresaRef.nombre,
+    titulo: tituloVacante,
+    descripcion: `Oportunidad laboral en ${empresaRef.nombre}. Se requiere profesional con experiencia comprobada en desarrollo, metodologías ágiles y trabajo en equipo para proyectos de alto impacto.`,
+    empresa: empresaRef.nombre,
     empresaSector: empresaRef.sector,
     empresaLogo: empresaRef.logo,
     ubicacion: ubicacion,
     modalidad: modalidad,
     nivel: nivel,
+    jornada: (p.id % 4 === 0) ? "Medio Tiempo" : "Tiempo Completo",
     salario: salarioFormateado,
     match: match,
     tags: tags,
-    rating: p.rating || 4.8,
+    rating: 4.8,
     plazas: p.stock ?? 2,
-    categoria: p.category || "Tecnología",
+    categoria: categoriaEsp,
     fechaPublicacion: `Hace ${(p.id % 5) + 1} días`,
     // Datos crudos originales para mantener compatibilidad
     _raw: p
@@ -159,7 +194,7 @@ export function adaptarEmpresa(c, index = 0) {
     logo: ref.logo,
     colaboradores: `${colaboradores}+ colaboradores`,
     vacantesActivas: totalVacantes,
-    rating: 4.8 + ((c.id % 3) * 0.1),
+    rating: Number((4.7 + ((c.id % 3) * 0.1)).toFixed(1)),
     userId: c.userId || 1,
     beneficios: ["Seguro médico privado", "Asociación solidarista", "Subsidio de internet", "Capacitación continua"],
     _raw: c
@@ -232,11 +267,11 @@ export function adaptarEntrevista(c, index = 0) {
 export function adaptarTarea(t, index = 0) {
   if (!t) return {};
   const prioridades = [
-    { texto: "🔥 Alta", color: "#dc2626", bg: "#fee2e2" },
-    { texto: "⚡ Media", color: "#d97706", bg: "#fef3c7" },
-    { texto: "🟢 Normal", color: "#16a34a", bg: "#dcfce7" }
+    { texto: "Alta", color: "#dc2626", bg: "#fee2e2" },
+    { texto: "Media", color: "#d97706", bg: "#fef3c7" },
+    { texto: "Normal", color: "#16a34a", bg: "#dcfce7" }
   ];
-  const categorias = ["Entrevistas", "Revisión de CV", "Ofertas Finales", "Feedback a Candidato"];
+  const categorias = ["Entrevistas", "Revisión de CV", "Ofertas Finales", "Retroalimentación"];
   
   const prio = prioridades[(t.id + index) % prioridades.length];
   const cat = categorias[(t.id + index) % categorias.length];

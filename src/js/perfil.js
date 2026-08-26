@@ -27,14 +27,14 @@ function renderHero() {
   
   if (rolActual === "empleador" || rolActual === "reclutador") {
     if (heroRoleBadge) {
-      heroRoleBadge.textContent = "🏢 Empresa / Reclutador";
+      heroRoleBadge.textContent = "Empresa / Reclutador";
       heroRoleBadge.style.backgroundColor = "#fff3e0";
       heroRoleBadge.style.color = "#e65100";
     }
     if (heroSubtitle) heroSubtitle.textContent = `${perfil.empresaNombre || "Empresa Aliada"} • ${perfil.sedeUbicacion || "Costa Rica"}`;
   } else {
     if (heroRoleBadge) {
-      heroRoleBadge.textContent = "👤 Candidato Profesional";
+      heroRoleBadge.textContent = "Candidato Profesional";
       heroRoleBadge.style.backgroundColor = "#f0ebf5";
       heroRoleBadge.style.color = "var(--primary-purple)";
     }
@@ -135,7 +135,7 @@ function renderFormFields() {
 
         <div class="form-group">
           <label class="login__label">Titular Profesional</label>
-          <input class="login__input" id="fTitular" value="${escapeHTML(perfil.titular || "")}" placeholder="Ej: Senior Full Stack Developer (React / Node)">
+          <input class="login__input" id="fTitular" value="${escapeHTML(perfil.titular || "")}" placeholder="Ej: Desarrollador Full Stack Senior (React / Node)">
         </div>
 
         <div class="form-group">
@@ -277,6 +277,83 @@ if (form) {
   });
 }
 
+// ── GENERADOR Y DESCARGA DE CV ──
+document.getElementById("btnExportarCV")?.addEventListener("click", () => {
+  const p = getPerfilExtendido();
+  const esEmpresa = (rolActual === "empleador" || rolActual === "reclutador");
+  
+  if (esEmpresa) {
+    mostrarToast("La generación de CV está diseñada para perfiles de Candidatos.", "info");
+    return;
+  }
+
+  const cvHTML = `
+    <div id="cvPreviewDoc" style="font-family: var(--font-family, sans-serif); color: #1e293b; line-height: 1.6; max-height: 65vh; overflow-y: auto; padding: 1.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
+      <div style="border-bottom: 2px solid var(--primary-purple, #531068); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary-purple, #531068); margin: 0 0 0.25rem 0;">${escapeHTML(p.nombre || "Candidato")}</h1>
+        <h2 style="font-size: 1.1rem; font-weight: 600; color: #475569; margin: 0 0 0.5rem 0;">${escapeHTML(p.titular || "Desarrollador de Software")}</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: #64748b;">
+          <span>📍 ${escapeHTML(p.ubicacion || "Costa Rica")}</span>
+          <span>✉️ ${escapeHTML(p.email || "")}</span>
+          <span>📞 ${escapeHTML(p.telefono || "")}</span>
+          <span>💵 Pretensión: ${escapeHTML(p.pretensionSalarial || "")}</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Perfil Profesional</h3>
+        <p style="font-size: 0.9rem; color: #334155; margin: 0;">${escapeHTML(p.bio || "Profesional con experiencia comprobada en desarrollo y proyectos tecnológicos.")}</p>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Habilidades Técnicas</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+          ${(skillsTags.length ? skillsTags : ["JavaScript", "React", "Node.js", "Git"]).map(s => `
+            <span style="background: #f1f5f9; color: #334155; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${escapeHTML(s)}</span>
+          `).join("")}
+        </div>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Presencia Profesional</h3>
+        <p style="font-size: 0.85rem; margin: 0.2rem 0;"><strong>LinkedIn:</strong> <a href="${escapeHTML(p.linkedin || "#")}" target="_blank" style="color: var(--primary-purple);">${escapeHTML(p.linkedin || "linkedin.com")}</a></p>
+        <p style="font-size: 0.85rem; margin: 0.2rem 0;"><strong>GitHub / Portafolio:</strong> <a href="${escapeHTML(p.github || "#")}" target="_blank" style="color: var(--primary-purple);">${escapeHTML(p.github || "github.com")}</a></p>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
+      <button class="btn btn-cta" id="btnPrintCV" style="display: inline-flex; align-items: center; gap: 0.4rem;">
+        🖨️ Imprimir / Guardar en PDF
+      </button>
+    </div>
+  `;
+
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalBody = document.getElementById("modalBody");
+  const btnFormCancel = document.getElementById("btnFormCancel");
+  const btnFormSubmit = document.getElementById("btnFormSubmit");
+  const modalClose = document.getElementById("modalClose");
+
+  if (modalTitle) modalTitle.textContent = "Vista Previa de tu Currículum Vitae (CV)";
+  if (modalBody) modalBody.innerHTML = cvHTML;
+  if (btnFormSubmit) btnFormSubmit.classList.add("d-none");
+  if (btnFormCancel) btnFormCancel.textContent = "Cerrar";
+
+  modalOverlay?.classList.remove("d-none");
+
+  document.getElementById("btnPrintCV")?.addEventListener("click", () => {
+    window.print();
+  });
+
+  const cerrar = () => {
+    modalOverlay?.classList.add("d-none");
+    if (btnFormSubmit) btnFormSubmit.classList.remove("d-none");
+  };
+
+  if (modalClose) modalClose.onclick = cerrar;
+  if (btnFormCancel) btnFormCancel.onclick = cerrar;
+});
+
 // ── BOTÓN TOGGLE ROL (DEMO RÁPIDO) ──
 document.getElementById("btnToggleRol")?.addEventListener("click", () => {
   const nuevoRol = (rolActual === "solicitante") ? "empleador" : "solicitante";
@@ -287,7 +364,7 @@ document.getElementById("btnToggleRol")?.addEventListener("click", () => {
   renderHero();
   renderFormFields();
   initUserNav();
-  mostrarToast(`Rol cambiado a: ${nuevoRol === "empleador" ? "🏢 Empleador" : "👤 Candidato"}`, "info");
+  mostrarToast(`Rol cambiado a: ${nuevoRol === "empleador" ? "Empleador" : "Candidato"}`, "info");
 });
 
 document.getElementById("btnRestablecer")?.addEventListener("click", () => {
