@@ -1,16 +1,10 @@
 // src/js/ui.js
-// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, seguridad.
-// RF-09
+// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, navbar dinamica.
 
-import { getUser, logout } from "./auth.js";
+import { getUser, logout, getRole, getVisibleModules } from "./auth.js";
 
 // ── SEGURIDAD ──────────────────────────────────────────────────
 
-/**
- * Escapa caracteres HTML para prevenir inyección de XSS.
- * @param {string} str
- * @returns {string}
- */
 export function escapeHTML(str) {
   if (str == null) return "";
   const div = document.createElement("div");
@@ -18,11 +12,71 @@ export function escapeHTML(str) {
   return div.innerHTML;
 }
 
+// ── NAVBAR DINAMICA POR ROL ───────────────────────────────────
+
+const NAV_ITEMS = [
+  { id: "vacantes",     label: "Vacantes",         href: "vacantes.html" },
+  { id: "candidatos",   label: "Candidatos",       href: "candidatos.html" },
+  { id: "empresas",     label: "Empresas",          href: "empresas.html" },
+  { id: "postulaciones",label: "Mis Postulaciones", href: "postulaciones.html" },
+  { id: "entrevistas",  label: "Entrevistas",       href: "entrevistas.html" },
+  { id: "tareas",       label: "Tareas",            href: "tareas.html" }
+];
+
+/**
+ * Renderiza la navbar horizontal superior con los modulos visibles segun el rol.
+ * @param {string} activePage - id del modulo activo actual (ej: "vacantes")
+ */
+export function renderNavbar(activePage) {
+  const navbar = document.getElementById("appNavbar");
+  if (!navbar) return;
+
+  const user = getUser();
+  const visibleModules = getVisibleModules();
+  const initials = user ? (user.firstName?.charAt(0) || "U") : "U";
+  const fullName = user ? `${user.firstName} ${user.lastName}` : "Usuario";
+  const rolLabel = getRole() === "reclutador" ? "Reclutador" :
+                   getRole() === "empleador" ? "Empleador" : "Candidato";
+
+  const navLinks = NAV_ITEMS
+    .filter(item => visibleModules.includes(item.id))
+    .map(item => {
+      const isActive = item.id === activePage;
+      return `<a href="${item.href}" class="nav-link${isActive ? " nav-link--active" : ""}"><span class="nav-text">${item.label}</span></a>`;
+    }).join("");
+
+  navbar.innerHTML = `
+    <div class="navbar__brand">
+      <a href="principal.html" class="navbar__logo">JobConnect</a>
+    </div>
+    <nav class="navbar__nav" id="navbarNav">
+      <a href="principal.html" class="nav-link${activePage === "principal" ? " nav-link--active" : ""}">
+        <span class="nav-text">Inicio</span>
+      </a>
+      ${navLinks}
+    </nav>
+    <div class="navbar__user">
+      <div class="navbar__user-card">
+        <div class="navbar__user-avatar">${initials}</div>
+        <div class="navbar__user-info">
+          <span class="navbar__user-name">${escapeHTML(fullName)}</span>
+          <span class="navbar__user-role">${rolLabel}</span>
+        </div>
+      </div>
+      <a href="/login.html" class="navbar__logout" id="btnLogout">Cerrar Sesion</a>
+    </div>
+  `;
+
+  document.getElementById("btnLogout")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    logout();
+  });
+}
+
 // ── INIT NAVBAR (usuario + logout) ─────────────────────────────
 
 /**
  * Inicializa la navbar: setea nombre, rol, avatar del usuario y conecta logout.
- * Llamar una vez al inicio de cada módulo.
  */
 export function initUserNav() {
   const user = getUser();
@@ -42,12 +96,6 @@ export function initUserNav() {
 
 // ── TOASTS ────────────────────────────────────────────────────
 
-/**
- * Muestra un toast de retroalimentación.
- * @param {string} mensaje
- * @param {'success'|'error'|'info'|'warning'} tipo
- * @param {number} duracion  ms
- */
 export function mostrarToast(mensaje, tipo = "success", duracion = 3000) {
   const container = document.getElementById("toastContainer");
   if (!container) return;
@@ -55,22 +103,16 @@ export function mostrarToast(mensaje, tipo = "success", duracion = 3000) {
   const toast = document.createElement("div");
   toast.className = `toast toast--${tipo}`;
 
-  const iconos = { success: "✅", error: "❌", info: "ℹ️", warning: "⚠️" };
+  const iconos = { success: "OK", error: "X", info: "i", warning: "!" };
   toast.innerHTML = `
-    <span class="toast__icon">${iconos[tipo] ?? "📢"}</span>
+    <span class="toast__icon">${iconos[tipo] ?? "?"}</span>
     <span class="toast__msg">${mensaje}</span>
-    <button class="toast__close">✕</button>
+    <button class="toast__close">X</button>
   `;
 
   container.appendChild(toast);
-
-  // Animar entrada
   requestAnimationFrame(() => toast.classList.add("toast--visible"));
-
-  // Cerrar al hacer clic en ✕
   toast.querySelector(".toast__close").addEventListener("click", () => cerrarToast(toast));
-
-  // Auto-cerrar
   setTimeout(() => cerrarToast(toast), duracion);
 }
 
@@ -89,14 +131,8 @@ export function ocultarLoading() {
   document.getElementById("loadingSpinner")?.classList.add("d-none");
 }
 
-// ── MODAL GENÉRICO ────────────────────────────────────────────
+// ── MODAL GENERICO ────────────────────────────────────────────
 
-/**
- * Abre el modal con título y contenido HTML.
- * @param {string} titulo
- * @param {string} htmlBody   innerHTML del cuerpo del modal
- * @param {Function} onGuardar   callback al presionar "Guardar"
- */
 export function abrirModal(titulo, htmlBody, onGuardar) {
   const overlay   = document.getElementById("modalOverlay");
   const titleEl   = document.getElementById("modalTitle");
@@ -128,11 +164,6 @@ export function cerrarModal() {
 
 // ── CONFIRM ───────────────────────────────────────────────────
 
-/**
- * Muestra el diálogo de confirmación.
- * @param {string} mensaje
- * @param {Function} onConfirmar
- */
 export function confirmar(mensaje, onConfirmar) {
   const overlay   = document.getElementById("confirmOverlay");
   const msgEl     = document.getElementById("confirmMessage");

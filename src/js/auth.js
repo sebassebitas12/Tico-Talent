@@ -1,5 +1,5 @@
 // src/js/auth.js
-// Sistema de autenticación con DummyJSON /auth/login + fallback demo local.
+// Sistema de autenticacion con DummyJSON /auth/login + fallback demo local.
 
 const DEMO_USERS = [
   {
@@ -17,10 +17,25 @@ const DEMO_USERS = [
     password: "maria123",
     firstName: "Maria",
     lastName: "Garcia",
-    email: "maria@ticotalent.com",
+    email: "maria@gmail.com",
     rol: "solicitante"
+  },
+  {
+    id: 3,
+    username: "admin",
+    password: "admin123",
+    firstName: "Admin",
+    lastName: "TicoTalent",
+    email: "admin@ticotalent.com",
+    rol: "reclutador"
   }
 ];
+
+const ROLE_PERMISSIONS = {
+  solicitante: ["vacantes", "postulaciones"],
+  empleador: ["vacantes", "candidatos"],
+  reclutador: ["vacantes", "candidatos", "empresas", "postulaciones", "entrevistas", "tareas"]
+};
 
 function getUsers() {
   const stored = localStorage.getItem("tt_users");
@@ -46,7 +61,6 @@ function findUser(username) {
 }
 
 export async function login(username, password) {
-  // Intentar autenticar con DummyJSON real
   try {
     const response = await fetch("https://dummyjson.com/auth/login", {
       method: "POST",
@@ -75,7 +89,6 @@ export async function login(username, password) {
     // Si DummyJSON no responde, caer al fallback local
   }
 
-  // Fallback: autenticación local demo
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const user = findUser(username);
@@ -156,6 +169,11 @@ export function getUser() {
 
 export function getRole() {
   return localStorage.getItem("rol") || "solicitante";
+}
+
+export function getVisibleModules() {
+  const rol = getRole();
+  return ROLE_PERMISSIONS[rol] || ROLE_PERMISSIONS.solicitante;
 }
 
 export function requireAuth() {
