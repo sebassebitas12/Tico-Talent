@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JobConnect - Iniciar Sesión</title>
-  <link rel="stylesheet" href="../../css/variables.css">
-  <link rel="stylesheet" href="../../css/reset.css">
-  <link rel="stylesheet" href="../../css/main.css">
-  <link rel="stylesheet" href="../../css/components.css">
+  <title>Tico Talent - Iniciar Sesión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/variables.css">
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/components.css">
 </head>
 <body id="loginPage">
 
@@ -18,26 +21,23 @@
       
       <div class="login__logo">
         <span class="login__logo-img">💼</span>
-        <h1 class="login__title">JobConnect</h1>
-        <p class="login__subtitle">Panel de Administración</p>
+        <h1 class="login__title">Tico Talent</h1>
+        <p class="login__subtitle">Plataforma de Reclutamiento Profesional</p>
       </div>
 
       <form class="login__form" id="loginForm" autocomplete="off">
         
         <div class="login__field">
-          <label class="login__label" for="loginEmail">Usuario</label>
-          <div class="login__input-wrapper">
-            <input 
-              class="login__input login__input--icon" 
-              type="text" 
-              id="loginEmail" 
-              name="username"
-              placeholder="ej: emilys"
-              autocomplete="username"
-              required
-            >
-            <span class="login__input-icon">👤</span>
-          </div>
+          <label class="login__label" for="loginEmail">Usuario / Correo Electrónico</label>
+          <input 
+            class="login__input" 
+            type="text" 
+            id="loginEmail" 
+            name="username"
+            placeholder="ej: emilys"
+            autocomplete="username"
+            required
+          >
         </div>
 
         <div class="login__field">
@@ -67,7 +67,7 @@
       </form>
 
       <div class="login__footer">
-        <p class="login__text">Demo: <strong>emilys</strong> / <strong>emilyspass</strong></p>
+        <p class="login__text">Credenciales demo: <strong>emilys</strong> / <strong>emilyspass</strong></p>
       </div>
 
     </div>
@@ -75,6 +75,6 @@
 
   <div class="toast-container" id="toastContainer"></div>
 
-  <script type="module" src="js/services/authService.js"></script>
+  <script type="module" src="src/js/login.js"></script>
 </body>
 </html>

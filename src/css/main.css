@@ -1,0 +1,481 @@
+/* ==========================================================================
+   TICO TALENT — ESTRUCTURA GLOBAL Y SIDEBAR LATERAL
+   Línea gráfica institucional estilo Stitch
+   Archivo: main.css
+   ========================================================================== */
+
+/* ==========================================================================
+   1. ESTRUCTURA GLOBAL DEL DOCUMENTO (Layout de 2 Columnas)
+   ========================================================================== */
+
+/* Layout general con Sidebar a la izquierda y Contenido a la derecha */
+body.main-page, body.app {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. SIDEBAR LATERAL IZQUIERDO
+   ========================================================================== */
+
+.sidebar, .main__sidebar {
+  width: 270px;
+  min-width: 270px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: var(--surface-solid);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-smooth);
+}
+
+/* Header del Sidebar (Logo y Marca) */
+.sidebar__header {
+  padding: 1.5rem 1.25rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: var(--primary-purple);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.sidebar__brand:hover {
+  color: var(--action-pink);
+}
+
+.sidebar__logo-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--primary-purple);
+}
+
+.sidebar__toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--secondary-navy);
+  cursor: pointer;
+}
+
+/* Navegación Vertical */
+.sidebar__nav {
+  flex: 1 1 auto;
+  padding: 1.25rem 0.85rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sidebar__nav-section {
+  margin-bottom: 1.25rem;
+}
+
+.sidebar__nav-section:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar__nav-title {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* Enlaces del Sidebar */
+.nav-link, .sidebar__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--secondary-navy);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.nav-icon {
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-text {
+  flex: 1 1 auto;
+}
+
+.nav-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+}
+
+.nav-badge--warning {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+/* Estados Hover y Activo */
+.nav-link:hover, .sidebar__nav-link:hover {
+  background-color: var(--bg-main);
+  color: var(--primary-purple);
+  transform: translateX(3px);
+}
+
+.nav-link--active, .sidebar__nav-link--active {
+  background: #f3e8f7 !important;
+  color: var(--primary-purple) !important;
+  font-weight: 800;
+}
+
+.nav-link--active::before, .sidebar__nav-link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  background-color: var(--primary-purple);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Footer del Sidebar (Usuario y Acciones) */
+.sidebar__footer {
+  padding: 1rem 0.85rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background-color: #fafafa;
+}
+
+.sidebar__user-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background-color: var(--surface-solid);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.sidebar__user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary-purple), #3a0849);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.sidebar__user-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sidebar__user-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--secondary-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__user-role {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.sidebar__logout {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: var(--transition-smooth);
+}
+
+.sidebar__logout:hover {
+  background-color: rgba(216, 0, 110, 0.08);
+  color: var(--action-pink);
+}
+
+/* ==========================================================================
+   3. ÁREA DE CONTENIDO PRINCIPAL (Lado Derecho)
+   ========================================================================== */
+
+.main-page__wrapper, .app-wrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.main-page .main, .app .main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2.25rem 2.5rem;
+}
+
+/* Header interno de cada vista */
+.main__content-header {
+  margin-bottom: 2rem;
+}
+
+.main__title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: var(--secondary-navy);
+}
+
+.main__description {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.main__content-body {
+  padding-top: 0.5rem;
+}
+
+/* Footer del Contenido */
+.main__footer {
+  flex-shrink: 0;
+  padding: 1.5rem 2.5rem;
+  text-align: center;
+  background-color: var(--surface-solid);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.main__footer-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   4. LOGIN (Página Completa Independiente)
+   ========================================================================== */
+
+#loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, var(--primary-purple) 0%, #2f063b 100%);
+}
+
+#loginPage .login {
+  width: 100%;
+  max-width: 420px;
+}
+
+#loginPage .login__container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: 2.5rem 2.25rem;
+  background-color: var(--surface-solid);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+#loginPage .login__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+#loginPage .login__logo-img {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+#loginPage .login__title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--primary-purple);
+}
+
+#loginPage .login__subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+#loginPage .login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+#loginPage .login__field {
+  width: 100%;
+}
+
+#loginPage .login__label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--secondary-navy);
+}
+
+#loginPage .login__input {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  font-size: 0.95rem;
+  color: var(--secondary-navy);
+  background-color: var(--surface-solid);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  transition: var(--transition-smooth);
+}
+
+#loginPage .login__input:focus {
+  border-color: var(--primary-purple);
+  outline: 2px solid rgba(83, 16, 104, 0.15);
+}
+
+#loginPage .login__btn {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-light);
+  background-color: var(--action-pink);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: var(--shadow-cta);
+  transition: var(--transition-smooth);
+}
+
+#loginPage .login__btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+#loginPage .login__footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   5. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  body.main-page, body.app {
+    flex-direction: column;
+  }
+
+  .sidebar, .main__sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .sidebar__header {
+    padding: 1rem 1.25rem;
+  }
+
+  .sidebar__toggle {
+    display: block;
+  }
+
+  .sidebar__nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .sidebar__nav-section {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .sidebar__nav-title {
+    display: none;
+  }
+
+  .nav-link, .sidebar__nav-link {
+    white-space: nowrap;
+  }
+
+  .sidebar__footer {
+    display: none;
+  }
+
+  .main-page .main, .app .main {
+    padding: 1.5rem 1rem;
+  }
+}
