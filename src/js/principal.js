@@ -10,8 +10,11 @@ renderNavbar("principal");
 
 const MODULES_CONFIG = {
   vacantes:      { label: "Vacantes",              desc: "Busca y aplica a ofertas de empleo",                   href: "vacantes.html" },
+  candidatos:    { label: "Candidatos",            desc: "Gestiona candidatos y cambia su estado",               href: "candidatos.html" },
+  empresas:      { label: "Empresas",              desc: "Administra empresas aliadas",                          href: "empresas.html" },
   postulaciones: { label: "Mis Postulaciones",      desc: "Estado y trazabilidad de tus aplicaciones",            href: "postulaciones.html" },
-  candidatos:    { label: "Candidatos Postulados",  desc: "Gestiona candidatos y cambia su estado",              href: "candidatos.html" }
+  entrevistas:   { label: "Entrevistas",            desc: "Programa y da seguimiento a entrevistas",              href: "entrevistas.html" },
+  tareas:        { label: "Tareas",                 desc: "Gestiona tareas del proceso de reclutamiento",         href: "tareas.html" }
 };
 
 function renderQuickModules() {
@@ -48,15 +51,19 @@ renderQuickModules();
 async function cargarMetricas() {
   mostrarLoading();
   try {
-    const [candidatosData, vacantesData] = await Promise.allSettled([
+    const [candidatosData, vacantesData, empresasData, entrevistasData, tareasData] = await Promise.allSettled([
       getAll("users"),
-      getAll("products")
+      getAll("products"),
+      getAll("carts"),
+      getAll("comments"),
+      getAll("todos")
     ]);
 
     const elCandidatos = document.getElementById("candidatesTotal");
     const elVacantes = document.getElementById("vacanciesTotal");
     const elEmpresas = document.getElementById("companiesTotal");
     const elPostulaciones = document.getElementById("applicationsTotal");
+    const elEntrevistas = document.getElementById("interviewsTotal");
     const elTareas = document.getElementById("tasksTotal");
 
     if (candidatosData.status === "fulfilled" && elCandidatos) {
@@ -69,9 +76,22 @@ async function cargarMetricas() {
       elVacantes.textContent = Array.isArray(prods) ? (vacantesData.value.total ?? prods.length) : "0";
     }
 
-    if (elEmpresas) elEmpresas.textContent = "2";
+    if (empresasData.status === "fulfilled" && elEmpresas) {
+      const carts = empresasData.value.carts ?? empresasData.value;
+      elEmpresas.textContent = Array.isArray(carts) ? (empresasData.value.total ?? carts.length) : "0";
+    }
+
+    if (entrevistasData.status === "fulfilled" && elEntrevistas) {
+      const comments = entrevistasData.value.comments ?? entrevistasData.value;
+      elEntrevistas.textContent = Array.isArray(comments) ? (entrevistasData.value.total ?? comments.length) : "0";
+    }
+
+    if (tareasData.status === "fulfilled" && elTareas) {
+      const todos = tareasData.value.todos ?? tareasData.value;
+      elTareas.textContent = Array.isArray(todos) ? (tareasData.value.total ?? todos.length) : "0";
+    }
+
     if (elPostulaciones) elPostulaciones.textContent = "0";
-    if (elTareas) elTareas.textContent = "0";
   } catch (error) {
     console.error("Error al cargar metricas:", error);
     mostrarToast("Error al cargar metricas del panel.", "error");

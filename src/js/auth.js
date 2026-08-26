@@ -24,8 +24,8 @@ const DEMO_USERS = [
 ];
 
 const ROLE_PERMISSIONS = {
-  solicitante: ["vacantes", "postulaciones"],
-  empresa: ["vacantes", "candidatos"]
+  solicitante: ["vacantes", "candidatos", "empresas", "postulaciones", "entrevistas", "tareas"],
+  empresa: ["vacantes", "candidatos", "empresas", "postulaciones", "entrevistas", "tareas"]
 };
 
 const ROLE_LABELS = {

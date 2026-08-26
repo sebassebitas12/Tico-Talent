@@ -16,8 +16,11 @@ export function escapeHTML(str) {
 
 const NAV_ITEMS = [
   { id: "vacantes",      label: "Vacantes",              href: "vacantes.html" },
-  { id: "candidatos",    label: "Candidatos Postulados",  href: "candidatos.html" },
-  { id: "postulaciones", label: "Mis Postulaciones",      href: "postulaciones.html" }
+  { id: "candidatos",    label: "Candidatos",            href: "candidatos.html" },
+  { id: "empresas",      label: "Empresas",              href: "empresas.html" },
+  { id: "postulaciones", label: "Mis Postulaciones",      href: "postulaciones.html" },
+  { id: "entrevistas",   label: "Entrevistas",            href: "entrevistas.html" },
+  { id: "tareas",        label: "Tareas",                 href: "tareas.html" }
 ];
 
 /**
