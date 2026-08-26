@@ -22,22 +22,7 @@
 
     <nav class="sidebar__nav">
       <div class="sidebar__nav-section">
-        <a href="principal.html" class="nav-link nav-link--active">
-          <span class="nav-text">Explorar</span>
-        </a>
-        <a href="vacantes.html" class="nav-link">
-          <span class="nav-text">Vacantes</span>
-          <span class="nav-badge">51</span>
-        </a>
-        <a href="candidatos.html" class="nav-link">
-          <span class="nav-text">Candidatos</span>
-        </a>
-        <a href="empresas.html" class="nav-link">
-          <span class="nav-text">Empresas</span>
-        </a>
-        <a href="postulaciones.html" class="nav-link">
-          <span class="nav-text">Mis Postulaciones</span>
-        </a>
+        <!-- Renderizado dinámicamente por ui.js según rol -->
       </div>
     </nav>
 
@@ -163,7 +148,31 @@
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
-    <p class="loading__text">Cargando métricas...</p>
+    <p class="loading__text">Cargando...</p>
+  </div>
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="../js/principal.js"></script>

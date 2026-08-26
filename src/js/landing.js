@@ -1,17 +1,27 @@
+// src/js/landing.js
+// Interacciones de la Landing Page pública
+
 document.getElementById("heroSearchBtn")?.addEventListener("click", () => {
-  const job = document.getElementById("heroSearchJob").value.trim();
-  const location = document.getElementById("heroSearchLocation").value.trim();
-  let url = "login.html?rol=solicitante";
+  const job = document.getElementById("heroSearchJob")?.value.trim() || "";
+  const location = document.getElementById("heroSearchLocation")?.value.trim() || "";
+  const token = localStorage.getItem("token");
+
   const params = [];
   if (job) params.push("q=" + encodeURIComponent(job));
   if (location) params.push("loc=" + encodeURIComponent(location));
-  if (params.length) url += "&" + params.join("&");
-  window.location.href = url;
+  const queryString = params.length ? "?" + params.join("&") : "";
+
+  if (token) {
+    window.location.href = `src/html/vacantes.html${queryString}`;
+  } else {
+    window.location.href = `login.html?rol=solicitante${queryString ? "&" + params.join("&") : ""}`;
+  }
 });
 
 document.querySelectorAll(".landing-hero__tag").forEach(tag => {
   tag.addEventListener("click", () => {
-    document.getElementById("heroSearchJob").value = tag.textContent;
+    const input = document.getElementById("heroSearchJob");
+    if (input) input.value = tag.textContent.trim();
   });
 });
 
