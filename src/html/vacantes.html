@@ -6,7 +6,7 @@
   <title>Tico Talent - Vacantes y Empleos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
@@ -14,73 +14,46 @@
 </head>
 <body class="main-page">
 
-  <!-- ========== SIDEBAR LATERAL IZQUIERDO ========== -->
-  <aside class="sidebar" id="sidebar">
+  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
+  <header class="sidebar" id="sidebar">
     <div class="sidebar__header">
-      <a href="principal.html" class="sidebar__brand">
-        <span>💼 Tico Talent</span>
-      </a>
-      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
     </div>
 
     <nav class="sidebar__nav">
       <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Principal</span>
         <a href="principal.html" class="nav-link">
-          <span class="nav-icon">📊</span>
           <span class="nav-text">Explorar</span>
         </a>
-      </div>
-
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Gestión de Talento</span>
         <a href="vacantes.html" class="nav-link nav-link--active">
-          <span class="nav-icon">💼</span>
           <span class="nav-text">Vacantes</span>
           <span class="nav-badge">51</span>
         </a>
         <a href="candidatos.html" class="nav-link">
-          <span class="nav-icon">👤</span>
           <span class="nav-text">Candidatos</span>
         </a>
         <a href="empresas.html" class="nav-link">
-          <span class="nav-icon">🏢</span>
           <span class="nav-text">Empresas</span>
         </a>
         <a href="postulaciones.html" class="nav-link">
-          <span class="nav-icon">📄</span>
           <span class="nav-text">Mis Postulaciones</span>
-        </a>
-      </div>
-
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Seguimiento</span>
-        <a href="entrevistas.html" class="nav-link">
-          <span class="nav-icon">📅</span>
-          <span class="nav-text">Entrevistas</span>
-        </a>
-        <a href="tareas.html" class="nav-link">
-          <span class="nav-icon">✅</span>
-          <span class="nav-text">Tareas</span>
-          <span class="nav-badge nav-badge--warning">1</span>
         </a>
       </div>
     </nav>
 
     <div class="sidebar__footer">
       <div class="sidebar__user-card">
-        <div class="sidebar__user-avatar">E</div>
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
         <div class="sidebar__user-info">
-          <span class="sidebar__user-name">Emily Salazar</span>
-          <span class="sidebar__user-role">Reclutadora Senior</span>
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
-      <a href="login.html" class="sidebar__logout" id="btnLogout">
-        <span class="nav-icon">🚪</span>
-        <span class="nav-text">Cerrar Sesión</span>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesion</span>
       </a>
     </div>
-  </aside>
+  </header>
 
   <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
@@ -198,111 +171,15 @@
           </div>
         </aside>
 
-        <!-- LISTA DE VACANTES / JOB CARDS -->
+        <!-- LISTA DE VACANTES / JOB CARDS (renderizada por vacantes.js) -->
         <section class="job-list-container" aria-labelledby="vacanciesListTitle">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-            <h2 id="vacanciesListTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Vacantes Disponibles <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">(51 resultados)</span></h2>
+            <h2 id="vacanciesListTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Vacantes Disponibles <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);" id="vacanteCount"></span></h2>
             <span style="font-size: 0.85rem; color: var(--text-muted);">Ordenado por: <strong>Mayor Compatibilidad</strong></span>
           </div>
 
-          <div class="job-list" id="vacanciesList">
-
-            <!-- TARJETA 1 -->
-            <article class="job-card">
-              <div class="job-card__header">
-                <div class="job-card__company-logo">💻</div>
-                <div class="job-card__title-area">
-                  <h3 class="job-card__title">Senior Frontend Developer (React / TypeScript)</h3>
-                  <div class="job-card__company-name">
-                    <span>TechCR Solutions</span> • <span>San José, Costa Rica (Remoto)</span>
-                  </div>
-                </div>
-                <span class="badge-match">⚡ 98% Match</span>
-              </div>
-
-              <div class="job-card__details">
-                <span class="job-tag">🏠 Remoto</span>
-                <span class="job-tag">💼 Tiempo Completo</span>
-                <span class="job-tag">🚀 Senior</span>
-                <span class="job-tag">⚡ React</span>
-                <span class="job-tag">📘 TypeScript</span>
-              </div>
-
-              <div class="job-card__footer">
-                <div>
-                  <span class="job-card__salary">$4,500 - $6,000 USD / mes</span>
-                  <span class="job-card__date" style="display: block;">Publicado hace 2 días</span>
-                </div>
-                <div class="job-card__actions">
-                  <button type="button" class="btn btn-cta" onclick="alert('¡Postulación enviada con éxito!')">Postularse</button>
-                </div>
-              </div>
-            </article>
-
-            <!-- TARJETA 2 -->
-            <article class="job-card">
-              <div class="job-card__header">
-                <div class="job-card__company-logo">☁️</div>
-                <div class="job-card__title-area">
-                  <h3 class="job-card__title">Cloud DevOps Engineer (AWS & Terraform)</h3>
-                  <div class="job-card__company-name">
-                    <span>Innovatech Pura Vida</span> • <span>Heredia (Híbrido)</span>
-                  </div>
-                </div>
-                <span class="badge-match">⚡ 94% Match</span>
-              </div>
-
-              <div class="job-card__details">
-                <span class="job-tag">🏢 Híbrido</span>
-                <span class="job-tag">💼 Tiempo Completo</span>
-                <span class="job-tag">🛡️ Mid-Senior</span>
-                <span class="job-tag">☁️ AWS</span>
-                <span class="job-tag">⚙️ Docker & CI/CD</span>
-              </div>
-
-              <div class="job-card__footer">
-                <div>
-                  <span class="job-card__salary">$3,800 - $5,000 USD / mes</span>
-                  <span class="job-card__date" style="display: block;">Publicado hace 3 días</span>
-                </div>
-                <div class="job-card__actions">
-                  <button type="button" class="btn btn-cta" onclick="alert('¡Postulación enviada con éxito!')">Postularse</button>
-                </div>
-              </div>
-            </article>
-
-            <!-- TARJETA 3 -->
-            <article class="job-card">
-              <div class="job-card__header">
-                <div class="job-card__company-logo">🎨</div>
-                <div class="job-card__title-area">
-                  <h3 class="job-card__title">Lead Product Designer (UI/UX & Design Systems)</h3>
-                  <div class="job-card__company-name">
-                    <span>Global Talent Hub</span> • <span>San José, Costa Rica (Remoto)</span>
-                  </div>
-                </div>
-                <span class="badge-match">⚡ 91% Match</span>
-              </div>
-
-              <div class="job-card__details">
-                <span class="job-tag">🏠 Remoto</span>
-                <span class="job-tag">💼 Tiempo Completo</span>
-                <span class="job-tag">✨ Lead</span>
-                <span class="job-tag">🎨 Figma</span>
-                <span class="job-tag">🧩 Design Systems</span>
-              </div>
-
-              <div class="job-card__footer">
-                <div>
-                  <span class="job-card__salary">$4,000 - $5,500 USD / mes</span>
-                  <span class="job-card__date" style="display: block;">Publicado hace 5 días</span>
-                </div>
-                <div class="job-card__actions">
-                  <button type="button" class="btn btn-cta" onclick="alert('¡Postulación enviada con éxito!')">Postularse</button>
-                </div>
-              </div>
-            </article>
-
+          <div class="job-list" id="vacantesList">
+            <!-- Las vacantes son renderizadas dinámicamente por vacantes.js -->
           </div>
         </section>
 
@@ -316,5 +193,37 @@
     </footer>
   </div>
 
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/vacantes.js"></script>
 </body>
 </html>

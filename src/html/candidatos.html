@@ -6,7 +6,7 @@
   <title>Tico Talent - Candidatos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
@@ -14,73 +14,46 @@
 </head>
 <body class="main-page">
 
-  <!-- ========== SIDEBAR LATERAL IZQUIERDO ========== -->
-  <aside class="sidebar" id="sidebar">
+  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
+  <header class="sidebar" id="sidebar">
     <div class="sidebar__header">
-      <a href="principal.html" class="sidebar__brand">
-        <span>💼 Tico Talent</span>
-      </a>
-      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
     </div>
 
     <nav class="sidebar__nav">
       <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Principal</span>
         <a href="principal.html" class="nav-link">
-          <span class="nav-icon">📊</span>
           <span class="nav-text">Explorar</span>
         </a>
-      </div>
-
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Gestión de Talento</span>
         <a href="vacantes.html" class="nav-link">
-          <span class="nav-icon">💼</span>
           <span class="nav-text">Vacantes</span>
           <span class="nav-badge">51</span>
         </a>
         <a href="candidatos.html" class="nav-link nav-link--active">
-          <span class="nav-icon">👤</span>
           <span class="nav-text">Candidatos</span>
         </a>
         <a href="empresas.html" class="nav-link">
-          <span class="nav-icon">🏢</span>
           <span class="nav-text">Empresas</span>
         </a>
         <a href="postulaciones.html" class="nav-link">
-          <span class="nav-icon">📄</span>
           <span class="nav-text">Mis Postulaciones</span>
-        </a>
-      </div>
-
-      <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Seguimiento</span>
-        <a href="entrevistas.html" class="nav-link">
-          <span class="nav-icon">📅</span>
-          <span class="nav-text">Entrevistas</span>
-        </a>
-        <a href="tareas.html" class="nav-link">
-          <span class="nav-icon">✅</span>
-          <span class="nav-text">Tareas</span>
-          <span class="nav-badge nav-badge--warning">1</span>
         </a>
       </div>
     </nav>
 
     <div class="sidebar__footer">
       <div class="sidebar__user-card">
-        <div class="sidebar__user-avatar">E</div>
+        <div class="sidebar__user-avatar" id="userAvatar">E</div>
         <div class="sidebar__user-info">
-          <span class="sidebar__user-name">Emily Salazar</span>
-          <span class="sidebar__user-role">Reclutadora Senior</span>
+          <span class="sidebar__user-name" id="userName">Cargando...</span>
+          <span class="sidebar__user-role" id="userRole">Reclutador</span>
         </div>
       </div>
-      <a href="login.html" class="sidebar__logout" id="btnLogout">
-        <span class="nav-icon">🚪</span>
-        <span class="nav-text">Cerrar Sesión</span>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesion</span>
       </a>
     </div>
-  </aside>
+  </header>
 
   <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
@@ -93,65 +66,7 @@
 
         <div class="main__content-body" id="contentArea">
           <section class="candidates" aria-labelledby="candidatesListTitle">
-            <div class="job-list" id="candidatesList">
-              <!-- Candidato 1 -->
-              <article class="job-card">
-                <div class="job-card__header">
-                  <div class="job-card__company-logo">👩‍💻</div>
-                  <div class="job-card__title-area">
-                    <h3 class="job-card__title">Ana Lucía Morales Brenes</h3>
-                    <div class="job-card__company-name">
-                      <span>Full Stack Developer</span> • <span>San José, Costa Rica</span>
-                    </div>
-                  </div>
-                  <span class="badge-match">⚡ 97% Match</span>
-                </div>
-                <div class="job-card__details">
-                  <span class="job-tag">🚀 5 años exp.</span>
-                  <span class="job-tag">⚡ React</span>
-                  <span class="job-tag">🟩 Node.js</span>
-                  <span class="job-tag">🐘 PostgreSQL</span>
-                  <span class="job-tag">🇬🇧 Inglés C1</span>
-                </div>
-                <div class="job-card__footer">
-                  <div>
-                    <span class="job-card__salary">Pretensión: $3,500 USD / mes</span>
-                  </div>
-                  <div class="job-card__actions">
-                    <button type="button" class="btn btn-cta">Ver Perfil Completo</button>
-                  </div>
-                </div>
-              </article>
-
-              <!-- Candidato 2 -->
-              <article class="job-card">
-                <div class="job-card__header">
-                  <div class="job-card__company-logo">👨‍💼</div>
-                  <div class="job-card__title-area">
-                    <h3 class="job-card__title">Carlos Eduardo Vargas Soto</h3>
-                    <div class="job-card__company-name">
-                      <span>DevOps & Security Specialist</span> • <span>Heredia, Costa Rica</span>
-                    </div>
-                  </div>
-                  <span class="badge-match">⚡ 92% Match</span>
-                </div>
-                <div class="job-card__details">
-                  <span class="job-tag">🚀 7 años exp.</span>
-                  <span class="job-tag">☁️ AWS</span>
-                  <span class="job-tag">☸️ Kubernetes</span>
-                  <span class="job-tag">🔒 Cybersecurity</span>
-                  <span class="job-tag">🇬🇧 Inglés C2</span>
-                </div>
-                <div class="job-card__footer">
-                  <div>
-                    <span class="job-card__salary">Pretensión: $4,800 USD / mes</span>
-                  </div>
-                  <div class="job-card__actions">
-                    <button type="button" class="btn btn-cta">Ver Perfil Completo</button>
-                  </div>
-                </div>
-              </article>
-            </div>
+            <div id="candidatesList"></div>
           </section>
         </div>
       </section>
@@ -162,5 +77,43 @@
     </footer>
   </div>
 
+  <!-- Toast -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+
+  <!-- Loading -->
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+
+  <!-- Modal genérico -->
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm -->
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/candidatos.js"></script>
 </body>
 </html>
