@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tico Talent - Notificaciones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body class="main-page">
+  <header class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
+    </div>
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section"></div>
+    </nav>
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card" style="cursor:pointer;" title="Ver mi perfil">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
+        </div>
+      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesion</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+      <div class="main__header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 class="main__title">Centro de Notificaciones</h1>
+          <p class="main__subtitle">Mantente al dia con las ultimas actualizaciones de la plataforma y tus procesos activos.</p>
+        </div>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="btnMarcarTodas">Marcar todas como leidas</button>
+          <button class="btn btn-secondary" id="btnLimpiarTodas" style="color:#b91c1c;">Limpiar todas</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;" id="notifFiltros">
+        <button class="curso-filtro curso-filtro--activo" data-tipo="todas">Todas</button>
+        <button class="curso-filtro" data-tipo="vacante">Vacantes</button>
+        <button class="curso-filtro" data-tipo="postulacion">Postulaciones</button>
+        <button class="curso-filtro" data-tipo="sistema">Sistema</button>
+        <button class="curso-filtro" data-tipo="capacitacion">Capacitacion</button>
+      </div>
+
+      <div id="notificacionesContainer" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+    </main>
+
+    <footer class="main__footer" id="mainFooter"></footer>
+  </div>
+
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Titulo</h2>
+        <button class="modal__close" id="modalClose">x</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">!</div>
+      <h3 class="confirm__title" id="confirmTitle">Esta seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta accion no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/notificaciones.js"></script>
+</body>
+</html>

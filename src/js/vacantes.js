@@ -62,7 +62,7 @@ function renderCards(lista) {
                   <span>${escapeHTML(v.empresa)}</span> • <span>${escapeHTML(v.ubicacion)}</span>
                 </div>
               </div>
-              <span class="badge-match">⚡ ${v.match}% Match</span>
+              <span class="badge-match">${v.match}% Match</span>
             </div>
 
             <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.75rem 0; line-height: 1.5;">
@@ -70,10 +70,11 @@ function renderCards(lista) {
             </p>
 
             <div class="job-card__details">
-              <span class="job-tag">📂 ${escapeHTML(v.categoria)}</span>
-              <span class="job-tag">🕒 ${escapeHTML(v.modalidad)}</span>
-              <span class="job-tag">🎯 ${escapeHTML(v.nivel)}</span>
-              <span class="job-tag">📦 Plazas: ${v.plazas}</span>
+              <span class="job-tag">${escapeHTML(v.categoria)}</span>
+              <span class="job-tag">${escapeHTML(v.modalidad)}</span>
+              <span class="job-tag">${escapeHTML(v.nivel)}</span>
+              <span class="job-tag">Jornada: ${escapeHTML(v.jornada || "Tiempo Completo")}</span>
+              <span class="job-tag">Plazas: ${v.plazas}</span>
               ${v.tags.map(t => `<span class="job-tag" style="background: var(--surface-subtle);">#${escapeHTML(t)}</span>`).join("")}
             </div>
 
@@ -85,11 +86,11 @@ function renderCards(lista) {
               
               <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
                 ${esEmpleador ? `
-                  <button type="button" class="btn btn-secondary btn-editar" data-id="${v.id}">✏️ Editar</button>
-                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️ Eliminar</button>
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${v.id}">Editar</button>
+                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Eliminar</button>
                 ` : `
                   <button type="button" class="btn btn-cta btn-postularme" data-id="${v.id}" data-title="${escapeHTML(v.titulo)}">
-                    ⚡ Postularme
+                    Postularme
                   </button>
                 `}
               </div>
@@ -253,13 +254,47 @@ async function postularseVacante(id, titulo) {
   }
 }
 
-// ── FILTROS Y BÚSQUEDA ──
+// ── FILTROS Y BÚSQUEDA DINÁMICA ──
+function actualizarContadoresFiltros() {
+  const total = vacantesAdaptadas.length;
+  
+  const countRemoto = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("remoto")).length;
+  const countHibrido = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("híbrido") || (v.modalidad || "").toLowerCase().includes("hibrido")).length;
+  const countPresencial = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("presencial")).length;
+
+  const countJunior = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("junior")).length;
+  const countMid = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("semi") || (v.nivel || "").toLowerCase().includes("mid")).length;
+  const countSenior = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("senior") && !(v.nivel || "").toLowerCase().includes("semi")).length;
+  const countLead = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("líder") || (v.nivel || "").toLowerCase().includes("lider") || (v.nivel || "").toLowerCase().includes("arquitecto")).length;
+
+  const countCompleto = vacantesAdaptadas.filter(v => (v.jornada || "").toLowerCase().includes("completo")).length;
+  const countMedio = vacantesAdaptadas.filter(v => (v.jornada || "").toLowerCase().includes("medio")).length;
+
+  const setTxt = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setTxt("countModRemoto", countRemoto);
+  setTxt("countModHibrido", countHibrido);
+  setTxt("countModPresencial", countPresencial);
+
+  setTxt("countNivelJunior", countJunior);
+  setTxt("countNivelMid", countMid);
+  setTxt("countNivelSenior", countSenior);
+  setTxt("countNivelLead", countLead);
+
+  setTxt("countJornadaCompleta", countCompleto);
+  setTxt("countJornadaMedia", countMedio);
+}
+
 function aplicarFiltros() {
   const query = document.getElementById("searchRole")?.value.toLowerCase().trim() || "";
   const location = document.getElementById("searchLocation")?.value.toLowerCase().trim() || "";
 
   const checkedModalidades = [...document.querySelectorAll('input[name="modality"]:checked')].map(c => c.value);
   const checkedNiveles = [...document.querySelectorAll('input[name="level"]:checked')].map(c => c.value);
+  const checkedJornadas = [...document.querySelectorAll('input[name="type"]:checked')].map(c => c.value);
 
   let resultado = [...vacantesAdaptadas];
 
@@ -282,14 +317,36 @@ function aplicarFiltros() {
   if (checkedModalidades.length > 0) {
     resultado = resultado.filter(v => {
       const mod = (v.modalidad || "").toLowerCase();
-      return checkedModalidades.some(m => mod.includes(m));
+      return checkedModalidades.some(m => {
+        if (m === "remoto") return mod.includes("remoto");
+        if (m === "hibrido") return mod.includes("híbrido") || mod.includes("hibrido");
+        if (m === "presencial") return mod.includes("presencial");
+        return false;
+      });
     });
   }
 
   if (checkedNiveles.length > 0) {
     resultado = resultado.filter(v => {
       const niv = (v.nivel || "").toLowerCase();
-      return checkedNiveles.some(n => niv.includes(n));
+      return checkedNiveles.some(n => {
+        if (n === "junior") return niv.includes("junior");
+        if (n === "semi-senior" || n === "mid") return niv.includes("semi") || niv.includes("mid");
+        if (n === "senior") return niv.includes("senior") && !niv.includes("semi");
+        if (n === "lider" || n === "lead") return niv.includes("líder") || niv.includes("lider") || niv.includes("arquitecto");
+        return false;
+      });
+    });
+  }
+
+  if (checkedJornadas.length > 0) {
+    resultado = resultado.filter(v => {
+      const jor = (v.jornada || "").toLowerCase();
+      return checkedJornadas.some(j => {
+        if (j === "completo") return jor.includes("completo");
+        if (j === "medio") return jor.includes("medio");
+        return false;
+      });
     });
   }
 
@@ -318,4 +375,9 @@ document.getElementById("btnResetFilters")?.addEventListener("click", () => {
   mostrarToast("Filtros restablecidos", "info");
 });
 
-cargarVacantes();
+async function inicializar() {
+  await cargarVacantes();
+  actualizarContadoresFiltros();
+}
+
+inicializar();

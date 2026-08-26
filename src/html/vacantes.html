@@ -87,24 +87,27 @@
               <button type="button" class="filter-card__reset" id="btnResetFilters">Limpiar</button>
             </div>
 
+
+
+
             <!-- Filtro Modalidad -->
             <div class="filter-group">
               <span class="filter-group__label">Modalidad</span>
               <div class="filter-options">
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="modality" value="remoto" checked>
+                  <input type="checkbox" name="modality" value="remoto">
                   <span>Remoto</span>
-                  <span class="filter-count">18</span>
+                  <span class="filter-count" id="countModRemoto">...</span>
                 </label>
                 <label class="filter-checkbox">
                   <input type="checkbox" name="modality" value="hibrido">
                   <span>Híbrido</span>
-                  <span class="filter-count">24</span>
+                  <span class="filter-count" id="countModHibrido">...</span>
                 </label>
                 <label class="filter-checkbox">
                   <input type="checkbox" name="modality" value="presencial">
                   <span>Presencial</span>
-                  <span class="filter-count">9</span>
+                  <span class="filter-count" id="countModPresencial">...</span>
                 </label>
               </div>
             </div>
@@ -116,22 +119,22 @@
                 <label class="filter-checkbox">
                   <input type="checkbox" name="level" value="junior">
                   <span>Junior</span>
-                  <span class="filter-count">12</span>
+                  <span class="filter-count" id="countNivelJunior">...</span>
                 </label>
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="level" value="mid" checked>
-                  <span>Mid / Semi-Senior</span>
-                  <span class="filter-count">29</span>
+                  <input type="checkbox" name="level" value="semi-senior">
+                  <span>Semi-Senior</span>
+                  <span class="filter-count" id="countNivelMid">...</span>
                 </label>
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="level" value="senior" checked>
+                  <input type="checkbox" name="level" value="senior">
                   <span>Senior</span>
-                  <span class="filter-count">15</span>
+                  <span class="filter-count" id="countNivelSenior">...</span>
                 </label>
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="level" value="lead">
-                  <span>Lead / Manager</span>
-                  <span class="filter-count">5</span>
+                  <input type="checkbox" name="level" value="lider">
+                  <span>Líder / Arquitecto</span>
+                  <span class="filter-count" id="countNivelLead">...</span>
                 </label>
               </div>
             </div>
@@ -141,14 +144,14 @@
               <span class="filter-group__label">Tipo de Jornada</span>
               <div class="filter-options">
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="type" value="full-time" checked>
+                  <input type="checkbox" name="type" value="completo">
                   <span>Tiempo Completo</span>
-                  <span class="filter-count">42</span>
+                  <span class="filter-count" id="countJornadaCompleta">...</span>
                 </label>
                 <label class="filter-checkbox">
-                  <input type="checkbox" name="type" value="part-time">
+                  <input type="checkbox" name="type" value="medio">
                   <span>Medio Tiempo</span>
-                  <span class="filter-count">6</span>
+                  <span class="filter-count" id="countJornadaMedia">...</span>
                 </label>
               </div>
             </div>

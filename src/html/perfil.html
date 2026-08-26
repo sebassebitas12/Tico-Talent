@@ -53,7 +53,7 @@
         <div style="background: var(--surface-card); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.75rem;">
           <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Modo Demo:</span>
           <button type="button" class="btn btn-secondary" id="btnToggleRol" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; font-weight: 600;">
-            🔄 Cambiar Rol (Candidato ⇄ Empresa)
+            Cambiar Rol (Candidato / Empresa)
           </button>
         </div>
       </div>
@@ -67,7 +67,7 @@
           <div style="flex: 1; min-width: 240px;">
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
               <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0;" id="heroName">Nombre de Usuario</h2>
-              <span class="badge-match" id="heroRoleBadge" style="background: #f0ebf5; color: var(--primary-purple);">👤 Rol</span>
+              <span class="badge-match" id="heroRoleBadge" style="background: #f0ebf5; color: var(--primary-purple);">Rol</span>
             </div>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="heroSubtitle">Detalle del perfil</p>
           </div>
@@ -81,9 +81,17 @@
           <!-- Contenedor renderizado por perfil.js -->
           <div id="perfilFieldsContainer"></div>
 
-          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
-            <button type="button" class="btn btn-secondary" id="btnRestablecer">Descartar</button>
-            <button type="submit" class="btn btn-cta" id="btnGuardarPerfil">💾 Guardar Configuración</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+            <div>
+              <button type="button" class="btn btn-secondary" id="btnExportarCV" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Generar / Descargar CV
+              </button>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <button type="button" class="btn btn-secondary" id="btnRestablecer">Descartar</button>
+              <button type="submit" class="btn btn-cta" id="btnGuardarPerfil">Guardar Configuración</button>
+            </div>
           </div>
 
         </form>

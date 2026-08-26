@@ -53,15 +53,15 @@ function renderCards(lista) {
                 </div>
               </div>
               <span class="badge-match" style="background-color: #f0ebf5; color: var(--primary-purple); border-color: rgba(83, 16, 104, 0.2);">
-                ⭐ Top Employer CR
+                Empresa Destacada CR
               </span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">👥 ${escapeHTML(emp.colaboradores)}</span>
-              <span class="job-tag">💼 ${emp.vacantesActivas} Vacantes Activas</span>
-              <span class="job-tag">⭐ ${emp.rating} / 5.0</span>
-              <span class="job-tag">🆔 Código Cart #${emp.id}</span>
+              <span class="job-tag">${escapeHTML(emp.colaboradores)}</span>
+              <span class="job-tag">${emp.vacantesActivas} Vacantes Activas</span>
+              <span class="job-tag">Calificación: ${Number(emp.rating).toFixed(1)} / 5.0</span>
+              <span class="job-tag">Código #${emp.id}</span>
             </div>
 
             <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0;">
@@ -70,16 +70,16 @@ function renderCards(lista) {
 
             <div class="job-card__footer">
               <div>
-                <span class="job-card__salary" style="font-size: 0.85rem; color: var(--color-success);">🟢 Convenio Activo</span>
+                <span class="job-card__salary" style="font-size: 0.85rem; color: var(--color-success);">Convenio Activo</span>
                 <span class="job-card__date" style="display: block; font-size: 0.8rem;">Parque Empresarial / Zona Franca</span>
               </div>
-              <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <a href="vacantes.html" class="btn btn-secondary" style="text-decoration: none;">Ver Vacantes</a>
-                ${esEmpleador ? `
-                  <button type="button" class="btn btn-secondary btn-editar" data-id="${emp.id}">✏️</button>
-                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${emp.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
-                ` : ''}
-              </div>
+
+              ${esEmpleador ? `
+                <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${emp.id}">Editar</button>
+                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${emp.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Eliminar</button>
+                </div>
+              ` : ''}
             </div>
           </article>
         `;

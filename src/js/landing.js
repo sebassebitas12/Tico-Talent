@@ -1,5 +1,18 @@
 // src/js/landing.js
 // Interacciones de la Landing Page pública
+import { initChatbot } from "./chatbot.js";
+
+// Inicializar Asistente TicoBot AI
+initChatbot();
+
+// Manejo del botón "Crear CV Gratis"
+document.getElementById("btnCrearCVLanding")?.addEventListener("click", (e) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    e.preventDefault();
+    window.location.href = "src/html/perfil.html";
+  }
+});
 
 document.getElementById("heroSearchBtn")?.addEventListener("click", () => {
   const job = document.getElementById("heroSearchJob")?.value.trim() || "";
