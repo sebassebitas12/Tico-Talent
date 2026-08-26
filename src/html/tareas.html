@@ -4,23 +4,70 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tico Talent - Tareas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
 </head>
 <body class="main-page">
-  <header class="main__header" id="mainHeader">
-    <a class="main__brand" href="principal.html">Tico Talent</a>
-    <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
-      <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link" href="principal.html">Dashboard</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="vacantes.html">Vacantes</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="empresas.html">Empresas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="entrevistas.html">Entrevistas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="tareas.html" aria-current="page">Tareas</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main class="main" id="main"><section class="main__content" id="mainContent" aria-labelledby="viewTitle"><header class="main__content-header"><h1 class="main__title" id="viewTitle">Tareas</h1><p class="main__description">Seguimiento de las tareas pendientes.</p></header><div class="main__content-body" id="contentArea"><section class="tasks" aria-labelledby="tasksListTitle"><h2 id="tasksListTitle">Listado de tareas</h2><div class="tasks__list" id="tasksList"></div></section></div></section></main>
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+
+  <header id="appNavbar"></header>
+
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+      <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+        <header class="main__content-header">
+          <h1 class="main__title" id="viewTitle">Gestion de Tareas</h1>
+          <p class="main__description">Actividades y seguimiento de procesos de seleccion de personal.</p>
+        </header>
+
+        <div class="main__content-body" id="contentArea">
+          <section class="tasks" aria-labelledby="tasksListTitle">
+            <h2 id="tasksListTitle" class="sr-only">Listado de tareas</h2>
+            <div class="job-list" id="tasksList"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main__footer" id="mainFooter">
+      <p class="main__footer-text">&copy; 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    </footer>
+  </div>
+
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Titulo</h2>
+        <button class="modal__close" id="modalClose">X</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">!</div>
+      <h3 class="confirm__title" id="confirmTitle">Estas seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta accion no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/tareas.js"></script>
 </body>
 </html>

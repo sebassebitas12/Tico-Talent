@@ -3,39 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tico Talent - Dashboard</title>
+  <title>Tico Talent - Panel Principal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
 </head>
 <body class="main-page">
-  <header class="main__header" id="mainHeader">
-    <a class="main__brand" href="principal.html">Tico Talent</a>
-    <nav class="main__navigation" id="mainNavigation" aria-label="Navegación principal">
-      <ul class="main__navigation-list">
-        <li class="main__navigation-item"><a class="main__navigation-link main__navigation-link--active" href="principal.html" aria-current="page">Dashboard</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="candidatos.html">Candidatos</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="vacantes.html">Vacantes</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="empresas.html">Empresas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="postulaciones.html">Postulaciones</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="entrevistas.html">Entrevistas</a></li>
-        <li class="main__navigation-item"><a class="main__navigation-link" href="tareas.html">Tareas</a></li>
-      </ul>
-    </nav>
-    <div class="main__user" id="currentUser" aria-label="Usuario actual"><span class="main__user-name" id="userName">Usuario</span><span class="main__user-role" id="userRole">Reclutador</span></div>
-  </header>
-  <main class="main" id="main">
-    <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-      <header class="main__content-header"><h1 class="main__title" id="viewTitle">Dashboard</h1><p class="main__description">Resumen general de Tico Talent.</p></header>
-      <div class="main__content-body" id="contentArea">
-        <section class="dashboard__summary" aria-labelledby="summaryTitle">
-          <h2 id="summaryTitle">Resumen</h2>
-          <dl class="dashboard__summary-list">
-            <div class="dashboard__summary-item"><dt>Candidatos</dt><dd id="candidatesTotal">0</dd></div>
-            <div class="dashboard__summary-item"><dt>Vacantes activas</dt><dd id="vacanciesTotal">0</dd></div>
-            <div class="dashboard__summary-item"><dt>Empresas</dt><dd id="companiesTotal">0</dd></div>
-          </dl>
-        </section>
-      </div>
-    </section>
-  </main>
-  <footer class="main__footer" id="mainFooter"><p class="main__footer-text">Tico Talent</p></footer>
+
+  <header id="appNavbar"></header>
+
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+
+      <section class="hero" aria-labelledby="heroTitle">
+        <h1 class="hero__title" id="heroTitle">El punto de encuentro del mejor talento en Costa Rica</h1>
+        <p class="hero__subtitle">Descubre oportunidades laborales disenadas a la medida de tu perfil y habilidades tecnicas.</p>
+        
+        <form class="hero-search" action="vacantes.html" method="GET" role="search">
+          <div class="hero-search__group">
+            <input 
+              type="text" 
+              class="hero-search__input" 
+              name="q" 
+              placeholder="Puesto, tecnologia o empresa..." 
+              aria-label="Buscar cargo"
+            >
+          </div>
+          <div class="hero-search__group">
+            <input 
+              type="text" 
+              class="hero-search__input" 
+              name="location" 
+              placeholder="San Jose, Alajuela, Remoto..." 
+              aria-label="Ubicacion"
+            >
+          </div>
+          <button type="submit" class="hero-search__btn">
+            Explorar Vacantes
+          </button>
+        </form>
+      </section>
+
+      <section class="summary" aria-labelledby="summaryTitle">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <h2 id="summaryTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Resumen de la Plataforma</h2>
+        </div>
+
+        <div class="summary-list">
+          <div class="summary-item">
+            <dt>Candidatos Registrados</dt>
+            <dd id="candidatesTotal">...</dd>
+          </div>
+          <div class="summary-item">
+            <dt>Vacantes Disponibles</dt>
+            <dd id="vacanciesTotal">...</dd>
+          </div>
+          <div class="summary-item">
+            <dt>Empresas Activas</dt>
+            <dd id="companiesTotal">...</dd>
+          </div>
+          <div class="summary-item">
+            <dt>Postulaciones</dt>
+            <dd id="applicationsTotal">...</dd>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="featuredJobsTitle" style="margin-top: 2rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <div>
+            <h2 id="featuredJobsTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Modulos Rapidos</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem;">Accede a las funcionalidades principales segun tu rol.</p>
+          </div>
+          <a href="vacantes.html" style="font-size: 0.9rem; font-weight: 700; color: var(--primary-purple); text-decoration: none;">Ver vacantes</a>
+        </div>
+
+        <div class="stats-grid" id="quickModules">
+          <!-- Rendered dynamically by principal.js based on role -->
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="main__footer" id="mainFooter">
+      <p class="main__footer-text">&copy; 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    </footer>
+  </div>
+
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando metricas...</p>
+  </div>
+
+  <script type="module" src="../js/principal.js"></script>
 </body>
 </html>
