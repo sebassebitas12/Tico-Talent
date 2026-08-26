@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JobConnect - Panel</title>
+  <title>Tico Talent - Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/main.css">
@@ -15,42 +18,42 @@
   <aside class="sidebar" id="sidebar">
     
     <div class="sidebar__header">
-      <span class="sidebar__logo-text">💼 TalentTico</span>
-      <button class="sidebar__toggle" id="sidebarToggle">☰</button>
+      <span class="sidebar__logo-text">ðŸ’¼ Tico Talent</span>
+      <button class="sidebar__toggle" id="sidebarToggle">â˜°</button>
     </div>
 
     <nav class="sidebar__nav">
       
       <div class="sidebar__nav-section">
         <span class="sidebar__nav-title">Principal</span>
-        <a href="principal.html" class="nav-link nav-link--active" data-view="dashboard">
-          <span class="nav-icon">📊</span>
-          <span class="nav-text">Dashboard</span>
+        <a href="src/html/principal.html" class="nav-link nav-link--active" data-view="inicio">
+          <span class="nav-icon">ðŸ“Š</span>
+          <span class="nav-text">Inicio</span>
         </a>
       </div>
 
       <div class="sidebar__nav-section">
-        <span class="sidebar__nav-title">Gestión</span>
+        <span class="sidebar__nav-title">GestiÃ³n</span>
         
-        <a href="candidatos.html" class="nav-link" data-view="candidatos">
-          <span class="nav-icon">👤</span>
+        <a href="src/html/candidatos.html" class="nav-link" data-view="candidatos">
+          <span class="nav-icon">ðŸ‘¤</span>
           <span class="nav-text">Candidatos</span>
           <span class="nav-badge" id="badgeCandidatos"></span>
         </a>
 
-        <a href="vacantes.html" class="nav-link" data-view="vacantes">
-          <span class="nav-icon">💼</span>
+        <a href="src/html/vacantes.html" class="nav-link" data-view="vacantes">
+          <span class="nav-icon">ðŸ’¼</span>
           <span class="nav-text">Vacantes</span>
           <span class="nav-badge" id="badgeVacantes"></span>
         </a>
 
-        <a href="empresas.html" class="nav-link" data-view="empresas">
-          <span class="nav-icon">🏢</span>
+        <a href="src/html/empresas.html" class="nav-link" data-view="empresas">
+          <span class="nav-icon">ðŸ¢</span>
           <span class="nav-text">Empresas</span>
         </a>
 
-        <a href="postulaciones.html" class="nav-link" data-view="postulaciones">
-          <span class="nav-icon">📄</span>
+        <a href="src/html/postulaciones.html" class="nav-link" data-view="postulaciones">
+          <span class="nav-icon">ðŸ“„</span>
           <span class="nav-text">Postulaciones</span>
         </a>
       </div>
@@ -58,13 +61,13 @@
       <div class="sidebar__nav-section">
         <span class="sidebar__nav-title">Seguimiento</span>
         
-        <a href="entrevistas.html" class="nav-link" data-view="entrevistas">
-          <span class="nav-icon">📅</span>
+        <a href="src/html/entrevistas.html" class="nav-link" data-view="entrevistas">
+          <span class="nav-icon">ðŸ“…</span>
           <span class="nav-text">Entrevistas</span>
         </a>
 
-        <a href="tareas.html" class="nav-link" data-view="tareas">
-          <span class="nav-icon">✅</span>
+        <a href="src/html/tareas.html" class="nav-link" data-view="tareas">
+          <span class="nav-icon">âœ…</span>
           <span class="nav-text">Tareas</span>
           <span class="nav-badge nav-badge--warning" id="badgeTareas"></span>
         </a>
@@ -73,10 +76,10 @@
     </nav>
 
     <div class="sidebar__footer">
-      <button class="sidebar__logout" id="btnLogout">
-        <span class="nav-icon">🚪</span>
-        <span class="nav-text">Cerrar Sesión</span>
-      </button>
+      <a href="src/html/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-icon">ðŸšª</span>
+        <span class="nav-text">Cerrar SesiÃ³n</span>
+      </a>
     </div>
 
   </aside>
@@ -86,34 +89,34 @@
     
     <header class="main__header">
       <div class="main__header-left">
-        <h1 class="main__title" id="viewTitle">Dashboard</h1>
+        <h1 class="main__title" id="viewTitle">Inicio</h1>
       </div>
       <div class="main__header-right">
-        <div class="main__user">
-          <div class="main__user-avatar" id="userAvatar">E</div>
-          <div class="main__user-info">
+        <div class="main__user" id="currentUser" aria-label="Usuario actual">
+          <div class="main__user-info-text">
             <span class="main__user-name" id="userName">Emily</span>
-            <span class="main__user-role" id="userRole">Reclutador</span>
+            <span class="main__user-role" id="userRole">Reclutadora</span>
           </div>
+          <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-purple), var(--action-pink)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; box-shadow: var(--shadow-sm);">E</div>
         </div>
       </div>
     </header>
 
     <section class="main__content" id="mainContent">
-      <!-- Contenido dinámico -->
+      <!-- Contenido dinÃ¡mico -->
     </section>
 
   </main>
 
-  <!-- ========== MODAL GENÉRICO ========== -->
-  <div class="modal-overlay" id="modalOverlay">
+  <!-- ========== MODAL GENÃ‰RICO ========== -->
+  <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
       <div class="modal__header" id="modalHeader">
-        <h2 class="modal__title" id="modalTitle">Título</h2>
-        <button class="modal__close" id="modalClose">✕</button>
+        <h2 class="modal__title" id="modalTitle">TÃ­tulo</h2>
+        <button class="modal__close" id="modalClose">âœ•</button>
       </div>
       <div class="modal__body" id="modalBody">
-        <!-- Formulario dinámico -->
+        <!-- Formulario dinÃ¡mico -->
       </div>
       <div class="modal__footer" id="modalFooter">
         <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
@@ -122,12 +125,12 @@
     </div>
   </div>
 
-  <!-- ========== MODAL CONFIRMACIÓN ========== -->
-  <div class="confirm-overlay" id="confirmOverlay">
+  <!-- ========== MODAL CONFIRMACIÃ“N ========== -->
+  <div class="confirm-overlay d-none" id="confirmOverlay" >
     <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger" id="confirmIcon">⚠️</div>
-      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
-      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__icon confirm__icon--danger" id="confirmIcon">âš ï¸</div>
+      <h3 class="confirm__title" id="confirmTitle">Â¿EstÃ¡s seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acciÃ³n no se puede deshacer.</p>
       <div class="confirm__actions">
         <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
         <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
@@ -144,6 +147,5 @@
     <p class="loading__text">Cargando...</p>
   </div>
 
-  <script type="module" src="js/app.js"></script>
-</body>
+  </body>
 </html>
