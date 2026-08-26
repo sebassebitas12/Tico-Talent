@@ -1364,7 +1364,7 @@ body.main-page, body.app {
 /* Lado izquierdo - Ilustracion */
 .login-split__left {
   flex: 1;
-  background: linear-gradient(160deg, var(--secondary-navy) 0%, #1a1a3e 40%, var(--primary-purple) 100%);
+  background: linear-gradient(160deg, #f0f4ff 0%, #e8edff 50%, #dde4ff 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1381,7 +1381,7 @@ body.main-page, body.app {
   right: -20%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(216, 0, 110, 0.12) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(83, 16, 104, 0.06) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -1393,7 +1393,7 @@ body.main-page, body.app {
   left: -15%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
+  background: radial-gradient(circle, rgba(216, 0, 110, 0.04) 0%, transparent 60%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -1409,7 +1409,7 @@ body.main-page, body.app {
   font-size: 1.4rem;
   font-weight: 800;
   font-style: italic;
-  color: white;
+  color: var(--primary-purple);
   text-decoration: none;
   letter-spacing: -0.02em;
 }
@@ -1422,12 +1422,10 @@ body.main-page, body.app {
 }
 
 .login-split__graphic {
-  margin-bottom: 2.5rem;
-}
-
-.login-split__svg {
-  width: 340px;
-  height: 270px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-split__tagline {
@@ -1435,14 +1433,14 @@ body.main-page, body.app {
   font-size: 1.8rem;
   font-weight: 800;
   font-style: italic;
-  color: white;
+  color: var(--secondary-navy);
   line-height: 1.2;
   margin-bottom: 0.75rem;
 }
 
 .login-split__tagline-desc {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-muted);
   line-height: 1.5;
 }
 
@@ -1450,7 +1448,7 @@ body.main-page, body.app {
   position: absolute;
   bottom: 1.5rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
 }
 
 /* Lado derecho - Formulario */
@@ -1517,7 +1515,7 @@ body.main-page, body.app {
   }
 
   .login-split__left {
-    min-height: 280px;
+    min-height: 320px;
     padding: 2rem 1.5rem;
   }
 
@@ -1528,8 +1526,9 @@ body.main-page, body.app {
     margin-bottom: 1rem;
   }
 
-  .login-split__graphic {
-    display: none;
+  .login-split__graphic dotlottie-player {
+    width: 280px !important;
+    height: 280px !important;
   }
 
   .login-split__tagline {

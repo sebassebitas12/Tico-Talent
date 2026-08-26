@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="src/css/reset.css">
   <link rel="stylesheet" href="src/css/main.css">
   <link rel="stylesheet" href="src/css/components.css">
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.0/dist/dotlottie-player.mjs" type="module"></script>
 </head>
 <body id="loginPage">
 
@@ -23,78 +24,17 @@
       </div>
       <div class="login-split__illustration">
         <div class="login-split__graphic">
-          <svg class="login-split__svg" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Escritorio -->
-            <rect x="100" y="280" width="300" height="12" rx="6" fill="rgba(255,255,255,0.18)"/>
-            <rect x="130" y="292" width="8" height="60" rx="4" fill="rgba(255,255,255,0.1)"/>
-            <rect x="362" y="292" width="8" height="60" rx="4" fill="rgba(255,255,255,0.1)"/>
-
-            <!-- Monitor -->
-            <rect x="170" y="170" width="160" height="110" rx="10" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
-            <rect x="180" y="180" width="140" height="85" rx="4" fill="rgba(216,0,110,0.12)"/>
-
-            <!-- Pantalla - formulario login -->
-            <rect x="200" y="198" width="100" height="10" rx="3" fill="rgba(255,255,255,0.25)"/>
-            <rect x="200" y="214" width="100" height="14" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-            <circle cx="210" cy="221" r="3" fill="rgba(255,255,255,0.2)"/>
-            <rect x="216" y="218" width="40" height="6" rx="2" fill="rgba(255,255,255,0.15)"/>
-            <rect x="200" y="234" width="100" height="14" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-            <circle cx="210" cy="241" r="3" fill="rgba(255,255,255,0.2)"/>
-            <rect x="216" y="238" width="30" height="6" rx="2" fill="rgba(255,255,255,0.15)"/>
-            <rect x="210" y="256" width="80" height="12" rx="6" fill="rgba(216,0,110,0.4)"/>
-            <rect x="232" y="259" width="36" height="6" rx="2" fill="rgba(255,255,255,0.4)"/>
-
-            <!-- Soporte monitor -->
-            <rect x="240" y="280" width="20" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
-            <rect x="230" y="286" width="40" height="6" rx="3" fill="rgba(255,255,255,0.1)"/>
-
-            <!-- Teclado -->
-            <rect x="195" y="294" width="110" height="10" rx="4" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-
-            <!-- Persona - cabeza -->
-            <circle cx="250" cy="100" r="32" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-
-            <!-- Pelo -->
-            <path d="M218 90 Q220 65 250 62 Q280 65 282 90 Q278 78 250 76 Q222 78 218 90Z" fill="rgba(255,255,255,0.2)"/>
-
-            <!-- Ojos -->
-            <circle cx="238" cy="98" r="4" fill="rgba(255,255,255,0.5)"/>
-            <circle cx="262" cy="98" r="4" fill="rgba(255,255,255,0.5)"/>
-            <circle cx="239" cy="97" r="2" fill="rgba(12,35,64,0.6)"/>
-            <circle cx="263" cy="97" r="2" fill="rgba(12,35,64,0.6)"/>
-
-            <!-- Sonrisa -->
-            <path d="M240 110 Q250 118 260 110" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-            <!-- Cuerpo / camisa -->
-            <path d="M220 130 Q215 155 210 195 L290 195 Q285 155 280 130 Q265 140 250 142 Q235 140 220 130Z" fill="rgba(216,0,110,0.25)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-
-            <!-- Brazo izquierdo -->
-            <path d="M210 160 Q185 185 195 270 Q198 280 205 280" stroke="rgba(255,255,255,0.2)" stroke-width="10" fill="none" stroke-linecap="round"/>
-
-            <!-- Brazo derecho -->
-            <path d="M290 160 Q315 185 305 270 Q302 280 295 280" stroke="rgba(255,255,255,0.2)" stroke-width="10" fill="none" stroke-linecap="round"/>
-
-            <!-- Manos sobre teclado -->
-            <ellipse cx="215" cy="285" rx="12" ry="8" fill="rgba(255,255,255,0.15)"/>
-            <ellipse cx="285" cy="285" rx="12" ry="8" fill="rgba(255,255,255,0.15)"/>
-
-            <!-- Mouse -->
-            <ellipse cx="330" cy="295" rx="10" ry="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-
-            <!-- Decoraciones -->
-            <circle cx="100" cy="120" r="40" fill="rgba(255,255,255,0.04)"/>
-            <circle cx="400" cy="200" r="30" fill="rgba(216,0,110,0.06)"/>
-            <circle cx="80" cy="280" r="20" fill="rgba(255,255,255,0.03)"/>
-
-            <!-- Items de escritorio -->
-            <rect x="120" y="265" width="16" height="15" rx="3" fill="rgba(255,255,255,0.1)"/>
-            <rect x="370" y="260" width="20" height="20" rx="4" fill="rgba(255,255,255,0.08)"/>
-            <circle cx="380" cy="267" r="5" fill="rgba(0,163,92,0.3)"/>
-          </svg>
+          <dotlottie-player
+            src="https://assets-v2.lottiefiles.com/a/676f02b0-1189-11ee-9780-23510fa549e4/RNBvkrC0Mk.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 400px; height: 400px"
+            loop
+            autoplay
+          ></dotlottie-player>
         </div>
         <h2 class="login-split__tagline">Encuentra tu proximo empleo ideal</h2>
-        <p class="login-split__tagline-desc"> Miles de oportunidades laborales en Costa Rica te esperan</p>
+        <p class="login-split__tagline-desc">Miles de oportunidades laborales en Costa Rica te esperan</p>
       </div>
       <div class="login-split__footer-text">
         &copy; 2026 Tico Talent
