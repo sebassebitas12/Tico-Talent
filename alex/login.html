@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tico Talent - Iniciar Sesión</title>
+  <title>Tico Talent - Iniciar Sesion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
 
   <div class="login-split">
 
-    <!-- ========== LADO IZQUIERDO - ILUSTRACION ========== -->
     <div class="login-split__left">
       <div class="login-split__brand">
         <a href="index.html" class="login-split__logo">Tico Talent</a>
@@ -33,7 +32,7 @@
             autoplay
           ></dotlottie-player>
         </div>
-        <h2 class="login-split__tagline">Encuentra tu próximo empleo ideal</h2>
+        <h2 class="login-split__tagline">Encuentra tu proximo empleo ideal</h2>
         <p class="login-split__tagline-desc">Miles de oportunidades laborales en Costa Rica te esperan</p>
       </div>
       <div class="login-split__footer-text">
@@ -41,7 +40,6 @@
       </div>
     </div>
 
-    <!-- ========== LADO DERECHO - FORMULARIO ========== -->
     <div class="login-split__right">
       <div class="login-split__form-wrapper">
 
@@ -71,28 +69,16 @@
           </div>
 
           <div class="login__field">
-            <label class="login__label" for="loginPassword">Contraseña</label>
-            <div class="login__input-wrapper">
-              <input
-                class="login__input login__input--password"
-                type="password"
-                id="loginPassword"
-                name="password"
-                placeholder="Tu contraseña"
-                autocomplete="current-password"
-                required
-              >
-              <button type="button" class="login__toggle-password" id="togglePassword" aria-label="Mostrar contraseña">
-                <svg class="eye-icon eye-icon--open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <svg class="eye-icon eye-icon--closed d-none" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
-                </svg>
-              </button>
-            </div>
+            <label class="login__label" for="loginPassword">Contrasena</label>
+            <input
+              class="login__input"
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Tu contrasena"
+              autocomplete="current-password"
+              required
+            >
           </div>
 
           <div class="login__error d-none" id="loginError"></div>
@@ -117,7 +103,7 @@
         </form>
 
         <div class="login__links">
-          <a href="#" class="login__link" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+          <a href="#" class="login__link" id="forgotPasswordLink">Olvidaste tu contrasena?</a>
           <span class="login__links-divider">|</span>
           <a href="#" class="login__link login__link--register" id="registerLink">No tienes cuenta? Registrate aqui</a>
         </div>
@@ -125,18 +111,12 @@
         <div class="login__footer">
           <p class="login__demo-title">Demo - Click para auto-rellenar</p>
           <div class="login__demo-users">
-            <div class="login__demo-user" data-role="empleador" id="demoEmpleador">
-              <span class="login__demo-role">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                Empleador
-              </span>
+            <div class="login__demo-user" data-role="empresa" id="demoEmpresa">
+              <span class="login__demo-role">Empresa</span>
               <code>carlos</code> / <code>carlos123</code>
             </div>
             <div class="login__demo-user" data-role="solicitante" id="demoSolicitante">
-              <span class="login__demo-role">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                Solicitante
-              </span>
+              <span class="login__demo-role">Solicitante</span>
               <code>maria</code> / <code>maria123</code>
             </div>
           </div>
@@ -147,15 +127,14 @@
 
   </div>
 
-  <!-- ========== MODAL OLVIDO CONTRASENA ========== -->
   <div class="modal-overlay d-none" id="forgotModal">
     <div class="modal">
       <div class="modal__header">
-        <h2 class="modal__title">Recuperar contraseña</h2>
-        <button class="modal__close" id="closeForgotModal">&#x2715;</button>
+        <h2 class="modal__title">Recuperar contrasena</h2>
+        <button class="modal__close" id="closeForgotModal">X</button>
       </div>
       <div class="modal__body">
-        <p class="login__modal-text">Ingresa tu correo electronico y te enviaremos las instrucciones para recuperar tu contraseña.</p>
+        <p class="login__modal-text">Ingresa tu correo electronico y te enviaremos las instrucciones para recuperar tu contrasena.</p>
         <form id="forgotForm">
           <div class="login__field">
             <label class="login__label" for="forgotEmail">Correo electronico</label>
@@ -167,12 +146,11 @@
     </div>
   </div>
 
-  <!-- ========== MODAL REGISTRO ========== -->
   <div class="modal-overlay d-none" id="registerModal">
     <div class="modal">
       <div class="modal__header">
         <h2 class="modal__title">Crear cuenta</h2>
-        <button class="modal__close" id="closeRegisterModal">&#x2715;</button>
+        <button class="modal__close" id="closeRegisterModal">X</button>
       </div>
       <div class="modal__body">
         <form id="registerForm">
@@ -189,8 +167,8 @@
             <input class="login__input" type="text" id="regUser" placeholder="Elige un usuario" required>
           </div>
           <div class="login__field">
-            <label class="login__label" for="regPass">Contraseña</label>
-            <input class="login__input" type="password" id="regPass" placeholder="Mínimo 6 caracteres" required minlength="6">
+            <label class="login__label" for="regPass">Contrasena</label>
+            <input class="login__input" type="password" id="regPass" placeholder="Minimo 6 caracteres" required minlength="6">
           </div>
           <div class="login__field">
             <label class="login__label">Rol</label>
@@ -198,8 +176,8 @@
               <button type="button" class="role-card role-card--sm" data-reg-role="solicitante">
                 <span class="role-card__title">Solicitante</span>
               </button>
-              <button type="button" class="role-card role-card--sm" data-reg-role="empleador">
-                <span class="role-card__title">Empleador</span>
+              <button type="button" class="role-card role-card--sm" data-reg-role="empresa">
+                <span class="role-card__title">Empresa</span>
               </button>
             </div>
             <input type="hidden" id="regRole" value="solicitante">
@@ -210,7 +188,6 @@
     </div>
   </div>
 
-  <!-- ========== TOASTS ========== -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script type="module" src="src/js/login.js"></script>
