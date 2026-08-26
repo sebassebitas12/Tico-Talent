@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tico Talent - Iniciar Sesion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/variables.css">
+  <link rel="stylesheet" href="src/css/reset.css">
+  <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/components.css">
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.0/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+<body id="loginPage">
+
+  <div class="login-split">
+
+    <div class="login-split__left">
+      <div class="login-split__brand">
+        <a href="index.html" class="login-split__logo">Tico Talent</a>
+      </div>
+      <div class="login-split__illustration">
+        <div class="login-split__graphic">
+          <dotlottie-player
+            src="https://assets-v2.lottiefiles.com/a/676f02b0-1189-11ee-9780-23510fa549e4/RNBvkrC0Mk.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 400px; height: 400px"
+            loop
+            autoplay
+          ></dotlottie-player>
+        </div>
+        <h2 class="login-split__tagline">Encuentra tu proximo empleo ideal</h2>
+        <p class="login-split__tagline-desc">Miles de oportunidades laborales en Costa Rica te esperan</p>
+      </div>
+      <div class="login-split__footer-text">
+        &copy; 2026 Tico Talent
+      </div>
+    </div>
+
+    <div class="login-split__right">
+      <div class="login-split__form-wrapper">
+
+        <a href="index.html" class="login-split__back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Volver al inicio
+        </a>
+
+        <div class="login-split__header">
+          <h1 class="login-split__title">Bienvenido</h1>
+          <p class="login-split__subtitle">Inicia sesion en tu cuenta para continuar</p>
+        </div>
+
+        <form class="login__form" id="loginForm" autocomplete="off">
+
+          <div class="login__field">
+            <label class="login__label" for="loginUser">Usuario</label>
+            <input
+              class="login__input"
+              type="text"
+              id="loginUser"
+              name="username"
+              placeholder="Tu usuario"
+              autocomplete="username"
+              required
+            >
+          </div>
+
+          <div class="login__field">
+            <label class="login__label" for="loginPassword">Contrasena</label>
+            <input
+              class="login__input"
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Tu contrasena"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <div class="login__error d-none" id="loginError"></div>
+
+          <div class="login__btn-wrapper">
+            <button class="login-btn-gradient" type="submit" id="btnLogin">
+              <span class="login-btn-gradient__shadow"></span>
+              <span class="login-btn-gradient__edge"></span>
+              <span class="login-btn-gradient__front">
+                Iniciar Sesion
+                <svg viewBox="0 0 20 20" fill="currentColor" class="login-btn-gradient__icon">
+                  <path clip-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+                </svg>
+              </span>
+            </button>
+            <div class="loader-wrapper d-none" id="loginLoader">
+              <div class="loader-ring"></div>
+              <span class="loader-text">Ingresando...</span>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="login__links">
+          <a href="#" class="login__link" id="forgotPasswordLink">Olvidaste tu contrasena?</a>
+          <span class="login__links-divider">|</span>
+          <a href="#" class="login__link login__link--register" id="registerLink">No tienes cuenta? Registrate aqui</a>
+        </div>
+
+        <div class="login__footer">
+          <p class="login__demo-title">Demo - Click para auto-rellenar</p>
+          <div class="login__demo-users">
+            <div class="login__demo-user" data-role="empresa" id="demoEmpresa">
+              <span class="login__demo-role">Empresa</span>
+              <code>carlos</code> / <code>carlos123</code>
+            </div>
+            <div class="login__demo-user" data-role="solicitante" id="demoSolicitante">
+              <span class="login__demo-role">Solicitante</span>
+              <code>maria</code> / <code>maria123</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-overlay d-none" id="forgotModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">Recuperar contrasena</h2>
+        <button class="modal__close" id="closeForgotModal">X</button>
+      </div>
+      <div class="modal__body">
+        <p class="login__modal-text">Ingresa tu correo electronico y te enviaremos las instrucciones para recuperar tu contrasena.</p>
+        <form id="forgotForm">
+          <div class="login__field">
+            <label class="login__label" for="forgotEmail">Correo electronico</label>
+            <input class="login__input" type="email" id="forgotEmail" placeholder="tu@email.com" required>
+          </div>
+          <button class="btn btn--primary login__modal-btn" type="submit">Enviar instrucciones</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay d-none" id="registerModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h2 class="modal__title">Crear cuenta</h2>
+        <button class="modal__close" id="closeRegisterModal">X</button>
+      </div>
+      <div class="modal__body">
+        <form id="registerForm">
+          <div class="login__field">
+            <label class="login__label" for="regName">Nombre completo</label>
+            <input class="login__input" type="text" id="regName" placeholder="Tu nombre" required>
+          </div>
+          <div class="login__field">
+            <label class="login__label" for="regEmail">Correo electronico</label>
+            <input class="login__input" type="email" id="regEmail" placeholder="tu@email.com" required>
+          </div>
+          <div class="login__field">
+            <label class="login__label" for="regUser">Usuario</label>
+            <input class="login__input" type="text" id="regUser" placeholder="Elige un usuario" required>
+          </div>
+          <div class="login__field">
+            <label class="login__label" for="regPass">Contrasena</label>
+            <input class="login__input" type="password" id="regPass" placeholder="Minimo 6 caracteres" required minlength="6">
+          </div>
+          <div class="login__field">
+            <label class="login__label">Rol</label>
+            <div class="login__roles login__roles--inline">
+              <button type="button" class="role-card role-card--sm" data-reg-role="solicitante">
+                <span class="role-card__title">Solicitante</span>
+              </button>
+              <button type="button" class="role-card role-card--sm" data-reg-role="empresa">
+                <span class="role-card__title">Empresa</span>
+              </button>
+            </div>
+            <input type="hidden" id="regRole" value="solicitante">
+          </div>
+          <button class="btn btn--primary login__modal-btn" type="submit">Crear cuenta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script type="module" src="src/js/login.js"></script>
+</body>
+</html>

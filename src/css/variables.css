@@ -29,7 +29,8 @@
   --text-main: #0C2340;          /* Texto principal en Azul Marino */
   --text-muted: #5A6A80;         /* Texto secundario / subtítulos */
   --text-light: #FFFFFF;         /* Texto sobre fondos de color */
-  --font-family: 'Syne', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bodoni Moda', Georgia, serif;
 
   /* ========================================================================
      RADIOS DE BORDE (Consistencia Round 8 / Full)
