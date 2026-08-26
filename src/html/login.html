@@ -11,6 +11,8 @@
 </head>
 <body id="loginPage">
 
+  <div class="login__particles" id="particles"></div>
+
   <div class="login">
     <div class="login__container">
       
@@ -20,37 +22,44 @@
         <p class="login__subtitle">Panel de Administración</p>
       </div>
 
-      <form class="login__form" id="loginForm">
+      <form class="login__form" id="loginForm" autocomplete="off">
         
         <div class="login__field">
           <label class="login__label" for="loginEmail">Usuario</label>
-          <input 
-            class="login__input" 
-            type="text" 
-            id="loginEmail" 
-            name="username"
-            placeholder="ej: emilys"
-            autocomplete="username"
-            required
-          >
+          <div class="login__input-wrapper">
+            <input 
+              class="login__input login__input--icon" 
+              type="text" 
+              id="loginEmail" 
+              name="username"
+              placeholder="ej: emilys"
+              autocomplete="username"
+              required
+            >
+            <span class="login__input-icon">👤</span>
+          </div>
         </div>
 
         <div class="login__field">
           <label class="login__label" for="loginPassword">Contraseña</label>
-          <input 
-            class="login__input" 
-            type="password" 
-            id="loginPassword" 
-            name="password"
-            placeholder="ej: emilyspass"
-            autocomplete="current-password"
-            required
-          >
+          <div class="login__input-wrapper">
+            <input 
+              class="login__input login__input--icon" 
+              type="password" 
+              id="loginPassword" 
+              name="password"
+              placeholder="ej: emilyspass"
+              autocomplete="current-password"
+              required
+            >
+            <span class="login__input-icon">🔒</span>
+            <span class="login__toggle-password" id="togglePassword">👁</span>
+          </div>
         </div>
 
         <div class="login__error d-none" id="loginError"></div>
 
-        <button class="login__btn" type="submit" id="btnLogin">
+        <button class="login__btn login__btn--pulse" type="submit" id="btnLogin">
           <span class="btn__text">Iniciar Sesión</span>
           <span class="login__spinner d-none"></span>
         </button>
