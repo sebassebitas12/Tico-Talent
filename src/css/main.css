@@ -5,13 +5,13 @@
    ========================================================================== */
 
 /* ==========================================================================
-   1. ESTRUCTURA GLOBAL DEL DOCUMENTO (Layout de 2 Columnas)
+   1. ESTRUCTURA GLOBAL DEL DOCUMENTO (Navbar Horizontal + Contenido)
    ========================================================================== */
 
-/* Layout general con Sidebar a la izquierda y Contenido a la derecha */
+/* Layout general con Navbar horizontal arriba y Contenido debajo */
 body.main-page, body.app {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   min-height: 100vh;
   background-color: var(--bg-main);
   color: var(--text-main);
@@ -20,38 +20,40 @@ body.main-page, body.app {
 }
 
 /* ==========================================================================
-   2. SIDEBAR LATERAL IZQUIERDO
+   2. NAVBAR HORIZONTAL SUPERIOR
    ========================================================================== */
 
-.sidebar, .main__sidebar {
-  width: 270px;
-  min-width: 270px;
-  height: 100vh;
+.sidebar {
+  width: 100%;
+  height: auto;
   position: sticky;
   top: 0;
   background-color: var(--surface-solid);
-  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
   z-index: 100;
   box-shadow: var(--shadow-sm);
   transition: var(--transition-smooth);
+  padding: 0 1.5rem;
+  min-height: 60px;
 }
 
-/* Header del Sidebar (Logo y Marca) */
+/* Header del Navbar (Logo y Marca) */
 .sidebar__header {
-  padding: 1.5rem 1.25rem 1.25rem;
+  padding: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border-light);
+  gap: 0;
+  border-bottom: none;
+  flex-shrink: 0;
 }
 
 .sidebar__brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0;
   font-size: 1.35rem;
   font-weight: 700;
   font-family: var(--font-display);
@@ -60,6 +62,7 @@ body.main-page, body.app {
   color: var(--primary-purple);
   text-decoration: none;
   transition: color 0.25s ease;
+  white-space: nowrap;
 }
 
 .sidebar__brand:hover {
@@ -84,18 +87,22 @@ body.main-page, body.app {
   cursor: pointer;
 }
 
-/* Navegación Vertical */
+/* Navegación Horizontal */
 .sidebar__nav {
   flex: 1 1 auto;
-  padding: 1.25rem 0.85rem;
-  overflow-y: auto;
+  padding: 0;
+  overflow-x: auto;
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  align-items: center;
+  gap: 0;
+  margin: 0 1.5rem;
 }
 
 .sidebar__nav-section {
-  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 0;
 }
 
 .sidebar__nav-section:last-child {
@@ -103,35 +110,27 @@ body.main-page, body.app {
 }
 
 .sidebar__nav-title {
-  display: block;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  display: none;
 }
 
-/* Enlaces del Sidebar */
+/* Enlaces del Navbar */
 .nav-link, .sidebar__nav-link {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
+  gap: 0;
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--secondary-navy);
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: var(--transition-smooth);
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-icon {
-  font-size: 1.15rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
 }
 
 .nav-text {
@@ -139,12 +138,13 @@ body.main-page, body.app {
 }
 
 .nav-badge {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.45rem;
   border-radius: var(--radius-full);
   background-color: var(--bg-main);
   color: var(--text-muted);
+  margin-left: 0.4rem;
 }
 
 .nav-badge--warning {
@@ -156,7 +156,7 @@ body.main-page, body.app {
 .nav-link:hover, .sidebar__nav-link:hover {
   background-color: var(--bg-main);
   color: var(--primary-purple);
-  transform: translateX(3px);
+  transform: none;
 }
 
 .nav-link--active, .sidebar__nav-link--active {
@@ -168,37 +168,39 @@ body.main-page, body.app {
 .nav-link--active::before, .sidebar__nav-link--active::before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 4px;
+  left: 1rem;
+  right: 1rem;
+  bottom: -1px;
+  top: auto;
+  height: 3px;
+  width: auto;
   background-color: var(--primary-purple);
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px 4px 0 0;
 }
 
-/* Footer del Sidebar (Usuario y Acciones) */
+/* Footer del Navbar (Usuario y Acciones) */
 .sidebar__footer {
-  padding: 1rem 0.85rem;
-  border-top: 1px solid var(--border-light);
+  padding: 0;
+  border-top: none;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.75rem;
-  background-color: #fafafa;
+  background-color: transparent;
+  flex-shrink: 0;
 }
 
 .sidebar__user-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  background-color: var(--surface-solid);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  gap: 0.6rem;
+  padding: 0;
+  background-color: transparent;
+  border: none;
 }
 
 .sidebar__user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--primary-purple), #3a0849);
   color: #ffffff;
@@ -206,7 +208,7 @@ body.main-page, body.app {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 
@@ -217,7 +219,7 @@ body.main-page, body.app {
 
 .sidebar__user-name {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   color: var(--secondary-navy);
   white-space: nowrap;
@@ -227,21 +229,22 @@ body.main-page, body.app {
 
 .sidebar__user-role {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
 }
 
 .sidebar__logout {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 0.75rem;
-  font-size: 0.85rem;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-muted);
   text-decoration: none;
   border-radius: var(--radius-md);
   transition: var(--transition-smooth);
+  white-space: nowrap;
 }
 
 .sidebar__logout:hover {
@@ -250,7 +253,7 @@ body.main-page, body.app {
 }
 
 /* ==========================================================================
-   3. ÁREA DE CONTENIDO PRINCIPAL (Lado Derecho)
+   3. ÁREA DE CONTENIDO PRINCIPAL (Debajo del Navbar)
    ========================================================================== */
 
 .main-page__wrapper, .app-wrapper {
@@ -258,7 +261,7 @@ body.main-page, body.app {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   overflow-y: auto;
 }
 
@@ -323,49 +326,18 @@ body.main-page, body.app {
    ========================================================================== */
 
 @media (max-width: 900px) {
-  body.main-page, body.app {
-    flex-direction: column;
-  }
-
-  .sidebar, .main__sidebar {
-    width: 100%;
-    min-width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .sidebar__header {
-    padding: 1rem 1.25rem;
-  }
-
-  .sidebar__toggle {
-    display: block;
+  .sidebar {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+    min-height: auto;
   }
 
   .sidebar__nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0.75rem 1rem;
-    gap: 0.5rem;
+    margin: 0 0.5rem;
+    gap: 0;
   }
 
-  .sidebar__nav-section {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0;
-  }
-
-  .sidebar__nav-title {
-    display: none;
-  }
-
-  .nav-link, .sidebar__nav-link {
-    white-space: nowrap;
-  }
-
-  .sidebar__footer {
+  .sidebar__user-info {
     display: none;
   }
 
@@ -682,37 +654,11 @@ body.main-page, body.app {
 }
 
 /* ==========================================================================
-   SIDEBAR - Iconos Centrados
+   SIDEBAR - Iconos (ocultos en diseño horizontal)
    ========================================================================== */
 
 .nav-icon {
-  font-size: 1.15rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  min-width: 28px;
-  text-align: center;
-}
-
-.sidebar__logout {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.75rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--secondary-navy);
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  transition: var(--transition-smooth);
-  width: 100%;
-  text-align: left;
-}
-
-.sidebar__logout:hover {
-  background-color: #fef2f2;
-  color: #b91c1c;
+  display: none;
 }
 
 /* ==========================================================================
