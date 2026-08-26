@@ -1,14 +1,15 @@
 // src/js/vacantes.js
-// CRUD Vacantes → /products de DummyJSON
-// RF-05 al RF-10
+// CRUD Vacantes -> /products de DummyJSON
+// Solicitante: buscar + postularse | Empresa: CRUD completo
 
-import { requireAuth } from "./auth.js";
-import { getAll, create, update, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { requireAuth, getRole } from "./auth.js";
+import { getAll, create, update, remove, patch } from "./dummyapi.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, renderNavbar } from "./ui.js";
 
 requireAuth();
-initUserNav();
+renderNavbar("vacantes");
 
+const rol = getRole();
 let vacantes = [];
 
 function renderCards(lista) {
@@ -22,41 +23,47 @@ function renderCards(lista) {
     contenedor.innerHTML = `
       <div style="text-align: center; padding: 2.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
         <p style="color: var(--text-muted); margin-bottom: 1rem;">No se encontraron vacantes.</p>
-        <button class="btn btn-cta" id="btnNuevaEmpty">+ Publicar primera vacante</button>
+        ${rol === "empresa" ? '<button class="btn btn-cta" id="btnNuevaEmpty">+ Publicar primera vacante</button>' : ""}
       </div>
     `;
     document.getElementById("btnNuevaEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
-  const icons = ["💻", "☁️", "🎨", "⚙️", "📱", "🛡️", "📊", "🤖"];
+  const btnNueva = rol === "empresa"
+    ? '<button class="btn btn-cta" id="btnNuevaVacante">+ Publicar Vacante</button>'
+    : "";
 
   contenedor.innerHTML = `
     <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-      <button class="btn btn-cta" id="btnNuevaVacante">+ Publicar Vacante</button>
+      ${btnNueva}
     </div>
-    ${lista.map((v, idx) => {
-      const icon = icons[idx % icons.length];
+    ${lista.map((v) => {
       const match = 90 + ((v.id * 7) % 10);
-      const salary = v.price ? `$${(v.price * 30).toLocaleString()} - $${(v.price * 45).toLocaleString()} USD / mes` : "Salario a convenir";
+      const salary = v.price ? "$" + (v.price * 30).toLocaleString() + " - $" + (v.price * 45).toLocaleString() + " USD / mes" : "Salario a convenir";
+      const acciones = rol === "empresa"
+        ? `<button type="button" class="btn btn--secondary btn-editar" data-id="${v.id}">Editar</button>
+           <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}">Eliminar</button>`
+        : `<button type="button" class="btn btn-cta btn-postularme" data-id="${v.id}" data-title="${escapeHTML(v.title)}">Postularse</button>`;
+
       return `
         <article class="job-card">
           <div class="job-card__header">
-            <div class="job-card__company-logo">${icon}</div>
+            <div class="job-card__company-logo">${escapeHTML((v.category || "tech").substring(0, 2).toUpperCase())}</div>
             <div class="job-card__title-area">
               <h3 class="job-card__title">${escapeHTML(v.title)}</h3>
               <div class="job-card__company-name">
-                <span>${escapeHTML(v.brand || v.category || "Tech Solutions CR")}</span> • <span>San José, Costa Rica (Híbrido/Remoto)</span>
+                <span>${escapeHTML(v.brand || v.category || "Tech Solutions CR")}</span> - <span>San Jose, Costa Rica (Hibrido/Remoto)</span>
               </div>
             </div>
-            <span class="badge-match">⚡ ${match}% Match</span>
+            <span class="badge-match">${match}% Match</span>
           </div>
 
           <div class="job-card__details">
-            <span class="job-tag">📂 ${escapeHTML(v.category || "Tecnología")}</span>
-            <span class="job-tag">⭐ ${escapeHTML(String(v.rating || "4.8"))} / 5.0</span>
-            <span class="job-tag">💼 Tiempo Completo</span>
-            <span class="job-tag">📦 Disponibles: ${v.stock ?? 1} plazas</span>
+            <span class="job-tag">${escapeHTML(v.category || "Tecnologia")}</span>
+            <span class="job-tag">${escapeHTML(String(v.rating || "4.8"))} / 5.0</span>
+            <span class="job-tag">Tiempo Completo</span>
+            <span class="job-tag">Plazas: ${v.stock ?? 1}</span>
           </div>
 
           <div class="job-card__footer">
@@ -65,9 +72,7 @@ function renderCards(lista) {
               <span class="job-card__date" style="display: block;">Publicado recientemente</span>
             </div>
             <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
-              <button type="button" class="btn btn-cta btn-postularme" data-id="${v.id}" data-title="${escapeHTML(v.title)}">Postularse</button>
-              <button type="button" class="btn btn-secondary btn-editar" data-id="${v.id}">✏️</button>
-              <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+              ${acciones}
             </div>
           </div>
         </article>
@@ -84,7 +89,7 @@ function renderCards(lista) {
     btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
   });
   contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("¿Eliminar esta vacante?", () => eliminarVacanteConfirmada(Number(btn.dataset.id))));
+    btn.addEventListener("click", () => confirmar("Eliminar esta vacante?", () => eliminarVacanteConfirmada(Number(btn.dataset.id))));
   });
 }
 
@@ -104,11 +109,11 @@ async function cargarVacantes() {
 function formularioHTML(v = {}) {
   return `
     <div class="form-group">
-      <label>Título de la vacante</label>
+      <label>Titulo de la vacante</label>
       <input class="form-control" id="fTitulo" value="${escapeHTML(v.title ?? "")}" placeholder="Ej: Senior React Developer" required>
     </div>
     <div class="form-group">
-      <label>Categoría / Área</label>
+      <label>Categoria / Area</label>
       <input class="form-control" id="fCategoria" value="${escapeHTML(v.category ?? "")}" placeholder="Ej: software, devops, design" required>
     </div>
     <div class="form-group">
@@ -140,7 +145,7 @@ function abrirFormulario(id = null) {
     };
 
     if (!datos.title) {
-      mostrarToast("El título es obligatorio.", "warning");
+      mostrarToast("El titulo es obligatorio.", "warning");
       return;
     }
 
@@ -183,15 +188,21 @@ async function eliminarVacanteConfirmada(id) {
 async function postularseVacante(id, titulo) {
   mostrarLoading();
   try {
-    await create("posts", {
-      title: titulo,
-      body: `Postulación automática a: ${titulo}`,
-      userId: 1,
-      tags: ["auto-postulacion", "ticotalent"],
+    await patch("comments", Number(id), {
+      body: "Postulacion automatica a: " + titulo
     });
-    mostrarToast(`¡Te has postulado con éxito a: ${titulo}!`, "success");
+    mostrarToast("Te has postulado con exito a: " + titulo, "success");
   } catch {
-    mostrarToast("Error al postularse.", "error");
+    try {
+      await create("comments", {
+        postId: Number(id),
+        body: "Postulacion automatica a: " + titulo,
+        userId: 1,
+      });
+      mostrarToast("Te has postulado con exito a: " + titulo, "success");
+    } catch {
+      mostrarToast("Error al postularse.", "error");
+    }
   } finally {
     ocultarLoading();
   }

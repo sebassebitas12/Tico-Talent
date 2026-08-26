@@ -1,5 +1,6 @@
 // src/js/auth.js
 // Sistema de autenticacion con DummyJSON /auth/login + fallback demo local.
+// Roles: solicitante y empresa.
 
 const DEMO_USERS = [
   {
@@ -9,7 +10,7 @@ const DEMO_USERS = [
     firstName: "Carlos",
     lastName: "Rodriguez",
     email: "carlos@ticotalent.com",
-    rol: "empleador"
+    rol: "empresa"
   },
   {
     id: 2,
@@ -19,22 +20,17 @@ const DEMO_USERS = [
     lastName: "Garcia",
     email: "maria@gmail.com",
     rol: "solicitante"
-  },
-  {
-    id: 3,
-    username: "admin",
-    password: "admin123",
-    firstName: "Admin",
-    lastName: "TicoTalent",
-    email: "admin@ticotalent.com",
-    rol: "reclutador"
   }
 ];
 
 const ROLE_PERMISSIONS = {
   solicitante: ["vacantes", "postulaciones"],
-  empleador: ["vacantes", "candidatos"],
-  reclutador: ["vacantes", "candidatos", "empresas", "postulaciones", "entrevistas", "tareas"]
+  empresa: ["vacantes", "candidatos"]
+};
+
+const ROLE_LABELS = {
+  solicitante: "Solicitante",
+  empresa: "Empresa"
 };
 
 function getUsers() {
@@ -71,14 +67,15 @@ export async function login(username, password) {
     if (response.ok) {
       const data = await response.json();
       const token = data.accessToken;
+      const builtIn = DEMO_USERS.find(u => u.username === data.username);
       const userData = {
         id: data.id,
         username: data.username,
         firstName: data.firstName,
         lastName: data.lastName,
-        email: data.email,
+        email: builtIn ? builtIn.email : data.email,
         image: data.image,
-        rol: "solicitante"
+        rol: builtIn ? builtIn.rol : "solicitante"
       };
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userData));
@@ -118,6 +115,14 @@ export function register({ name, email, username, password, rol }) {
   if (exists) {
     throw new Error("El usuario o correo ya esta registrado");
   }
+
+  if (rol === "empresa" && !email.endsWith("@ticotalent.com")) {
+    throw new Error("El correo de la empresa debe ser @ticotalent.com");
+  }
+  if (rol === "solicitante" && email.endsWith("@ticotalent.com")) {
+    throw new Error("El correo del solicitante debe ser un correo personal (@gmail.com)");
+  }
+
   const newUser = {
     id: Date.now(),
     username,
@@ -169,6 +174,10 @@ export function getUser() {
 
 export function getRole() {
   return localStorage.getItem("rol") || "solicitante";
+}
+
+export function getRoleLabel() {
+  return ROLE_LABELS[getRole()] || "Solicitante";
 }
 
 export function getVisibleModules() {

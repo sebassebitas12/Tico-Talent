@@ -1,15 +1,27 @@
 // src/js/candidatos.js
-// CRUD Candidatos → /users de DummyJSON
-// RF-05 al RF-10
+// Vista de Candidatos Postulados (solo Empresa)
+// PATCH /comments/{id} para cambiar estado del candidato
 
 import { requireAuth } from "./auth.js";
-import { getAll, create, update, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { getAll, patch } from "./dummyapi.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, escapeHTML, renderNavbar } from "./ui.js";
 
 requireAuth();
-initUserNav();
+renderNavbar("candidatos");
 
 let candidatos = [];
+
+const estadosCandidato = [
+  { value: "pendiente",       label: "Pendiente",          bg: "#fff3e0", color: "#e65100" },
+  { value: "revision",        label: "En Revision",        bg: "#f0ebf5", color: "var(--primary-purple)" },
+  { value: "entrevista",      label: "Entrevista Agendada", bg: "#E6F6EE", color: "var(--color-success)" },
+  { value: "rechazado",       label: "Rechazado",          bg: "#fef2f2", color: "#b91c1c" },
+  { value: "contratado",      label: "Contratado",         bg: "#E6F6EE", color: "var(--color-success)" }
+];
+
+function getEstado(idx) {
+  return estadosCandidato[idx % estadosCandidato.length];
+}
 
 function renderCards(lista) {
   const contenedor = document.getElementById("candidatesList");
@@ -17,56 +29,51 @@ function renderCards(lista) {
 
   if (lista.length === 0) {
     contenedor.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">No hay candidatos registrados.</p>
-        <button class="btn btn-cta" id="btnNuevoEmpty">+ Crear primer candidato</button>
+      <div style="text-align: center; padding: 2rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
+        <p style="color: var(--text-muted);">No hay candidatos postulados aun.</p>
       </div>
     `;
-    document.getElementById("btnNuevoEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
-  const logos = ["👩‍💻", "👨‍💻", "👩‍💼", "👨‍💼", "🧑‍💻", "👩‍🔬"];
-
   contenedor.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%;">
-      <span style="font-size: 0.95rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> candidatos registrados</span>
-      <button class="btn btn-cta" id="btnNuevo">+ Nuevo Candidato</button>
+      <span style="font-size: 0.95rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> candidatos postulados</span>
     </div>
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
-      ${lista.map((c, index) => {
-        const logo = logos[index % logos.length];
+      ${lista.map((c, idx) => {
+        const est = getEstado(c._estadoIdx ?? idx);
         const match = 88 + ((c.id * 3) % 11);
-        const city = c.address?.city || "San José, Costa Rica";
-        const role = c.company?.title || "Desarrollador / Profesional";
+        const nombre = c.user?.username || "candidato_" + (c.postId || (idx + 1));
+        const titulo = c.body ? (c.body.length > 55 ? c.body.substring(0, 55) + "..." : c.body) : "Postulacion #" + c.id;
+
         return `
           <article class="job-card">
             <div class="job-card__header">
-              <div class="job-card__company-logo">${logo}</div>
+              <div class="job-card__company-logo">${(nombre || "U").charAt(0).toUpperCase()}</div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title">${escapeHTML(c.firstName)} ${escapeHTML(c.lastName)}</h3>
+                <h3 class="job-card__title">@${escapeHTML(nombre)}</h3>
                 <div class="job-card__company-name">
-                  <span>${escapeHTML(role)}</span> • <span>${escapeHTML(city)}</span>
+                  <span>${escapeHTML(titulo)}</span>
                 </div>
               </div>
-              <span class="badge-match">⚡ ${match}% Match</span>
+              <span class="badge-match" style="background-color: ${est.bg}; color: ${est.color};">${est.label}</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">👤 @${escapeHTML(c.username)}</span>
-              <span class="job-tag">📧 ${escapeHTML(c.email)}</span>
-              <span class="job-tag">📞 ${escapeHTML(c.phone || "+506 8888-0000")}</span>
-              <span class="job-tag">🏢 ${escapeHTML(c.company?.name || "Tico Talent Network")}</span>
+              <span class="job-tag">Postulacion #${c.id}</span>
+              <span class="job-tag">Post ID: ${c.postId ?? "N/A"}</span>
+              <span class="job-tag">${match}% Compatibilidad</span>
             </div>
 
             <div class="job-card__footer">
               <div>
-                <span class="job-card__salary">ID #${c.id}</span>
-                <span class="job-card__date" style="display: block; font-size: 0.8rem;">Perfil activo</span>
+                <span class="job-card__date">Estado actual: ${est.label}</span>
               </div>
-              <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${c.id}">✏️ Editar</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${c.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️ Eliminar</button>
+              <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                <select class="form-control" style="width: auto; padding: 0.4rem 0.6rem; font-size: 0.85rem;" data-id="${c.id}" data-idx="${idx}">
+                  ${estadosCandidato.map((e, i) => `<option value="${i}" ${i === (c._estadoIdx ?? idx) ? "selected" : ""}>${e.label}</option>`).join("")}
+                </select>
               </div>
             </div>
           </article>
@@ -75,103 +82,34 @@ function renderCards(lista) {
     </div>
   `;
 
-  document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
-
-  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
-    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
-  });
-  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("¿Eliminar este candidato?", () => eliminarCandidatoConfirmado(Number(btn.dataset.id))));
+  contenedor.querySelectorAll("select[data-id]").forEach(sel => {
+    sel.addEventListener("change", async () => {
+      const id = Number(sel.dataset.id);
+      const nuevoIdx = Number(sel.value);
+      mostrarLoading();
+      try {
+        await patch("comments", id, { postId: id });
+        const c = candidatos.find(item => item.id === id);
+        if (c) c._estadoIdx = nuevoIdx;
+        mostrarToast("Estado del candidato actualizado.", "success");
+        renderCards(candidatos);
+      } catch {
+        mostrarToast("Error al actualizar estado.", "error");
+      } finally {
+        ocultarLoading();
+      }
+    });
   });
 }
 
 async function cargarCandidatos() {
   mostrarLoading();
   try {
-    const data = await getAll("users");
-    candidatos = data.users ?? (Array.isArray(data) ? data : []);
+    const data = await getAll("comments");
+    candidatos = data.comments ?? (Array.isArray(data) ? data : []);
     renderCards(candidatos);
   } catch {
     mostrarToast("Error al cargar candidatos.", "error");
-  } finally {
-    ocultarLoading();
-  }
-}
-
-function formularioHTML(c = {}) {
-  return `
-    <div class="form-group">
-      <label>Nombre</label>
-      <input class="form-control" id="fNombre" value="${escapeHTML(c.firstName ?? "")}" placeholder="Nombre" required>
-    </div>
-    <div class="form-group">
-      <label>Apellido</label>
-      <input class="form-control" id="fApellido" value="${escapeHTML(c.lastName ?? "")}" placeholder="Apellido" required>
-    </div>
-    <div class="form-group">
-      <label>Usuario</label>
-      <input class="form-control" id="fUsername" value="${escapeHTML(c.username ?? "")}" placeholder="usuario123" required>
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input class="form-control" type="email" id="fEmail" value="${escapeHTML(c.email ?? "")}" placeholder="correo@ejemplo.com" required>
-    </div>
-    <div class="form-group">
-      <label>Teléfono</label>
-      <input class="form-control" id="fTelefono" value="${escapeHTML(c.phone ?? "")}" placeholder="+506 1234-5678">
-    </div>
-  `;
-}
-
-function abrirFormulario(id = null) {
-  const candidato = id ? candidatos.find((c) => c.id === id) : {};
-  const titulo    = id ? "Editar candidato" : "Nuevo candidato";
-
-  abrirModal(titulo, formularioHTML(candidato), async () => {
-    const datos = {
-      firstName: document.getElementById("fNombre").value.trim(),
-      lastName:  document.getElementById("fApellido").value.trim(),
-      username:  document.getElementById("fUsername").value.trim(),
-      email:     document.getElementById("fEmail").value.trim(),
-      phone:     document.getElementById("fTelefono").value.trim(),
-    };
-
-    if (!datos.firstName || !datos.email) {
-      mostrarToast("Nombre y email son obligatorios.", "warning");
-      return;
-    }
-
-    mostrarLoading();
-    try {
-      if (id) {
-        await update("users", id, datos);
-        const idx = candidatos.findIndex((c) => c.id === id);
-        if (idx !== -1) candidatos[idx] = { ...candidatos[idx], ...datos };
-        mostrarToast("Candidato actualizado.", "success");
-      } else {
-        const nuevo = await create("users", datos);
-        candidatos.unshift({ ...nuevo, ...datos, id: Date.now() });
-        mostrarToast("Candidato creado.", "success");
-      }
-      cerrarModal();
-      renderCards(candidatos);
-    } catch {
-      mostrarToast("Error al guardar.", "error");
-    } finally {
-      ocultarLoading();
-    }
-  });
-}
-
-async function eliminarCandidatoConfirmado(id) {
-  mostrarLoading();
-  try {
-    await remove("users", id);
-    candidatos = candidatos.filter((c) => c.id !== id);
-    mostrarToast("Candidato eliminado.", "success");
-    renderCards(candidatos);
-  } catch {
-    mostrarToast("Error al eliminar.", "error");
   } finally {
     ocultarLoading();
   }

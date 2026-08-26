@@ -1,13 +1,12 @@
 // src/js/entrevistas.js
-// CRUD Entrevistas / Agenda → /comments de DummyJSON
-// RF-05 al RF-10
+// CRUD Entrevistas / Agenda -> /comments de DummyJSON
 
 import { requireAuth } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, renderNavbar } from "./ui.js";
 
 requireAuth();
-initUserNav();
+renderNavbar("entrevistas");
 
 let entrevistas = [];
 
@@ -26,7 +25,7 @@ function renderCards(lista) {
     return;
   }
 
-  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+  const dias = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
   const horas = ["09:00 AM", "10:30 AM", "02:00 PM", "03:30 PM", "04:45 PM"];
 
   contenedor.innerHTML = `
@@ -38,36 +37,36 @@ function renderCards(lista) {
       ${lista.map((ent, idx) => {
         const dia = dias[idx % dias.length];
         const hora = horas[idx % horas.length];
-        const candidato = ent.user?.username || `candidato_${ent.postId || (idx + 1)}`;
-        const titulo = ent.body ? (ent.body.length > 55 ? ent.body.substring(0, 55) + "..." : ent.body) : `Entrevista Técnica #${ent.id}`;
+        const candidato = ent.user?.username || "candidato_" + (ent.postId || (idx + 1));
+        const titulo = ent.body ? (ent.body.length > 55 ? ent.body.substring(0, 55) + "..." : ent.body) : "Entrevista Tecnica #" + ent.id;
 
         return `
           <article class="job-card">
             <div class="job-card__header">
-              <div class="job-card__company-logo">📅</div>
+              <div class="job-card__company-logo">EN</div>
               <div class="job-card__title-area">
                 <h3 class="job-card__title">${escapeHTML(titulo)}</h3>
                 <div class="job-card__company-name">
-                  <span>Candidato: <strong>@${escapeHTML(candidato)}</strong></span> • <span>Vía Google Meet / Teams</span>
+                  <span>Candidato: <strong>@${escapeHTML(candidato)}</strong></span> - <span>Via Google Meet / Teams</span>
                 </div>
               </div>
-              <span class="badge-match" style="background-color: #E6F6EE; color: var(--color-success);">🟢 Confirmada</span>
+              <span class="badge-match" style="background-color: #E6F6EE; color: var(--color-success);">Confirmada</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">⏰ ${dia} próximo, ${hora} (CST)</span>
-              <span class="job-tag">👤 Panel Reclutador Tico Talent</span>
-              <span class="job-tag">🆔 ID #${ent.id}</span>
+              <span class="job-tag">${dia} proximo, ${hora} (CST)</span>
+              <span class="job-tag">Panel Reclutador Tico Talent</span>
+              <span class="job-tag">ID #${ent.id}</span>
             </div>
 
             <div class="job-card__footer">
               <div>
-                <span class="job-card__date">Enlace enviado al correo electrónico</span>
+                <span class="job-card__date">Enlace enviado al correo electronico</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-cta btn-reunion" data-id="${ent.id}">Unirse a la Reunión</button>
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${ent.id}">✏️</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${ent.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                <button type="button" class="btn btn--cta btn-reunion" data-id="${ent.id}">Unirse a la Reunion</button>
+                <button type="button" class="btn btn--secondary btn-editar" data-id="${ent.id}">Editar</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${ent.id}">Eliminar</button>
               </div>
             </div>
           </article>
@@ -85,7 +84,7 @@ function renderCards(lista) {
     btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
   });
   contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("¿Eliminar esta cita de la agenda?", () => eliminarEntrevistaConfirmada(Number(btn.dataset.id))));
+    btn.addEventListener("click", () => confirmar("Eliminar esta cita de la agenda?", () => eliminarEntrevistaConfirmada(Number(btn.dataset.id))));
   });
 }
 
@@ -105,11 +104,11 @@ async function cargarEntrevistas() {
 function formularioHTML(ent = {}) {
   return `
     <div class="form-group">
-      <label>Título / Notas de la Entrevista</label>
-      <input class="form-control" id="fBody" value="${escapeHTML(ent.body ?? "")}" placeholder="Ej: Entrevista técnica Frontend con Carlos" required>
+      <label>Titulo / Notas de la Entrevista</label>
+      <input class="form-control" id="fBody" value="${escapeHTML(ent.body ?? "")}" placeholder="Ej: Entrevista tecnica Frontend con Carlos" required>
     </div>
     <div class="form-group">
-      <label>ID Postulación / Candidato</label>
+      <label>ID Postulacion / Candidato</label>
       <input class="form-control" type="number" id="fPostId" value="${ent.postId ?? 1}" placeholder="1">
     </div>
     <div class="form-group">
@@ -134,7 +133,7 @@ function abrirFormulario(id = null) {
     };
 
     if (!datos.body) {
-      mostrarToast("La descripción de la entrevista es obligatoria.", "warning");
+      mostrarToast("La descripcion de la entrevista es obligatoria.", "warning");
       return;
     }
 
@@ -148,7 +147,7 @@ function abrirFormulario(id = null) {
       } else {
         const nueva = await create("comments", datos);
         entrevistas.unshift({ ...nueva, ...datos, id: Date.now() });
-        mostrarToast("Entrevista agendada con éxito.", "success");
+        mostrarToast("Entrevista agendada con exito.", "success");
       }
       cerrarModal();
       renderCards(entrevistas);

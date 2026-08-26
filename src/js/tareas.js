@@ -1,13 +1,12 @@
 // src/js/tareas.js
-// CRUD Tareas del reclutador → /todos de DummyJSON
-// RF-05 al RF-10
+// CRUD Tareas del reclutador -> /todos de DummyJSON
 
 import { requireAuth } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, renderNavbar } from "./ui.js";
 
 requireAuth();
-initUserNav();
+renderNavbar("tareas");
 
 let tareas = [];
 
@@ -40,25 +39,25 @@ function renderCards(lista) {
         const badgeBg = t.completed ? "#E6F6EE" : "#fff3e0";
         const badgeColor = t.completed ? "var(--color-success)" : "#e65100";
         const badgeBorder = t.completed ? "rgba(0, 163, 92, 0.2)" : "#ffe0b2";
-        const badgeText = t.completed ? "✅ Completada" : "⚠️ Pendiente";
+        const badgeText = t.completed ? "Completada" : "Pendiente";
 
         return `
           <article class="job-card" style="${t.completed ? "opacity: 0.85; border-left: 4px solid var(--color-success);" : "border-left: 4px solid var(--action-pink);"}">
             <div class="job-card__header">
-              <div class="job-card__company-logo">📋</div>
+              <div class="job-card__company-logo">TA</div>
               <div class="job-card__title-area">
                 <h3 class="job-card__title" style="${t.completed ? "text-decoration: line-through; color: var(--text-muted);" : ""}">${escapeHTML(t.todo)}</h3>
                 <div class="job-card__company-name">
-                  <span>Asignado a: Usuario #${t.userId}</span> • <span>Prioridad ${t.completed ? "Baja" : "Alta"}</span>
+                  <span>Asignado a: Usuario #${t.userId}</span> - <span>Prioridad ${t.completed ? "Baja" : "Alta"}</span>
                 </div>
               </div>
               <span class="badge-match" style="background-color: ${badgeBg}; color: ${badgeColor}; border-color: ${badgeBorder};">${badgeText}</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">📅 Vencimiento: Próximamente</span>
-              <span class="job-tag">🆔 Tarea #${t.id}</span>
-              <span class="job-tag">👤 Reclutamiento Tico Talent</span>
+              <span class="job-tag">Vencimiento: Proximamente</span>
+              <span class="job-tag">Tarea #${t.id}</span>
+              <span class="job-tag">Reclutamiento Tico Talent</span>
             </div>
 
             <div class="job-card__footer">
@@ -66,11 +65,11 @@ function renderCards(lista) {
                 <span class="job-card__date">${t.completed ? "Estado: Resuelta" : "Estado: En seguimiento activo"}</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
-                <button type="button" class="btn ${t.completed ? "btn-secondary" : "btn-cta"} btn-toggle" data-id="${t.id}" data-completed="${t.completed}">
-                  ${t.completed ? "↩️ Reabrir" : "Completar Tarea"}
+                <button type="button" class="btn ${t.completed ? "btn--secondary" : "btn--cta"} btn-toggle" data-id="${t.id}" data-completed="${t.completed}">
+                  ${t.completed ? "Reabrir" : "Completar Tarea"}
                 </button>
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${t.id}">✏️</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${t.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                <button type="button" class="btn btn--secondary btn-editar" data-id="${t.id}">Editar</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${t.id}">Eliminar</button>
               </div>
             </div>
           </article>
@@ -88,7 +87,7 @@ function renderCards(lista) {
     btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
   });
   contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("¿Eliminar esta tarea?", () => eliminarTareaConfirmada(Number(btn.dataset.id))));
+    btn.addEventListener("click", () => confirmar("Eliminar esta tarea?", () => eliminarTareaConfirmada(Number(btn.dataset.id))));
   });
 }
 
@@ -108,8 +107,8 @@ async function cargarTareas() {
 function formularioHTML(t = {}) {
   return `
     <div class="form-group">
-      <label>Descripción de la tarea</label>
-      <input class="form-control" id="fTodo" value="${escapeHTML(t.todo ?? "")}" placeholder="Ej: Llamar a candidato Juan para entrevista técnica" required>
+      <label>Descripcion de la tarea</label>
+      <input class="form-control" id="fTodo" value="${escapeHTML(t.todo ?? "")}" placeholder="Ej: Llamar a candidato Juan para entrevista tecnica" required>
     </div>
     <div class="form-group">
       <label>ID Usuario / Responsable</label>
@@ -118,8 +117,8 @@ function formularioHTML(t = {}) {
     <div class="form-group">
       <label>Estado</label>
       <select class="form-control" id="fCompletado">
-        <option value="false" ${!t.completed ? "selected" : ""}>⏳ Pendiente</option>
-        <option value="true"  ${t.completed  ? "selected" : ""}>✅ Completada</option>
+        <option value="false" ${!t.completed ? "selected" : ""}>Pendiente</option>
+        <option value="true"  ${t.completed  ? "selected" : ""}>Completada</option>
       </select>
     </div>
   `;
@@ -137,7 +136,7 @@ function abrirFormulario(id = null) {
     };
 
     if (!datos.todo) {
-      mostrarToast("La descripción es obligatoria.", "warning");
+      mostrarToast("La descripcion es obligatoria.", "warning");
       return;
     }
 
@@ -169,7 +168,7 @@ async function toggleTareaEstado(id, completadoActual) {
     await patch("todos", id, { completed: !completadoActual });
     const idx = tareas.findIndex((t) => t.id === id);
     if (idx !== -1) tareas[idx].completed = !completadoActual;
-    mostrarToast(completadoActual ? "Tarea reabierta." : "¡Tarea completada con éxito! ✅", "success");
+    mostrarToast(completadoActual ? "Tarea reabierta." : "Tarea completada con exito!", "success");
     renderCards(tareas);
   } catch {
     mostrarToast("Error al actualizar estado.", "error");

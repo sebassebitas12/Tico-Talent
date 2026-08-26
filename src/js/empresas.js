@@ -1,21 +1,20 @@
 // src/js/empresas.js
-// CRUD Empresas Clientes → /carts de DummyJSON
-// RF-05 al RF-10
+// CRUD Empresas Clientes -> /carts de DummyJSON
 
 import { requireAuth } from "./auth.js";
 import { getAll, create, update, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, renderNavbar } from "./ui.js";
 
 requireAuth();
-initUserNav();
+renderNavbar("empresas");
 
 let empresas = [];
 
 const nombresEmpresas = [
   "TechCR Solutions", "Innovatech Pura Vida", "Global Talent Hub",
-  "Costa Rica Softworks", "San José Cloud Labs", "Pura Vida Analytics",
+  "Costa Rica Softworks", "San Jose Cloud Labs", "Pura Vida Analytics",
   "EcoTech Innovations", "Tico Fintech Group", "Bananera Digital Systems",
-  "AeroCR Engineering", "Caribe Dev Center", "Volcán Interactive"
+  "AeroCR Engineering", "Caribe Dev Center", "Volcan Interactive"
 ];
 
 function renderCards(lista) {
@@ -33,8 +32,6 @@ function renderCards(lista) {
     return;
   }
 
-  const logos = ["🏢", "🌐", "💻", "⚡", "🚀", "🏦", "📱", "🛰️"];
-
   contenedor.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%;">
       <span style="font-size: 0.95rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> empresas aliadas</span>
@@ -43,28 +40,27 @@ function renderCards(lista) {
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
       ${lista.map((emp, idx) => {
         const nombre = emp.nombre || nombresEmpresas[idx % nombresEmpresas.length];
-        const logo = logos[idx % logos.length];
         const totalProds = emp.totalProducts ?? (emp.products?.length || (2 + (emp.id % 8)));
         const colabs = 50 + ((emp.id * 35) % 400);
 
         return `
           <article class="job-card">
             <div class="job-card__header">
-              <div class="job-card__company-logo">${logo}</div>
+              <div class="job-card__company-logo">${nombre.charAt(0)}</div>
               <div class="job-card__title-area">
                 <h3 class="job-card__title">${escapeHTML(nombre)}</h3>
                 <div class="job-card__company-name">
-                  <span>Tecnología & Servicios</span> • <span>San José, Costa Rica</span>
+                  <span>Tecnologia & Servicios</span> - <span>San Jose, Costa Rica</span>
                 </div>
               </div>
-              <span class="badge-match" style="background-color: #f0ebf5; color: var(--primary-purple); border-color: rgba(83, 16, 104, 0.2);">⭐ Empresa Verificada</span>
+              <span class="badge-match" style="background-color: #f0ebf5; color: var(--primary-purple); border-color: rgba(83, 16, 104, 0.2);">Empresa Verificada</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">👥 ${colabs}+ Colaboradores</span>
-              <span class="job-tag">💼 ${totalProds} Vacantes Activas</span>
-              <span class="job-tag">🏆 Top Employer 2026</span>
-              <span class="job-tag">🆔 Código #${emp.id}</span>
+              <span class="job-tag">${colabs}+ Colaboradores</span>
+              <span class="job-tag">${totalProds} Vacantes Activas</span>
+              <span class="job-tag">Top Employer 2026</span>
+              <span class="job-tag">Codigo #${emp.id}</span>
             </div>
 
             <div class="job-card__footer">
@@ -72,8 +68,8 @@ function renderCards(lista) {
                 <span class="job-card__date">Miembro aliado desde 2024</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${emp.id}">✏️</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${emp.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                <button type="button" class="btn btn--secondary btn-editar" data-id="${emp.id}">Editar</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${emp.id}">Eliminar</button>
               </div>
             </div>
           </article>
@@ -88,7 +84,7 @@ function renderCards(lista) {
     btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
   });
   contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("¿Eliminar esta empresa aliada?", () => eliminarEmpresaConfirmada(Number(btn.dataset.id))));
+    btn.addEventListener("click", () => confirmar("Eliminar esta empresa aliada?", () => eliminarEmpresaConfirmada(Number(btn.dataset.id))));
   });
 }
 
@@ -149,7 +145,7 @@ function abrirFormulario(id = null) {
       } else {
         const nueva = await create("carts", datos);
         empresas.unshift({ ...nueva, ...datos, id: Date.now() });
-        mostrarToast("Empresa registrada con éxito.", "success");
+        mostrarToast("Empresa registrada con exito.", "success");
       }
       cerrarModal();
       renderCards(empresas);

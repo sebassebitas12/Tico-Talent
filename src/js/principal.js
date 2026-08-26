@@ -1,37 +1,56 @@
 // src/js/principal.js
 // Controlador para la vista de Inicio / Dashboard
-// RF-05, RF-10
 
-import { requireAuth, getUser, logout } from "./auth.js";
+import { requireAuth, getUser, getRole, getVisibleModules } from "./auth.js";
 import { getAll } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, renderNavbar, escapeHTML } from "./ui.js";
 
 requireAuth();
+renderNavbar("principal");
 
-// ── Inicialización del usuario ────────────────────────────────
-const user = getUser();
-if (user) {
-  const nameEl = document.getElementById("userName");
-  const roleEl = document.getElementById("userRole");
-  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-  if (roleEl) roleEl.textContent = user.email;
+const MODULES_CONFIG = {
+  vacantes:      { label: "Vacantes",              desc: "Busca y aplica a ofertas de empleo",                   href: "vacantes.html" },
+  postulaciones: { label: "Mis Postulaciones",      desc: "Estado y trazabilidad de tus aplicaciones",            href: "postulaciones.html" },
+  candidatos:    { label: "Candidatos Postulados",  desc: "Gestiona candidatos y cambia su estado",              href: "candidatos.html" }
+};
+
+function renderQuickModules() {
+  const container = document.getElementById("quickModules");
+  if (!container) return;
+
+  const modules = getVisibleModules();
+  const rol = getRole();
+
+  container.innerHTML = modules.map(id => {
+    const mod = MODULES_CONFIG[id];
+    if (!mod) return "";
+    let label = mod.label;
+    let desc = mod.desc;
+    if (id === "vacantes" && rol === "empresa") {
+      label = "Mis Vacantes";
+      desc = "Publica, edita y elimina ofertas de empleo";
+    }
+    if (id === "candidatos" && rol === "empresa") {
+      label = "Candidatos Postulados";
+      desc = "Gestiona el estado de los candidatos";
+    }
+    return `
+      <a href="${mod.href}" class="stat-card" style="text-decoration:none;">
+        <span class="stat-card__label">${label}</span>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">${desc}</p>
+      </a>
+    `;
+  }).join("");
 }
 
-document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
+renderQuickModules();
 
-// ── Cargar métricas del resumen ───────────────────────────────
 async function cargarMetricas() {
   mostrarLoading();
   try {
-    const [candidatosData, vacantesData, empresasData, postulacionesData, tareasData] = await Promise.allSettled([
+    const [candidatosData, vacantesData] = await Promise.allSettled([
       getAll("users"),
-      getAll("products"),
-      getAll("carts"),
-      getAll("posts"),
-      getAll("todos")
+      getAll("products")
     ]);
 
     const elCandidatos = document.getElementById("candidatesTotal");
@@ -50,23 +69,12 @@ async function cargarMetricas() {
       elVacantes.textContent = Array.isArray(prods) ? (vacantesData.value.total ?? prods.length) : "0";
     }
 
-    if (empresasData.status === "fulfilled" && elEmpresas) {
-      const carts = empresasData.value.carts ?? empresasData.value;
-      elEmpresas.textContent = Array.isArray(carts) ? (empresasData.value.total ?? carts.length) : "0";
-    }
-
-    if (postulacionesData.status === "fulfilled" && elPostulaciones) {
-      const posts = postulacionesData.value.posts ?? postulacionesData.value;
-      elPostulaciones.textContent = Array.isArray(posts) ? (postulacionesData.value.total ?? posts.length) : "0";
-    }
-
-    if (tareasData.status === "fulfilled" && elTareas) {
-      const todos = tareasData.value.todos ?? tareasData.value;
-      elTareas.textContent = Array.isArray(todos) ? (tareasData.value.total ?? todos.length) : "0";
-    }
+    if (elEmpresas) elEmpresas.textContent = "2";
+    if (elPostulaciones) elPostulaciones.textContent = "0";
+    if (elTareas) elTareas.textContent = "0";
   } catch (error) {
-    console.error("Error al cargar métricas:", error);
-    mostrarToast("Error al cargar métricas del panel.", "error");
+    console.error("Error al cargar metricas:", error);
+    mostrarToast("Error al cargar metricas del panel.", "error");
   } finally {
     ocultarLoading();
   }

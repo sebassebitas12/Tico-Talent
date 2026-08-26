@@ -17,7 +17,6 @@
 
   <div class="login-split">
 
-    <!-- ========== LADO IZQUIERDO - ILUSTRACION ========== -->
     <div class="login-split__left">
       <div class="login-split__brand">
         <a href="index.html" class="login-split__logo">Tico Talent</a>
@@ -41,7 +40,6 @@
       </div>
     </div>
 
-    <!-- ========== LADO DERECHO - FORMULARIO ========== -->
     <div class="login-split__right">
       <div class="login-split__form-wrapper">
 
@@ -72,27 +70,15 @@
 
           <div class="login__field">
             <label class="login__label" for="loginPassword">Contrasena</label>
-            <div class="login__input-wrapper">
-              <input
-                class="login__input login__input--password"
-                type="password"
-                id="loginPassword"
-                name="password"
-                placeholder="Tu contrasena"
-                autocomplete="current-password"
-                required
-              >
-              <button type="button" class="login__toggle-password" id="togglePassword" aria-label="Mostrar contrasena">
-                <svg class="eye-icon eye-icon--open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-                <svg class="eye-icon eye-icon--closed d-none" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
-                </svg>
-              </button>
-            </div>
+            <input
+              class="login__input"
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Tu contrasena"
+              autocomplete="current-password"
+              required
+            >
           </div>
 
           <div class="login__error d-none" id="loginError"></div>
@@ -118,12 +104,12 @@
         <div class="login__footer">
           <p class="login__demo-title">Demo - Click para auto-rellenar</p>
           <div class="login__demo-users">
-            <div class="login__demo-user" data-role="empleador" id="demoEmpleador">
-              <span class="login__demo-role">&#x1F4BC; Empleador</span>
+            <div class="login__demo-user" data-role="empresa" id="demoEmpresa">
+              <span class="login__demo-role">Empresa</span>
               <code>carlos</code> / <code>carlos123</code>
             </div>
             <div class="login__demo-user" data-role="solicitante" id="demoSolicitante">
-              <span class="login__demo-role">&#x1F464; Solicitante</span>
+              <span class="login__demo-role">Solicitante</span>
               <code>maria</code> / <code>maria123</code>
             </div>
           </div>
@@ -134,12 +120,11 @@
 
   </div>
 
-  <!-- ========== MODAL OLVIDO CONTRASENA ========== -->
   <div class="modal-overlay d-none" id="forgotModal">
     <div class="modal">
       <div class="modal__header">
         <h2 class="modal__title">Recuperar contrasena</h2>
-        <button class="modal__close" id="closeForgotModal">&#x2715;</button>
+        <button class="modal__close" id="closeForgotModal">X</button>
       </div>
       <div class="modal__body">
         <p class="login__modal-text">Ingresa tu correo electronico y te enviaremos las instrucciones para recuperar tu contrasena.</p>
@@ -154,12 +139,11 @@
     </div>
   </div>
 
-  <!-- ========== MODAL REGISTRO ========== -->
   <div class="modal-overlay d-none" id="registerModal">
     <div class="modal">
       <div class="modal__header">
         <h2 class="modal__title">Crear cuenta</h2>
-        <button class="modal__close" id="closeRegisterModal">&#x2715;</button>
+        <button class="modal__close" id="closeRegisterModal">X</button>
       </div>
       <div class="modal__body">
         <form id="registerForm">
@@ -183,12 +167,10 @@
             <label class="login__label">Rol</label>
             <div class="login__roles login__roles--inline">
               <button type="button" class="role-card role-card--sm" data-reg-role="solicitante">
-                <span class="role-card__emoji">&#x1F464;</span>
                 <span class="role-card__title">Solicitante</span>
               </button>
-              <button type="button" class="role-card role-card--sm" data-reg-role="empleador">
-                <span class="role-card__emoji">&#x1F4BC;</span>
-                <span class="role-card__title">Empleador</span>
+              <button type="button" class="role-card role-card--sm" data-reg-role="empresa">
+                <span class="role-card__title">Empresa</span>
               </button>
             </div>
             <input type="hidden" id="regRole" value="solicitante">
@@ -199,7 +181,6 @@
     </div>
   </div>
 
-  <!-- ========== TOASTS ========== -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script type="module" src="src/js/login.js"></script>

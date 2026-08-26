@@ -11,21 +11,11 @@ const inputPass = document.getElementById("loginPassword");
 const errorBox = document.getElementById("loginError");
 const btnLogin = document.getElementById("btnLogin");
 const loader = document.getElementById("loginLoader");
-const toggleBtn = document.getElementById("togglePassword");
-const eyeOpen = toggleBtn.querySelector(".eye-icon--open");
-const eyeClosed = toggleBtn.querySelector(".eye-icon--closed");
 
 const DEMO_CREDS = {
-  empleador: { username: "carlos", password: "carlos123" },
-  solicitante: { username: "maria", password: "maria123" }
+  empresa:     { username: "carlos",  password: "carlos123" },
+  solicitante: { username: "maria",   password: "maria123" }
 };
-
-toggleBtn.addEventListener("click", () => {
-  const isPassword = inputPass.type === "password";
-  inputPass.type = isPassword ? "text" : "password";
-  eyeOpen.classList.toggle("d-none", !isPassword);
-  eyeClosed.classList.toggle("d-none", isPassword);
-});
 
 document.querySelectorAll(".login__demo-user").forEach(demo => {
   demo.addEventListener("click", () => {
@@ -139,6 +129,14 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
   }
   if (password.length < 6) {
     mostrarToast("La contrasena debe tener al menos 6 caracteres", "error");
+    return;
+  }
+  if (rol === "empresa" && !email.endsWith("@ticotalent.com")) {
+    mostrarToast("El correo de la empresa debe ser @ticotalent.com", "error");
+    return;
+  }
+  if (rol === "solicitante" && email.endsWith("@ticotalent.com")) {
+    mostrarToast("El correo del solicitante debe ser un correo personal", "error");
     return;
   }
   try {

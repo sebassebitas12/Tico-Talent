@@ -1,7 +1,7 @@
 // src/js/ui.js
 // Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, navbar dinamica.
 
-import { getUser, logout, getRole, getVisibleModules } from "./auth.js";
+import { getUser, logout, getRole, getVisibleModules, getRoleLabel } from "./auth.js";
 
 // ── SEGURIDAD ──────────────────────────────────────────────────
 
@@ -15,12 +15,9 @@ export function escapeHTML(str) {
 // ── NAVBAR DINAMICA POR ROL ───────────────────────────────────
 
 const NAV_ITEMS = [
-  { id: "vacantes",     label: "Vacantes",         href: "vacantes.html" },
-  { id: "candidatos",   label: "Candidatos",       href: "candidatos.html" },
-  { id: "empresas",     label: "Empresas",          href: "empresas.html" },
-  { id: "postulaciones",label: "Mis Postulaciones", href: "postulaciones.html" },
-  { id: "entrevistas",  label: "Entrevistas",       href: "entrevistas.html" },
-  { id: "tareas",       label: "Tareas",            href: "tareas.html" }
+  { id: "vacantes",      label: "Vacantes",              href: "vacantes.html" },
+  { id: "candidatos",    label: "Candidatos Postulados",  href: "candidatos.html" },
+  { id: "postulaciones", label: "Mis Postulaciones",      href: "postulaciones.html" }
 ];
 
 /**
@@ -35,8 +32,7 @@ export function renderNavbar(activePage) {
   const visibleModules = getVisibleModules();
   const initials = user ? (user.firstName?.charAt(0) || "U") : "U";
   const fullName = user ? `${user.firstName} ${user.lastName}` : "Usuario";
-  const rolLabel = getRole() === "reclutador" ? "Reclutador" :
-                   getRole() === "empleador" ? "Empleador" : "Candidato";
+  const rolLabel = getRoleLabel();
 
   const navLinks = NAV_ITEMS
     .filter(item => visibleModules.includes(item.id))
@@ -47,7 +43,7 @@ export function renderNavbar(activePage) {
 
   navbar.innerHTML = `
     <div class="navbar__brand">
-      <a href="principal.html" class="navbar__logo">JobConnect</a>
+      <a href="principal.html" class="navbar__logo">Tico Talent</a>
     </div>
     <nav class="navbar__nav" id="navbarNav">
       <a href="principal.html" class="nav-link${activePage === "principal" ? " nav-link--active" : ""}">

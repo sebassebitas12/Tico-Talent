@@ -14,73 +14,30 @@
 </head>
 <body class="main-page">
 
-  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
-  <header class="sidebar" id="sidebar">
-    <div class="sidebar__header">
-      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
-    </div>
+  <header id="appNavbar"></header>
 
-    <nav class="sidebar__nav">
-      <div class="sidebar__nav-section">
-        <a href="principal.html" class="nav-link">
-          <span class="nav-text">Explorar</span>
-        </a>
-        <a href="vacantes.html" class="nav-link">
-          <span class="nav-text">Vacantes</span>
-          <span class="nav-badge">51</span>
-        </a>
-        <a href="candidatos.html" class="nav-link">
-          <span class="nav-text">Candidatos</span>
-        </a>
-        <a href="empresas.html" class="nav-link">
-          <span class="nav-text">Empresas</span>
-        </a>
-        <a href="postulaciones.html" class="nav-link nav-link--active">
-          <span class="nav-text">Mis Postulaciones</span>
-        </a>
-      </div>
-    </nav>
-
-    <div class="sidebar__footer">
-      <div class="sidebar__user-card">
-        <div class="sidebar__user-avatar" id="userAvatar">U</div>
-        <div class="sidebar__user-info">
-          <span class="sidebar__user-name" id="userName">Usuario</span>
-          <span class="sidebar__user-role" id="userRole">Rol</span>
-        </div>
-      </div>
-      <a href="/login.html" class="sidebar__logout" id="btnLogout">
-        <span class="nav-text">Cerrar Sesion</span>
-      </a>
-    </div>
-  </header>
-
-  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
     <main class="main" id="main">
       <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
         <header class="main__content-header">
-          <h1 class="main__title" id="viewTitle">Seguimiento de Postulaciones</h1>
-          <p class="main__description">Estado y trazabilidad de las aplicaciones en proceso.</p>
+          <h1 class="main__title" id="viewTitle">Mis Postulaciones</h1>
+          <p class="main__description">Historial y estado de tus aplicaciones a ofertas de empleo.</p>
         </header>
 
         <div class="main__content-body" id="contentArea">
           <section class="applications" aria-labelledby="applicationsListTitle">
             <h2 id="applicationsListTitle" class="sr-only">Listado de postulaciones</h2>
-            <div class="job-list" id="applicationsList">
-              <!-- Las postulaciones son renderizadas dinámicamente por postulaciones.js -->
-            </div>
+            <div class="job-list" id="applicationsList"></div>
           </section>
         </div>
       </section>
     </main>
 
     <footer class="main__footer" id="mainFooter">
-      <p class="main__footer-text">© 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+      <p class="main__footer-text">&copy; 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
     </footer>
   </div>
 
-  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
@@ -89,8 +46,8 @@
   <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
       <div class="modal__header">
-        <h2 class="modal__title" id="modalTitle">Título</h2>
-        <button class="modal__close" id="modalClose">✕</button>
+        <h2 class="modal__title" id="modalTitle">Titulo</h2>
+        <button class="modal__close" id="modalClose">X</button>
       </div>
       <div class="modal__body" id="modalBody"></div>
       <div class="modal__footer">
@@ -101,9 +58,9 @@
   </div>
   <div class="confirm-overlay d-none" id="confirmOverlay">
     <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger">⚠️</div>
-      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
-      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__icon confirm__icon--danger">!</div>
+      <h3 class="confirm__title" id="confirmTitle">Estas seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta accion no se puede deshacer.</p>
       <div class="confirm__actions">
         <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
         <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
