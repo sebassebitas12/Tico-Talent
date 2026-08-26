@@ -1,3 +1,6 @@
+// src/js/auth.js
+// Sistema de autenticación con DummyJSON /auth/login + fallback demo local.
+
 const DEMO_USERS = [
   {
     id: 1,
@@ -43,6 +46,36 @@ function findUser(username) {
 }
 
 export async function login(username, password) {
+  // Intentar autenticar con DummyJSON real
+  try {
+    const response = await fetch("https://dummyjson.com/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.accessToken;
+      const userData = {
+        id: data.id,
+        username: data.username,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        image: data.image,
+        rol: "solicitante"
+      };
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("rol", userData.rol);
+      return userData;
+    }
+  } catch {
+    // Si DummyJSON no responde, caer al fallback local
+  }
+
+  // Fallback: autenticación local demo
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const user = findUser(username);

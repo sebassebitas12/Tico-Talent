@@ -1,26 +1,13 @@
 // src/js/postulaciones.js
-// CRUD Postulaciones → /posts de DummyJSON con diseño Stitch (job-card)
+// CRUD Postulaciones → /posts de DummyJSON
 // RF-05 al RF-10
 
-import { requireAuth, getUser, logout } from "./auth.js";
+import { requireAuth } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
 
 requireAuth();
-
-const user = getUser();
-if (user) {
-  const nameEl = document.getElementById("userName");
-  const roleEl = document.getElementById("userRole");
-  const avatarEl = document.getElementById("userAvatar");
-  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-  if (roleEl) roleEl.textContent = user.email;
-  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
-}
-document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
+initUserNav();
 
 let postulaciones = [];
 
@@ -63,7 +50,7 @@ function renderCards(lista) {
             <div class="job-card__header">
               <div class="job-card__company-logo">💻</div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title">${p.title}</h3>
+                <h3 class="job-card__title">${escapeHTML(p.title)}</h3>
                 <div class="job-card__company-name">
                   <span>TechCR Solutions & Partners</span> • <span>Postulado recientemente</span>
                 </div>
@@ -74,18 +61,18 @@ function renderCards(lista) {
             <div class="job-card__details">
               <span class="job-tag">🏠 Remoto</span>
               <span class="job-tag">⚡ ${match}% Match</span>
-              ${tags.map((t) => `<span class="job-tag">🏷️ ${t}</span>`).join("")}
+              ${tags.map((t) => `<span class="job-tag">🏷️ ${escapeHTML(t)}</span>`).join("")}
               <span class="job-tag">🆔 Folio #${p.id}</span>
             </div>
 
             <div class="job-card__footer">
               <div>
-                <span class="job-card__salary">${salary}</span>
+                <span class="job-card__salary">${escapeHTML(salary)}</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-secondary" onclick="verDetallePostulacion(${p.id})">Ver Detalles</button>
-                <button type="button" class="btn btn-secondary" onclick="editarPostulacion(${p.id})">✏️</button>
-                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarPostulacion(${p.id})">🗑️</button>
+                <button type="button" class="btn btn-secondary btn-detalle" data-id="${p.id}">Ver Detalles</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${p.id}">✏️</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${p.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
               </div>
             </div>
           </article>
@@ -95,6 +82,19 @@ function renderCards(lista) {
   `;
 
   document.getElementById("btnNuevaPostulacion")?.addEventListener("click", () => abrirFormulario());
+
+  contenedor.querySelectorAll(".btn-detalle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const p = postulaciones.find(item => item.id === Number(btn.dataset.id));
+      if (p) mostrarToast(`Detalle: ${p.title} - ${p.body ? p.body.substring(0, 40) + '...' : 'Sin observaciones'}`, "info", 4000);
+    });
+  });
+  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
+    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+  });
+  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
+    btn.addEventListener("click", () => confirmar("¿Eliminar esta postulación?", () => eliminarPostulacionConfirmada(Number(btn.dataset.id))));
+  });
 }
 
 async function cargarPostulaciones() {
@@ -114,11 +114,11 @@ function formularioHTML(p = {}) {
   return `
     <div class="form-group">
       <label>Título / Cargo Postulado</label>
-      <input class="form-control" id="fTitulo" value="${p.title ?? ""}" placeholder="Ej: Senior Frontend Developer" required>
+      <input class="form-control" id="fTitulo" value="${escapeHTML(p.title ?? "")}" placeholder="Ej: Senior Frontend Developer" required>
     </div>
     <div class="form-group">
       <label>Descripción / Observaciones</label>
-      <textarea class="form-control" id="fBody" rows="3" placeholder="Detalles de la postulación">${p.body ?? ""}</textarea>
+      <textarea class="form-control" id="fBody" rows="3" placeholder="Detalles de la postulación">${escapeHTML(p.body ?? "")}</textarea>
     </div>
     <div class="form-group">
       <label>ID Candidato (userId)</label>
@@ -126,7 +126,7 @@ function formularioHTML(p = {}) {
     </div>
     <div class="form-group">
       <label>Etiquetas (separadas por coma)</label>
-      <input class="form-control" id="fTags" value="${(p.tags ?? []).join(", ")}" placeholder="react, typescript, remoto">
+      <input class="form-control" id="fTags" value="${escapeHTML((p.tags ?? []).join(", "))}" placeholder="react, typescript, remoto">
     </div>
   `;
 }
@@ -183,15 +183,5 @@ async function eliminarPostulacionConfirmada(id) {
     ocultarLoading();
   }
 }
-
-window.editarPostulacion   = (id) => abrirFormulario(id);
-window.eliminarPostulacion = (id) =>
-  confirmar("¿Eliminar esta postulación?", () => eliminarPostulacionConfirmada(id));
-window.verDetallePostulacion = (id) => {
-  const p = postulaciones.find((item) => item.id === id);
-  if (p) {
-    mostrarToast(`Detalle: ${p.title} - ${p.body ? p.body.substring(0, 40) + '...' : 'Sin observaciones'}`, "info", 4000);
-  }
-};
 
 cargarPostulaciones();

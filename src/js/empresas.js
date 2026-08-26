@@ -1,26 +1,13 @@
 // src/js/empresas.js
-// CRUD Empresas Clientes → /carts de DummyJSON con diseño Stitch (job-card)
+// CRUD Empresas Clientes → /carts de DummyJSON
 // RF-05 al RF-10
 
-import { requireAuth, getUser, logout } from "./auth.js";
+import { requireAuth } from "./auth.js";
 import { getAll, create, update, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
 
 requireAuth();
-
-const user = getUser();
-if (user) {
-  const nameEl = document.getElementById("userName");
-  const roleEl = document.getElementById("userRole");
-  const avatarEl = document.getElementById("userAvatar");
-  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-  if (roleEl) roleEl.textContent = user.email;
-  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
-}
-document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
+initUserNav();
 
 let empresas = [];
 
@@ -65,7 +52,7 @@ function renderCards(lista) {
             <div class="job-card__header">
               <div class="job-card__company-logo">${logo}</div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title">${nombre}</h3>
+                <h3 class="job-card__title">${escapeHTML(nombre)}</h3>
                 <div class="job-card__company-name">
                   <span>Tecnología & Servicios</span> • <span>San José, Costa Rica</span>
                 </div>
@@ -85,9 +72,8 @@ function renderCards(lista) {
                 <span class="job-card__date">Miembro aliado desde 2024</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <a href="vacantes.html" class="btn btn-cta" style="text-decoration: none;">Ver Vacantes (${totalProds})</a>
-                <button type="button" class="btn btn-secondary" onclick="editarEmpresa(${emp.id})">✏️</button>
-                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarEmpresa(${emp.id})">🗑️</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${emp.id}">✏️</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${emp.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
               </div>
             </div>
           </article>
@@ -97,6 +83,13 @@ function renderCards(lista) {
   `;
 
   document.getElementById("btnNuevaEmpresa")?.addEventListener("click", () => abrirFormulario());
+
+  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
+    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+  });
+  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
+    btn.addEventListener("click", () => confirmar("¿Eliminar esta empresa aliada?", () => eliminarEmpresaConfirmada(Number(btn.dataset.id))));
+  });
 }
 
 async function cargarEmpresas() {
@@ -116,7 +109,7 @@ function formularioHTML(emp = {}) {
   return `
     <div class="form-group">
       <label>Nombre de la Empresa</label>
-      <input class="form-control" id="fNombreEmpresa" value="${emp.nombre ?? ""}" placeholder="Ej: Pura Vida Software" required>
+      <input class="form-control" id="fNombreEmpresa" value="${escapeHTML(emp.nombre ?? "")}" placeholder="Ej: Pura Vida Software" required>
     </div>
     <div class="form-group">
       <label>ID Usuario / Representante</label>
@@ -181,9 +174,5 @@ async function eliminarEmpresaConfirmada(id) {
     ocultarLoading();
   }
 }
-
-window.editarEmpresa   = (id) => abrirFormulario(id);
-window.eliminarEmpresa = (id) =>
-  confirmar("¿Eliminar esta empresa aliada?", () => eliminarEmpresaConfirmada(id));
 
 cargarEmpresas();

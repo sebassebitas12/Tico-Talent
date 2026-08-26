@@ -674,64 +674,6 @@
   box-shadow: 0 0 0 3px rgba(83, 16, 104, 0.15);
 }
 
-/* Tablas CRUD */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface-solid);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  margin-top: 1rem;
-  border: 1px solid var(--border-subtle);
-}
-
-.data-table th {
-  background: var(--secondary-navy);
-  color: var(--text-light);
-  padding: 1rem;
-  font-weight: 700;
-  text-align: left;
-  font-size: 0.9rem;
-}
-
-.data-table td {
-  padding: 0.9rem 1rem;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--secondary-navy);
-  font-size: 0.95rem;
-}
-
-.data-table tr:hover {
-  background-color: rgba(83, 16, 104, 0.03);
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
-  font-size: 0.8rem;
-  font-weight: 600;
-  background-color: var(--bg-main);
-  color: var(--secondary-navy);
-}
-
-.badge--success { background-color: #dcfce7; color: #166534; }
-.badge--warning { background-color: #fef3c7; color: #92400e; }
-.badge--danger  { background-color: #fee2e2; color: #991b1b; }
-
 /* Toasts */
 .toast-container {
   position: fixed;

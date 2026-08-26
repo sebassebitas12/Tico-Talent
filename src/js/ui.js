@@ -1,6 +1,44 @@
 // src/js/ui.js
-// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading.
+// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, seguridad.
 // RF-09
+
+import { getUser, logout } from "./auth.js";
+
+// ── SEGURIDAD ──────────────────────────────────────────────────
+
+/**
+ * Escapa caracteres HTML para prevenir inyección de XSS.
+ * @param {string} str
+ * @returns {string}
+ */
+export function escapeHTML(str) {
+  if (str == null) return "";
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// ── INIT NAVBAR (usuario + logout) ─────────────────────────────
+
+/**
+ * Inicializa la navbar: setea nombre, rol, avatar del usuario y conecta logout.
+ * Llamar una vez al inicio de cada módulo.
+ */
+export function initUserNav() {
+  const user = getUser();
+  if (user) {
+    const nameEl = document.getElementById("userName");
+    const roleEl = document.getElementById("userRole");
+    const avatarEl = document.getElementById("userAvatar");
+    if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
+    if (roleEl) roleEl.textContent = user.email;
+    if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
+  }
+  document.getElementById("btnLogout")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    logout();
+  });
+}
 
 // ── TOASTS ────────────────────────────────────────────────────
 

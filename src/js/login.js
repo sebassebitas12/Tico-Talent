@@ -1,4 +1,5 @@
 ﻿import { login, isAuthenticated, register, forgotPassword } from "./auth.js";
+import { mostrarToast } from "./ui.js";
 
 if (isAuthenticated()) {
   window.location.href = "/src/html/principal.html";
@@ -74,22 +75,6 @@ function hideError() {
   errorBox.classList.add("d-none");
 }
 
-function showToast(message, type = "success") {
-  const container = document.getElementById("toastContainer");
-  const toast = document.createElement("div");
-  toast.className = `toast toast--${type}`;
-  toast.innerHTML = `
-    <span>${message}</span>
-    <button class="toast__close" onclick="this.parentElement.remove()">&#x2715;</button>
-  `;
-  container.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add("toast--visible"));
-  setTimeout(() => {
-    toast.classList.remove("toast--visible");
-    setTimeout(() => toast.remove(), 300);
-  }, 4000);
-}
-
 const forgotModal = document.getElementById("forgotModal");
 const registerModal = document.getElementById("registerModal");
 
@@ -125,11 +110,11 @@ document.getElementById("forgotForm").addEventListener("submit", async (e) => {
   if (!email) return;
   try {
     await forgotPassword(email);
-    showToast("Se enviaron las instrucciones de recuperacion a tu correo");
+    mostrarToast("Se enviaron las instrucciones de recuperacion a tu correo");
     forgotModal.classList.add("d-none");
     document.getElementById("forgotForm").reset();
   } catch (err) {
-    showToast(err.message, "error");
+    mostrarToast(err.message, "error");
   }
 });
 
@@ -149,22 +134,22 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
   const password = document.getElementById("regPass").value.trim();
   const rol = document.getElementById("regRole").value;
   if (!name || !email || !username || !password) {
-    showToast("Completa todos los campos", "error");
+    mostrarToast("Completa todos los campos", "error");
     return;
   }
   if (password.length < 6) {
-    showToast("La contrasena debe tener al menos 6 caracteres", "error");
+    mostrarToast("La contrasena debe tener al menos 6 caracteres", "error");
     return;
   }
   try {
     register({ name, email, username, password, rol });
-    showToast("Cuenta creada exitosamente. Ya puedes iniciar sesion.");
+    mostrarToast("Cuenta creada exitosamente. Ya puedes iniciar sesion.");
     registerModal.classList.add("d-none");
     document.getElementById("registerForm").reset();
     inputUser.value = username;
     inputPass.value = "";
     inputPass.focus();
   } catch (err) {
-    showToast(err.message, "error");
+    mostrarToast(err.message, "error");
   }
 });

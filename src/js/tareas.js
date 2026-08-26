@@ -1,26 +1,13 @@
 // src/js/tareas.js
-// CRUD Tareas del reclutador → /todos de DummyJSON con diseño Stitch (job-card)
+// CRUD Tareas del reclutador → /todos de DummyJSON
 // RF-05 al RF-10
 
-import { requireAuth, getUser, logout } from "./auth.js";
+import { requireAuth } from "./auth.js";
 import { getAll, create, patch, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
 
 requireAuth();
-
-const user = getUser();
-if (user) {
-  const nameEl = document.getElementById("userName");
-  const roleEl = document.getElementById("userRole");
-  const avatarEl = document.getElementById("userAvatar");
-  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-  if (roleEl) roleEl.textContent = user.email;
-  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
-}
-document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
+initUserNav();
 
 let tareas = [];
 
@@ -60,7 +47,7 @@ function renderCards(lista) {
             <div class="job-card__header">
               <div class="job-card__company-logo">📋</div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title" style="${t.completed ? "text-decoration: line-through; color: var(--text-muted);" : ""}">${t.todo}</h3>
+                <h3 class="job-card__title" style="${t.completed ? "text-decoration: line-through; color: var(--text-muted);" : ""}">${escapeHTML(t.todo)}</h3>
                 <div class="job-card__company-name">
                   <span>Asignado a: Usuario #${t.userId}</span> • <span>Prioridad ${t.completed ? "Baja" : "Alta"}</span>
                 </div>
@@ -79,11 +66,11 @@ function renderCards(lista) {
                 <span class="job-card__date">${t.completed ? "Estado: Resuelta" : "Estado: En seguimiento activo"}</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
-                <button type="button" class="btn ${t.completed ? "btn-secondary" : "btn-cta"}" onclick="toggleTarea(${t.id}, ${t.completed})">
+                <button type="button" class="btn ${t.completed ? "btn-secondary" : "btn-cta"} btn-toggle" data-id="${t.id}" data-completed="${t.completed}">
                   ${t.completed ? "↩️ Reabrir" : "Completar Tarea"}
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="editarTarea(${t.id})">✏️</button>
-                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarTarea(${t.id})">🗑️</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${t.id}">✏️</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${t.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
               </div>
             </div>
           </article>
@@ -93,6 +80,16 @@ function renderCards(lista) {
   `;
 
   document.getElementById("btnNuevaTarea")?.addEventListener("click", () => abrirFormulario());
+
+  contenedor.querySelectorAll(".btn-toggle").forEach(btn => {
+    btn.addEventListener("click", () => toggleTareaEstado(Number(btn.dataset.id), btn.dataset.completed === "true"));
+  });
+  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
+    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+  });
+  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
+    btn.addEventListener("click", () => confirmar("¿Eliminar esta tarea?", () => eliminarTareaConfirmada(Number(btn.dataset.id))));
+  });
 }
 
 async function cargarTareas() {
@@ -112,7 +109,7 @@ function formularioHTML(t = {}) {
   return `
     <div class="form-group">
       <label>Descripción de la tarea</label>
-      <input class="form-control" id="fTodo" value="${t.todo ?? ""}" placeholder="Ej: Llamar a candidato Juan para entrevista técnica" required>
+      <input class="form-control" id="fTodo" value="${escapeHTML(t.todo ?? "")}" placeholder="Ej: Llamar a candidato Juan para entrevista técnica" required>
     </div>
     <div class="form-group">
       <label>ID Usuario / Responsable</label>
@@ -194,9 +191,5 @@ async function eliminarTareaConfirmada(id) {
     ocultarLoading();
   }
 }
-
-window.editarTarea    = (id) => abrirFormulario(id);
-window.toggleTarea    = (id, completado) => toggleTareaEstado(id, completado);
-window.eliminarTarea  = (id) => confirmar("¿Eliminar esta tarea?", () => eliminarTareaConfirmada(id));
 
 cargarTareas();

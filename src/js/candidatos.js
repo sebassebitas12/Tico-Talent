@@ -1,32 +1,16 @@
 // src/js/candidatos.js
-// Módulo CRUD de Candidatos → mapea /users de DummyJSON con diseño Stitch (job-card)
+// CRUD Candidatos → /users de DummyJSON
 // RF-05 al RF-10
 
-import { requireAuth, getUser, logout } from "./auth.js";
+import { requireAuth } from "./auth.js";
 import { getAll, create, update, remove } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar } from "./ui.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
 
 requireAuth();
+initUserNav();
 
-// ── Inicialización de usuario en el header/sidebar ────────────
-const user = getUser();
-if (user) {
-  const nameEl = document.getElementById("userName");
-  const roleEl = document.getElementById("userRole");
-  const avatarEl = document.getElementById("userAvatar");
-  if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-  if (roleEl) roleEl.textContent = user.email;
-  if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
-}
-document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  logout();
-});
-
-// ── Estado ────────────────────────────────────────────────────
 let candidatos = [];
 
-// ── Render de tarjetas (Mockup Stitch) ─────────────────────────
 function renderCards(lista) {
   const contenedor = document.getElementById("candidatesList");
   if (!contenedor) return;
@@ -60,19 +44,19 @@ function renderCards(lista) {
             <div class="job-card__header">
               <div class="job-card__company-logo">${logo}</div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title">${c.firstName} ${c.lastName}</h3>
+                <h3 class="job-card__title">${escapeHTML(c.firstName)} ${escapeHTML(c.lastName)}</h3>
                 <div class="job-card__company-name">
-                  <span>${role}</span> • <span>${city}</span>
+                  <span>${escapeHTML(role)}</span> • <span>${escapeHTML(city)}</span>
                 </div>
               </div>
               <span class="badge-match">⚡ ${match}% Match</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">👤 @${c.username}</span>
-              <span class="job-tag">📧 ${c.email}</span>
-              <span class="job-tag">📞 ${c.phone || "+506 8888-0000"}</span>
-              <span class="job-tag">🏢 ${c.company?.name || "Tico Talent Network"}</span>
+              <span class="job-tag">👤 @${escapeHTML(c.username)}</span>
+              <span class="job-tag">📧 ${escapeHTML(c.email)}</span>
+              <span class="job-tag">📞 ${escapeHTML(c.phone || "+506 8888-0000")}</span>
+              <span class="job-tag">🏢 ${escapeHTML(c.company?.name || "Tico Talent Network")}</span>
             </div>
 
             <div class="job-card__footer">
@@ -81,8 +65,8 @@ function renderCards(lista) {
                 <span class="job-card__date" style="display: block; font-size: 0.8rem;">Perfil activo</span>
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
-                <button type="button" class="btn btn-secondary" onclick="editarCandidato(${c.id})">✏️ Editar</button>
-                <button type="button" class="btn btn--danger" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;" onclick="eliminarCandidato(${c.id})">🗑️ Eliminar</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${c.id}">✏️ Editar</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${c.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️ Eliminar</button>
               </div>
             </div>
           </article>
@@ -92,9 +76,15 @@ function renderCards(lista) {
   `;
 
   document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
+
+  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
+    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+  });
+  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
+    btn.addEventListener("click", () => confirmar("¿Eliminar este candidato?", () => eliminarCandidatoConfirmado(Number(btn.dataset.id))));
+  });
 }
 
-// ── Cargar candidatos ─────────────────────────────────────────
 async function cargarCandidatos() {
   mostrarLoading();
   try {
@@ -108,28 +98,27 @@ async function cargarCandidatos() {
   }
 }
 
-// ── Formulario (crear / editar) ───────────────────────────────
 function formularioHTML(c = {}) {
   return `
     <div class="form-group">
       <label>Nombre</label>
-      <input class="form-control" id="fNombre" value="${c.firstName ?? ""}" placeholder="Nombre" required>
+      <input class="form-control" id="fNombre" value="${escapeHTML(c.firstName ?? "")}" placeholder="Nombre" required>
     </div>
     <div class="form-group">
       <label>Apellido</label>
-      <input class="form-control" id="fApellido" value="${c.lastName ?? ""}" placeholder="Apellido" required>
+      <input class="form-control" id="fApellido" value="${escapeHTML(c.lastName ?? "")}" placeholder="Apellido" required>
     </div>
     <div class="form-group">
       <label>Usuario</label>
-      <input class="form-control" id="fUsername" value="${c.username ?? ""}" placeholder="usuario123" required>
+      <input class="form-control" id="fUsername" value="${escapeHTML(c.username ?? "")}" placeholder="usuario123" required>
     </div>
     <div class="form-group">
       <label>Email</label>
-      <input class="form-control" type="email" id="fEmail" value="${c.email ?? ""}" placeholder="correo@ejemplo.com" required>
+      <input class="form-control" type="email" id="fEmail" value="${escapeHTML(c.email ?? "")}" placeholder="correo@ejemplo.com" required>
     </div>
     <div class="form-group">
       <label>Teléfono</label>
-      <input class="form-control" id="fTelefono" value="${c.phone ?? ""}" placeholder="+506 1234-5678">
+      <input class="form-control" id="fTelefono" value="${escapeHTML(c.phone ?? "")}" placeholder="+506 1234-5678">
     </div>
   `;
 }
@@ -156,13 +145,16 @@ function abrirFormulario(id = null) {
     try {
       if (id) {
         await update("users", id, datos);
+        const idx = candidatos.findIndex((c) => c.id === id);
+        if (idx !== -1) candidatos[idx] = { ...candidatos[idx], ...datos };
         mostrarToast("Candidato actualizado.", "success");
       } else {
-        await create("users", datos);
+        const nuevo = await create("users", datos);
+        candidatos.unshift({ ...nuevo, ...datos, id: Date.now() });
         mostrarToast("Candidato creado.", "success");
       }
       cerrarModal();
-      await cargarCandidatos();
+      renderCards(candidatos);
     } catch {
       mostrarToast("Error al guardar.", "error");
     } finally {
@@ -171,13 +163,13 @@ function abrirFormulario(id = null) {
   });
 }
 
-// ── Eliminar ──────────────────────────────────────────────────
 async function eliminarCandidatoConfirmado(id) {
   mostrarLoading();
   try {
     await remove("users", id);
+    candidatos = candidatos.filter((c) => c.id !== id);
     mostrarToast("Candidato eliminado.", "success");
-    await cargarCandidatos();
+    renderCards(candidatos);
   } catch {
     mostrarToast("Error al eliminar.", "error");
   } finally {
@@ -185,10 +177,4 @@ async function eliminarCandidatoConfirmado(id) {
   }
 }
 
-// Exponer globalmente para los onclick en las tarjetas
-window.editarCandidato   = (id) => abrirFormulario(id);
-window.eliminarCandidato = (id) =>
-  confirmar("¿Eliminar este candidato?", () => eliminarCandidatoConfirmado(id));
-
-// ── Arranque ──────────────────────────────────────────────────
 cargarCandidatos();
