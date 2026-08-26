@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tico Talent - Mi Perfil y Configuración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body class="main-page">
+
+  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
+  <header class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
+    </div>
+
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">
+        <!-- Renderizado dinámico vía ui.js -->
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card" style="cursor: pointer;" title="Ver mi perfil">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
+        </div>
+      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== ÁREA DE CONTENIDO (PERFIL) ========== -->
+  <div class="main-page__wrapper">
+    <main class="main" id="main">
+      
+      <div class="main__header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h1 class="main__title">Mi Perfil & Configuración</h1>
+          <p class="main__subtitle">Administra tus datos, preferencias laborales y visibilidad en la plataforma.</p>
+        </div>
+        <!-- Selector rápido de rol para demo de exposición -->
+        <div style="background: var(--surface-card); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Modo Demo:</span>
+          <button type="button" class="btn btn-secondary" id="btnToggleRol" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; font-weight: 600;">
+            🔄 Cambiar Rol (Candidato ⇄ Empresa)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjeta Hero del Perfil -->
+      <section class="job-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, var(--surface-card) 0%, rgba(83, 16, 104, 0.04) 100%);">
+        <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+          <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--primary-purple); color: #fff; font-size: 2rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 12px rgba(83, 16, 104, 0.2);" id="heroAvatar">
+            U
+          </div>
+          <div style="flex: 1; min-width: 240px;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0;" id="heroName">Nombre de Usuario</h2>
+              <span class="badge-match" id="heroRoleBadge" style="background: #f0ebf5; color: var(--primary-purple);">👤 Rol</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="heroSubtitle">Detalle del perfil</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formulario de Configuración Dinámico según Rol -->
+      <div style="background: var(--surface-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); padding: 2rem; box-shadow: var(--shadow-sm);">
+        <form id="perfilForm">
+          
+          <!-- Contenedor renderizado por perfil.js -->
+          <div id="perfilFieldsContainer"></div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+            <button type="button" class="btn btn-secondary" id="btnRestablecer">Descartar</button>
+            <button type="submit" class="btn btn-cta" id="btnGuardarPerfil">💾 Guardar Configuración</button>
+          </div>
+
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Contenedor de Toasts y Overlays -->
+  <div class="toast-container toast-container--top-right" id="toastContainer"></div>
+  <div class="loading loading--full d-none" id="loadingSpinner">
+    <div class="loading__spinner loading__spinner--lg"></div>
+    <p class="loading__text">Cargando...</p>
+  </div>
+  <div class="modal-overlay d-none" id="modalOverlay">
+    <div class="modal" id="modalContainer">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
+      </div>
+      <div class="modal__body" id="modalBody"></div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="btnFormCancel">Cancelar</button>
+        <button class="btn btn--primary" id="btnFormSubmit">Guardar</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-overlay d-none" id="confirmOverlay">
+    <div class="confirm" id="confirmContainer">
+      <div class="confirm__icon confirm__icon--danger">⚠️</div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
+      <div class="confirm__actions">
+        <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/perfil.js"></script>
+</body>
+</html>

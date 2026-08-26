@@ -1,7 +1,7 @@
 // src/js/ui.js
-// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, navbar dinamica.
+// Utilidades de interfaz reutilizables: toasts, modal, confirm, loading, navbar dinámica por rol.
 
-import { getUser, logout, getRole, getVisibleModules } from "./auth.js";
+import { getUser, logout, getRole, getVisibleModules, getPerfilExtendido } from "./auth.js";
 
 // ── SEGURIDAD ──────────────────────────────────────────────────
 
@@ -12,82 +12,71 @@ export function escapeHTML(str) {
   return div.innerHTML;
 }
 
-// ── NAVBAR DINAMICA POR ROL ───────────────────────────────────
-
-const NAV_ITEMS = [
-  { id: "vacantes",     label: "Vacantes",         href: "vacantes.html" },
-  { id: "candidatos",   label: "Candidatos",       href: "candidatos.html" },
-  { id: "empresas",     label: "Empresas",          href: "empresas.html" },
-  { id: "postulaciones",label: "Mis Postulaciones", href: "postulaciones.html" },
-  { id: "entrevistas",  label: "Entrevistas",       href: "entrevistas.html" },
-  { id: "tareas",       label: "Tareas",            href: "tareas.html" }
-];
+// ── INIT NAVBAR DINÁMICA POR ROL ──────────────────────────────
 
 /**
- * Renderiza la navbar horizontal superior con los modulos visibles segun el rol.
- * @param {string} activePage - id del modulo activo actual (ej: "vacantes")
- */
-export function renderNavbar(activePage) {
-  const navbar = document.getElementById("appNavbar");
-  if (!navbar) return;
-
-  const user = getUser();
-  const visibleModules = getVisibleModules();
-  const initials = user ? (user.firstName?.charAt(0) || "U") : "U";
-  const fullName = user ? `${user.firstName} ${user.lastName}` : "Usuario";
-  const rolLabel = getRole() === "reclutador" ? "Reclutador" :
-                   getRole() === "empleador" ? "Empleador" : "Candidato";
-
-  const navLinks = NAV_ITEMS
-    .filter(item => visibleModules.includes(item.id))
-    .map(item => {
-      const isActive = item.id === activePage;
-      return `<a href="${item.href}" class="nav-link${isActive ? " nav-link--active" : ""}"><span class="nav-text">${item.label}</span></a>`;
-    }).join("");
-
-  navbar.innerHTML = `
-    <div class="navbar__brand">
-      <a href="principal.html" class="navbar__logo">JobConnect</a>
-    </div>
-    <nav class="navbar__nav" id="navbarNav">
-      <a href="principal.html" class="nav-link${activePage === "principal" ? " nav-link--active" : ""}">
-        <span class="nav-text">Inicio</span>
-      </a>
-      ${navLinks}
-    </nav>
-    <div class="navbar__user">
-      <div class="navbar__user-card">
-        <div class="navbar__user-avatar">${initials}</div>
-        <div class="navbar__user-info">
-          <span class="navbar__user-name">${escapeHTML(fullName)}</span>
-          <span class="navbar__user-role">${rolLabel}</span>
-        </div>
-      </div>
-      <a href="/login.html" class="navbar__logout" id="btnLogout">Cerrar Sesion</a>
-    </div>
-  `;
-
-  document.getElementById("btnLogout")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    logout();
-  });
-}
-
-// ── INIT NAVBAR (usuario + logout) ─────────────────────────────
-
-/**
- * Inicializa la navbar: setea nombre, rol, avatar del usuario y conecta logout.
+ * Inicializa la barra de navegación horizontal superior:
+ * - Adapta el nombre, rol y avatar del usuario activo.
+ * - Muestra u oculta enlaces según el rol (Candidato vs Empleador).
+ * - Agrega el enlace a "Mi Perfil".
+ * - Conecta el evento de cerrar sesión.
  */
 export function initUserNav() {
   const user = getUser();
-  if (user) {
-    const nameEl = document.getElementById("userName");
-    const roleEl = document.getElementById("userRole");
-    const avatarEl = document.getElementById("userAvatar");
-    if (nameEl) nameEl.textContent = `${user.firstName} ${user.lastName}`;
-    if (roleEl) roleEl.textContent = user.email;
-    if (avatarEl) avatarEl.textContent = user.firstName.charAt(0).toUpperCase();
+  const perfil = getPerfilExtendido();
+  const rol = getRole();
+
+  // 1. Datos de usuario en la barra
+  const nameEl = document.getElementById("userName");
+  const roleEl = document.getElementById("userRole");
+  const avatarEl = document.getElementById("userAvatar");
+
+  const displayName = perfil.nombre || (user ? `${user.firstName} ${user.lastName}` : "Usuario");
+  const rolLabel = (rol === "empleador" || rol === "reclutador") ? "🏢 Empleador" : "👤 Candidato";
+
+  if (nameEl) nameEl.textContent = displayName;
+  if (roleEl) roleEl.textContent = rolLabel;
+  if (avatarEl) {
+    avatarEl.textContent = displayName.charAt(0).toUpperCase();
+    avatarEl.title = `${displayName} (${rolLabel})`;
   }
+
+  // 2. Conectar click en avatar / user card para ir a perfil
+  document.querySelector(".sidebar__user-card")?.addEventListener("click", () => {
+    window.location.href = "perfil.html";
+  });
+
+  // 3. Ajustar visibilidad de enlaces en el nav según rol
+  const navSection = document.querySelector(".sidebar__nav-section");
+  if (navSection) {
+    const currentPath = window.location.pathname;
+    
+    // Configuración de items según rol
+    const items = [
+      { id: "explorar", label: "Inicio", href: "principal.html", visible: true },
+      { id: "vacantes", label: "Vacantes", href: "vacantes.html", visible: true },
+      { id: "postulaciones", label: rol === "empleador" ? "Pipeline Postulaciones" : "Mis Postulaciones", href: "postulaciones.html", visible: true },
+      { id: "candidatos", label: "Candidatos", href: "candidatos.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "entrevistas", label: "Entrevistas", href: "entrevistas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "empresas", label: "Empresas", href: "empresas.html", visible: true },
+      { id: "tareas", label: "Tareas", href: "tareas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "perfil", label: "Mi Perfil", href: "perfil.html", visible: true }
+    ];
+
+    navSection.innerHTML = items
+      .filter(item => item.visible)
+      .map(item => {
+        const isActive = currentPath.endsWith(item.href);
+        return `
+          <a href="${item.href}" class="nav-link${isActive ? " nav-link--active" : ""}">
+            <span class="nav-text">${item.label}</span>
+            ${item.badge ? `<span class="nav-badge" style="background: var(--surface-subtle); color: var(--text-main); font-size: 0.75rem;">${item.badge}</span>` : ""}
+          </a>
+        `;
+      }).join("");
+  }
+
+  // 4. Conectar Cerrar Sesión
   document.getElementById("btnLogout")?.addEventListener("click", (e) => {
     e.preventDefault();
     logout();
@@ -96,29 +85,35 @@ export function initUserNav() {
 
 // ── TOASTS ────────────────────────────────────────────────────
 
-export function mostrarToast(mensaje, tipo = "success", duracion = 3000) {
-  const container = document.getElementById("toastContainer");
-  if (!container) return;
+export function mostrarToast(mensaje, tipo = "success", duracion = 3200) {
+  let container = document.getElementById("toastContainer");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toastContainer";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
 
   const toast = document.createElement("div");
   toast.className = `toast toast--${tipo}`;
 
-  const iconos = { success: "OK", error: "X", info: "i", warning: "!" };
+  const iconos = { success: "✓", error: "✕", info: "ℹ", warning: "⚠" };
   toast.innerHTML = `
-    <span class="toast__icon">${iconos[tipo] ?? "?"}</span>
-    <span class="toast__msg">${mensaje}</span>
-    <button class="toast__close">X</button>
+    <span class="toast__icon">${iconos[tipo] ?? "ℹ"}</span>
+    <span class="toast__msg">${escapeHTML(mensaje)}</span>
+    <button class="toast__close" aria-label="Cerrar">✕</button>
   `;
 
   container.appendChild(toast);
   requestAnimationFrame(() => toast.classList.add("toast--visible"));
+  
   toast.querySelector(".toast__close").addEventListener("click", () => cerrarToast(toast));
   setTimeout(() => cerrarToast(toast), duracion);
 }
 
 function cerrarToast(toast) {
   toast.classList.remove("toast--visible");
-  toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+  setTimeout(() => toast.remove(), 300);
 }
 
 // ── LOADING ───────────────────────────────────────────────────
@@ -131,7 +126,7 @@ export function ocultarLoading() {
   document.getElementById("loadingSpinner")?.classList.add("d-none");
 }
 
-// ── MODAL GENERICO ────────────────────────────────────────────
+// ── MODAL GENÉRICO ────────────────────────────────────────────
 
 export function abrirModal(titulo, htmlBody, onGuardar) {
   const overlay   = document.getElementById("modalOverlay");
@@ -170,7 +165,10 @@ export function confirmar(mensaje, onConfirmar) {
   const btnSi     = document.getElementById("btnConfirmYes");
   const btnNo     = document.getElementById("btnConfirmNo");
 
-  if (!overlay) return;
+  if (!overlay) {
+    if (confirm(mensaje)) onConfirmar();
+    return;
+  }
 
   msgEl.textContent = mensaje;
   overlay.classList.remove("d-none");

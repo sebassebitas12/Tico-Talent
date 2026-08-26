@@ -22,35 +22,20 @@
 
     <nav class="sidebar__nav">
       <div class="sidebar__nav-section">
-        <a href="principal.html" class="nav-link">
-          <span class="nav-text">Explorar</span>
-        </a>
-        <a href="vacantes.html" class="nav-link">
-          <span class="nav-text">Vacantes</span>
-          <span class="nav-badge">51</span>
-        </a>
-        <a href="candidatos.html" class="nav-link nav-link--active">
-          <span class="nav-text">Candidatos</span>
-        </a>
-        <a href="empresas.html" class="nav-link">
-          <span class="nav-text">Empresas</span>
-        </a>
-        <a href="postulaciones.html" class="nav-link">
-          <span class="nav-text">Mis Postulaciones</span>
-        </a>
+        <!-- Renderizado dinámicamente por ui.js según rol -->
       </div>
     </nav>
 
     <div class="sidebar__footer">
-      <div class="sidebar__user-card">
-        <div class="sidebar__user-avatar" id="userAvatar">E</div>
+      <div class="sidebar__user-card" style="cursor: pointer;" title="Ver mi perfil">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
         <div class="sidebar__user-info">
           <span class="sidebar__user-name" id="userName">Cargando...</span>
-          <span class="sidebar__user-role" id="userRole">Reclutador</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
       <a href="/login.html" class="sidebar__logout" id="btnLogout">
-        <span class="nav-text">Cerrar Sesion</span>
+        <span class="nav-text">Cerrar Sesión</span>
       </a>
     </div>
   </header>
@@ -59,9 +44,14 @@
   <div class="main-page__wrapper">
     <main class="main" id="main">
       <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-        <header class="main__content-header">
-          <h1 class="main__title" id="viewTitle">Directorio de Candidatos</h1>
-          <p class="main__description">Búsqueda, filtrado y gestión de perfiles profesionales en Costa Rica.</p>
+        <header class="main__content-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <h1 class="main__title" id="viewTitle">Directorio de Candidatos</h1>
+            <p class="main__description">Búsqueda, filtrado y gestión de perfiles profesionales en Costa Rica.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex: 1; max-width: 420px;">
+            <input type="text" class="login__input" id="searchCandidate" placeholder="🔍 Buscar por nombre, rol o tecnología..." style="background: var(--surface-card);">
+          </div>
         </header>
 
         <div class="main__content-body" id="contentArea">
