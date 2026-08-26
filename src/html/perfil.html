@@ -34,9 +34,15 @@
           <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
-      <a href="/login.html" class="sidebar__logout" id="btnLogout">
-        <span class="nav-text">Cerrar Sesión</span>
-      </a>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <a href="notificaciones.html" class="sidebar__logout" id="btnNotif" title="Notificaciones" style="position:relative;padding:0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:var(--action-pink);color:#fff;font-size:0.65rem;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">3</span>
+        </a>
+        <a href="/login.html" class="sidebar__logout" id="btnLogout">
+          <span class="nav-text">Cerrar Sesión</span>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -61,8 +67,15 @@
       <!-- Tarjeta Hero del Perfil -->
       <section class="job-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, var(--surface-card) 0%, rgba(83, 16, 104, 0.04) 100%);">
         <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-          <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--primary-purple); color: #fff; font-size: 2rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 12px rgba(83, 16, 104, 0.2);" id="heroAvatar">
-            U
+          <!-- Avatar con opción de cambio de foto -->
+          <div style="position:relative;">
+            <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--primary-purple); color: #fff; font-size: 2rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 12px rgba(83, 16, 104, 0.2); overflow:hidden;" id="heroAvatar">
+              U
+            </div>
+            <label for="fotoPerfilInput" title="Cambiar foto de perfil" style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--action-pink);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </label>
+            <input type="file" id="fotoPerfilInput" accept="image/*" style="display:none;">
           </div>
           <div style="flex: 1; min-width: 240px;">
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
@@ -70,6 +83,7 @@
               <span class="badge-match" id="heroRoleBadge" style="background: #f0ebf5; color: var(--primary-purple);">Rol</span>
             </div>
             <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="heroSubtitle">Detalle del perfil</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">Haz clic en el ícono de cámara para cambiar tu foto de perfil.</p>
           </div>
         </div>
       </section>
@@ -132,5 +146,44 @@
   </div>
 
   <script type="module" src="../js/perfil.js"></script>
+  <script>
+    // --- Foto de perfil (Base64 en localStorage) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputFoto = document.getElementById('fotoPerfilInput');
+      const heroAvatar = document.getElementById('heroAvatar');
+      const userAvatar = document.getElementById('userAvatar');
+
+      // Cargar foto guardada
+      const fotoGuardada = localStorage.getItem('fotoPerfil');
+      if (fotoGuardada && heroAvatar) {
+        heroAvatar.innerHTML = `<img src="${fotoGuardada}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="Foto de perfil">`;
+      }
+
+      // Manejar subida de nueva foto
+      if (inputFoto) {
+        inputFoto.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const base64 = ev.target.result;
+            localStorage.setItem('fotoPerfil', base64);
+            if (heroAvatar) heroAvatar.innerHTML = `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="Foto de perfil">`;
+            if (userAvatar) userAvatar.innerHTML = `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">`;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Badge de notificaciones
+      const badge = document.getElementById('notifBadge');
+      const notifs = JSON.parse(localStorage.getItem('notificaciones') || '[]');
+      const noLeidas = notifs.filter(n => !n.leida).length;
+      if (badge) {
+        badge.style.display = noLeidas > 0 ? 'flex' : 'none';
+        badge.textContent = noLeidas;
+      }
+    });
+  </script>
 </body>
 </html>

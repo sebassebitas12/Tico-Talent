@@ -43,6 +43,7 @@ function renderEstrellas(r) {
 function renderCursos() {
   const container = document.getElementById('cursosContainer');
   if (!container) return;
+  const inscritosIds = JSON.parse(localStorage.getItem('cursosInscritos') || '[]');
   let lista = [...CURSOS];
   if (categoriaActual !== 'todos') lista = lista.filter(c => c.categoria === categoriaActual);
   if (busquedaActual) {
@@ -81,11 +82,14 @@ function renderCursos() {
             <span style="font-size:0.78rem;color:#9ca3af;">(${c.inscritos.toLocaleString('es-CR')} inscritos)</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
             <div style="display:flex;gap:0.75rem;align-items:center;">
               <span style="font-size:0.8rem;color:#9ca3af;">${c.horas} horas</span>
               <span style="font-size:0.85rem;font-weight:700;color:#16a34a;">${c.precio}</span>
             </div>
-            <button class="btn btn-cta" style="font-size:0.83rem;padding:0.45rem 1rem;" data-curso-id="${c.id}">Inscribirse</button>
+            <button class="btn btn-cta" style="font-size:0.83rem;padding:0.45rem 1rem;${inscritosIds.includes(c.id) ? 'background-color:#9ca3af;cursor:not-allowed;' : ''}" data-curso-id="${c.id}" ${inscritosIds.includes(c.id) ? 'disabled' : ''}>
+              ${inscritosIds.includes(c.id) ? 'Inscrito' : 'Inscribirse'}
+            </button>
           </div>
         </div>
       </article>
@@ -94,8 +98,18 @@ function renderCursos() {
 
   container.querySelectorAll('[data-curso-id]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const c = CURSOS.find(x => x.id === Number(btn.dataset.cursoId));
-      if (c) mostrarToast('Inscrito en: ' + c.titulo, 'success');
+      if (btn.disabled) return;
+      const id = Number(btn.dataset.cursoId);
+      const c = CURSOS.find(x => x.id === id);
+      if (c) {
+        const inscritos = JSON.parse(localStorage.getItem('cursosInscritos') || '[]');
+        if (!inscritos.includes(id)) {
+          inscritos.push(id);
+          localStorage.setItem('cursosInscritos', JSON.stringify(inscritos));
+        }
+        mostrarToast('Inscrito en: ' + c.titulo, 'success');
+        renderCursos();
+      }
     });
   });
 }
