@@ -427,7 +427,8 @@
 }
 
 /* Botón CTA Postularse / Acción */
-.btn-cta, .btn--action {
+.btn-cta,
+.btn--action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -443,7 +444,8 @@
   transition: var(--transition-smooth);
 }
 
-.btn-cta:hover, .btn--action:hover {
+.btn-cta:hover,
+.btn--action:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
 }
@@ -452,14 +454,16 @@
    4. TARJETAS DE RESUMEN Y MÉTRICAS
    ========================================================================== */
 
-.summary-list, .stats-grid {
+.summary-list,
+.stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
-.summary-item, .stat-card {
+.summary-item,
+.stat-card {
   background: var(--surface-solid);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -471,12 +475,14 @@
   transition: var(--transition-smooth);
 }
 
-.summary-item:hover, .stat-card:hover {
+.summary-item:hover,
+.stat-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
-.summary-item dt, .stat-card__label {
+.summary-item dt,
+.stat-card__label {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -484,7 +490,8 @@
   letter-spacing: 0.03em;
 }
 
-.summary-item dd, .stat-card__value {
+.summary-item dd,
+.stat-card__value {
   font-size: 2rem;
   font-weight: 800;
   color: var(--primary-purple);
@@ -495,7 +502,8 @@
    5. MODALES, BOTONES, CONFIRMACIONES & FORMULARIOS CRUD
    ========================================================================== */
 
-.modal-overlay, .confirm-overlay {
+.modal-overlay,
+.confirm-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(12, 35, 64, 0.45);
@@ -508,7 +516,8 @@
   animation: fadeIn 0.25s ease;
 }
 
-.modal, .confirm {
+.modal,
+.confirm {
   background: var(--surface-solid);
   border-radius: var(--radius-xl);
   width: 90%;
@@ -707,10 +716,21 @@
   transform: translateY(0);
 }
 
-.toast--success { border-left: 5px solid var(--color-success); }
-.toast--error   { border-left: 5px solid var(--action-pink); }
-.toast--warning { border-left: 5px solid #eab308; }
-.toast--info    { border-left: 5px solid var(--primary-purple); }
+.toast--success {
+  border-left: 5px solid var(--color-success);
+}
+
+.toast--error {
+  border-left: 5px solid var(--action-pink);
+}
+
+.toast--warning {
+  border-left: 5px solid #eab308;
+}
+
+.toast--info {
+  border-left: 5px solid var(--primary-purple);
+}
 
 .toast__close {
   background: transparent;
@@ -721,7 +741,9 @@
   font-size: 1rem;
 }
 
-.toast__close:hover { color: #fff; }
+.toast__close:hover {
+  color: #fff;
+}
 
 /* Loading */
 .loading--full {
@@ -751,12 +773,48 @@
   color: var(--secondary-navy);
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-.d-none { display: none !important; }
-.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.d-none {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
 
 /* ==========================================================================
    LOADER WRAPPER - Uiverse.io
@@ -793,7 +851,9 @@
 }
 
 @keyframes loaderSpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ==========================================================================
@@ -990,20 +1050,173 @@
 /* ==========================================================================
    CV EDITOR: MODAL AMPLIO Y EN DOS COLUMNAS
    ========================================================================== */
-.modal-overlay.cv-editor-overlay { padding: 2vh 2vw; }
-.modal.cv-editor-modal { width: min(1180px, 96vw); max-width: 1180px; height: min(900px, 94vh); display: flex; flex-direction: column; }
-.cv-editor-modal .modal__body { padding: 1.25rem 1.5rem; overflow: auto; flex: 1; }
-.cv-editor-layout { display: grid; grid-template-columns: minmax(340px, .92fr) minmax(520px, 1.35fr); gap: 1.25rem; align-items: start; }
-.cv-editor-panel { min-width: 0; }
-.cv-preview-panel { position: sticky; top: 0; min-width: 0; }
-.cv-preview-frame { width: 100%; height: min(650px, 68vh); min-height: 560px; border: none; display: block; background: #fff; }
+.modal-overlay.cv-editor-overlay {
+  padding: 2vh 2vw;
+}
+
+.modal.cv-editor-modal {
+  width: min(1180px, 96vw);
+  max-width: 1180px;
+  height: min(900px, 94vh);
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-editor-modal .modal__body {
+  padding: 1.25rem 1.5rem;
+  overflow: auto;
+  flex: 1;
+}
+
+.cv-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(340px, .92fr) minmax(520px, 1.35fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.cv-editor-panel {
+  min-width: 0;
+}
+
+.cv-preview-panel {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+}
+
+.cv-preview-frame {
+  width: 100%;
+  height: min(650px, 68vh);
+  min-height: 560px;
+  border: none;
+  display: block;
+  background: #fff;
+}
+
 @media (max-width: 900px) {
-  .modal-overlay.cv-editor-overlay { padding: 1rem; align-items: flex-start; overflow-y: auto; }
-  .modal.cv-editor-modal { width: 100%; height: auto; max-height: none; margin: 0; }
-  .cv-editor-layout { grid-template-columns: 1fr; }
-  .cv-preview-panel { position: static; }
-  .cv-preview-frame { height: 620px; min-height: 520px; }
+  .modal-overlay.cv-editor-overlay {
+    padding: 1rem;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .modal.cv-editor-modal {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin: 0;
+  }
+
+  .cv-editor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-preview-panel {
+    position: static;
+  }
+
+  .cv-preview-frame {
+    height: 620px;
+    min-height: 520px;
+  }
 }
 
 /* El panel de notificaciones se portaliza a body para escapar de cualquier overflow del header */
-body > #notifDropdown { position: fixed !important; z-index: 2147483647 !important; isolation: isolate; }
+body>#notifDropdown {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  isolation: isolate;
+}
+
+
+/* Gestión de postulantes: selector visual de estados */
+.status-picker {
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+
+.status-picker__hint {
+  margin: 0 0 .25rem;
+  color: var(--text-muted);
+  font-size: .88rem;
+  line-height: 1.45;
+}
+
+.status-option {
+  display: grid;
+  grid-template-columns: 42px 1fr 24px;
+  align-items: center;
+  gap: .8rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--surface-solid);
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.status-option:hover {
+  border-color: var(--primary-purple);
+  background: #faf7fb;
+  transform: translateY(-1px);
+}
+
+.status-option.is-selected {
+  border-color: var(--primary-purple);
+  background: #f7eff9;
+  box-shadow: 0 0 0 2px rgba(83, 16, 104, .1);
+}
+
+.status-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.status-option__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  font-size: 1.25rem;
+}
+
+.status-option__content {
+  display: flex;
+  flex-direction: column;
+  gap: .18rem;
+}
+
+.status-option__content strong {
+  color: var(--secondary-navy);
+  font-size: .92rem;
+}
+
+.status-option__content small {
+  color: var(--text-muted);
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
+.status-option__check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-subtle);
+  color: transparent;
+  display: grid;
+  place-items: center;
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.status-option.is-selected .status-option__check {
+  background: var(--primary-purple);
+  border-color: var(--primary-purple);
+  color: #fff;
+}

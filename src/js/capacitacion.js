@@ -20,6 +20,16 @@ const CURSOS = [
   { id: 12, titulo: 'Contabilidad y Tributacion para PYMES en Costa Rica', instructor: 'Juan Esquivel', horas: 14, nivel: 'Basico', categoria: 'finanzas', precio: 'Gratis', calificacion: 4.5, inscritos: 760, descripcion: 'Comprende los principios contables y las obligaciones fiscales de tu empresa ante el Ministerio de Hacienda.' }
 ];
 
+const IMAGENES_CATEGORIA = {
+  tecnologia: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
+  rrhh: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
+  liderazgo: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=900&q=80",
+  idiomas: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=80",
+  finanzas: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
+  marketing: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80",
+  legal: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=900&q=80"
+};
+
 const COLORES = {
   tecnologia: { bg: '#eff6ff', color: '#1d4ed8', label: 'Tecnologia' },
   rrhh: { bg: '#fdf4ff', color: '#7c3aed', label: 'Recursos Humanos' },
@@ -61,10 +71,10 @@ function renderCursos() {
     const badge2 = `<span style="background:${nColor}18;color:${nColor};font-size:0.73rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:12px;">${escapeHTML(c.nivel)}</span>`;
     return `
       <article class="job-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-        <div style="height:140px;background:linear-gradient(135deg,#531068 0%,#1e3a8a 100%);display:flex;align-items:center;justify-content:center;">
-          <div style="text-align:center;">
-            <div style="font-size:2.5rem;">&#128218;</div>
-            <div style="color:rgba(255,255,255,0.85);font-size:0.75rem;font-weight:600;letter-spacing:0.5px;margin-top:0.4rem;">CENTRO DE CAPACITACION</div>
+        <div class="course-card__image" style="height:160px;position:relative;overflow:hidden;background:#ede9f1;">
+          <img src="${IMAGENES_CATEGORIA[c.categoria] || IMAGENES_CATEGORIA.tecnologia}" alt="Imagen del curso ${escapeHTML(c.titulo)}" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(25,12,35,.05),rgba(43,8,59,.5));display:flex;align-items:flex-end;padding:0.9rem 1rem;">
+            <span style="color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;">${escapeHTML(col.label)}</span>
           </div>
         </div>
         <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">

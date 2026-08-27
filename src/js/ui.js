@@ -69,17 +69,17 @@ export function initUserNav() {
     const esEmpresa = rol === "empleador" || rol === "reclutador";
     const servicios = esEmpresa
       ? [
-          { label: "Gestionar vacantes", href: "vacantes.html", visible: true },
-          { label: "Gestionar postulaciones", href: "postulaciones.html", visible: true },
-          { label: "Buscar candidatos", href: "candidatos.html", visible: true },
-          { label: "Empresas", href: "empresas.html", visible: true },
-          { label: "Entrevistas", href: "entrevistas.html", visible: true }
-        ]
+        { label: "Gestionar vacantes", href: "vacantes.html", visible: true },
+        { label: "Gestionar postulantes", href: "postulaciones.html", visible: true },
+        { label: "Buscar candidatos", href: "candidatos.html", visible: true },
+        { label: "Empresas", href: "empresas.html", visible: true },
+        { label: "Entrevistas", href: "entrevistas.html", visible: true }
+      ]
       : [
-          { label: "Buscar empleo", href: "vacantes.html", visible: true },
-          { label: "Mis postulaciones", href: "postulaciones.html", visible: true },
-          { label: "Empresas", href: "empresas.html", visible: true }
-        ];
+        { label: "Buscar empleo", href: "vacantes.html", visible: true },
+        { label: "Mis postulaciones", href: "postulaciones.html", visible: true },
+        { label: "Empresas", href: "empresas.html", visible: true }
+      ];
 
     const recursos = [
       { label: "Mi perfil y CV", href: "perfil.html", visible: true },

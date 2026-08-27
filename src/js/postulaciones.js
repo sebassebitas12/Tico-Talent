@@ -12,6 +12,22 @@ initUserNav();
 
 let postulacionesRaw = [];
 let postulacionesAdaptadas = [];
+const ESTADOS_PIPELINE = [
+  { value: "📄 CV Recibido", paso: 1, bg: "#f0ebf5", color: "#531068", icono: "📄", titulo: "CV Recibido", descripcion: "El perfil ingresó al proceso." },
+  { value: "🔎 En Revisión Técnica", paso: 2, bg: "#e6f6ee", color: "#00875a", icono: "🔎", titulo: "Revisión Técnica", descripcion: "Evaluación de experiencia y habilidades." },
+  { value: "💬 Entrevista Agendada", paso: 3, bg: "#fff3e0", color: "#e65100", icono: "💬", titulo: "Entrevista", descripcion: "El candidato avanza a entrevista." },
+  { value: "🎯 Oferta Final", paso: 4, bg: "#e0f2fe", color: "#0369a1", icono: "🎯", titulo: "Oferta Final", descripcion: "Proceso final de contratación." }
+];
+
+function estadoMeta(estado = "") {
+  return ESTADOS_PIPELINE.find(e =>
+    estado.includes("Oferta") ? e.paso === 4 :
+      estado.includes("Entrevista") ? e.paso === 3 :
+        estado.includes("Revisión") ? e.paso === 2 :
+          e.paso === 1
+  ) || ESTADOS_PIPELINE[0];
+}
+
 
 function renderCards(lista) {
   const contenedor = document.getElementById("applicationsList");
@@ -30,8 +46,13 @@ function renderCards(lista) {
     return;
   }
 
-  const headerTitle = esEmpleador ? "Pipeline de Postulaciones Recibidas (Gestión de Reclutamiento)" : "Mis Postulaciones en Seguimiento";
-  const btnLabel = "+ Registrar Postulación Manual";
+  const headerTitle = esEmpleador ? "Gestionar Postulantes" : "Mis Postulaciones en Seguimiento";
+  const btnLabel = "+ Agregar Postulante";
+
+  const pageTitle = document.getElementById("viewTitle");
+  const pageDescription = document.querySelector(".main__description");
+  if (esEmpleador && pageTitle) pageTitle.textContent = "Gestionar Postulantes";
+  if (esEmpleador && pageDescription) pageDescription.textContent = "Revisá candidatos y movelos entre etapas del proceso de selección.";
 
   contenedor.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%; flex-wrap: wrap; gap: 1rem;">
@@ -44,7 +65,7 @@ ${esEmpleador ? `<button class="btn btn-cta" id="btnNuevaPostulacion">${btnLabel
 
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
       ${lista.map((p) => {
-        return `
+    return `
           <article class="job-card" data-id="${p.id}">
             <div class="job-card__header">
               <div class="job-card__company-logo">${p.empresaLogo || "📄"}</div>
@@ -112,7 +133,7 @@ ${esEmpleador ? `<button class="btn btn-cta" id="btnNuevaPostulacion">${btnLabel
             </div>
           </article>
         `;
-      }).join("")}
+  }).join("")}
     </div>
   `;
 
@@ -173,10 +194,10 @@ function abrirFormulario(id = null) {
 
   abrirModal(tituloModal, formularioHTML(post), async () => {
     const datos = {
-      title:  document.getElementById("fTitulo").value.trim(),
-      body:   document.getElementById("fBody").value.trim(),
+      title: document.getElementById("fTitulo").value.trim(),
+      body: document.getElementById("fBody").value.trim(),
       userId: Number(document.getElementById("fUserId").value) || 1,
-      tags:   document.getElementById("fTags").value.split(",").map((t) => t.trim()).filter(Boolean),
+      tags: document.getElementById("fTags").value.split(",").map((t) => t.trim()).filter(Boolean),
     };
 
     if (!datos.title) {
@@ -215,62 +236,56 @@ function abrirModalCambioEstado(id) {
   if (!post) return;
 
   const html = `
-    <div class="form-group">
-      <label>Seleccionar Nuevo Estado en el Pipeline:</label>
-      <select class="form-control" id="fNuevoEstado">
-        <option value="📄 CV Recibido" ${post.estado?.includes("Recibido") ? "selected" : ""}>📄 CV Recibido</option>
-        <option value="🟢 En Revisión Técnica" ${post.estado?.includes("Revisión") ? "selected" : ""}>🟢 En Revisión Técnica</option>
-        <option value="⚡ Entrevista Agendada" ${post.estado?.includes("Entrevista") ? "selected" : ""}>⚡ Entrevista Agendada</option>
-        <option value="🎯 Oferta Final" ${post.estado?.includes("Oferta") ? "selected" : ""}>🎯 Oferta Final</option>
-      </select>
+    <div class="status-picker" id="statusPicker">
+      <p class="status-picker__hint">Elegí la etapa del proceso. La barra de avance se actualizará inmediatamente.</p>
+      ${ESTADOS_PIPELINE.map(e => `
+        <label class="status-option ${post.paso === e.paso ? "is-selected" : ""}" data-status-option>
+          <input type="radio" name="nuevoEstado" value="${e.value}" ${post.paso === e.paso ? "checked" : ""}>
+          <span class="status-option__icon">${e.icono}</span>
+          <span class="status-option__content">
+            <strong>${e.titulo}</strong>
+            <small>${e.descripcion}</small>
+          </span>
+          <span class="status-option__check">✓</span>
+        </label>
+      `).join("")}
     </div>
   `;
 
-  abrirModal(`Actualizar Estado: ${post.titulo}`, html, async () => {
-    const nuevoEstado = document.getElementById("fNuevoEstado").value;
+  abrirModal(`Actualizar proceso: ${post.titulo}`, html, async () => {
+    const selected = document.querySelector('input[name="nuevoEstado"]:checked');
+    if (!selected) return;
+    const nuevoEstado = selected.value;
+    const meta = estadoMeta(nuevoEstado);
+
     mostrarLoading();
     try {
       await patch("posts", id, { body: `Estado actualizado a: ${nuevoEstado}` });
       const idx = postulacionesAdaptadas.findIndex((p) => p.id === id);
       if (idx !== -1) {
-        postulacionesAdaptadas[idx].estado = nuevoEstado;
-        if (nuevoEstado.includes("Oferta")) {
-          postulacionesAdaptadas[idx].estadoBg = "#e0f2fe";
-          postulacionesAdaptadas[idx].estadoColor = "#0369a1";
-        } else if (nuevoEstado.includes("Entrevista")) {
-          postulacionesAdaptadas[idx].estadoBg = "#fff3e0";
-          postulacionesAdaptadas[idx].estadoColor = "#e65100";
-        } else if (nuevoEstado.includes("Revisión")) {
-          postulacionesAdaptadas[idx].estadoBg = "#e6f6ee";
-          postulacionesAdaptadas[idx].estadoColor = "#00875a";
-        } else {
-          postulacionesAdaptadas[idx].estadoBg = "#f0ebf5";
-          postulacionesAdaptadas[idx].estadoColor = "#531068";
-        }
+        Object.assign(postulacionesAdaptadas[idx], {
+          estado: nuevoEstado,
+          paso: meta.paso,
+          estadoBg: meta.bg,
+          estadoColor: meta.color
+        });
       }
       cerrarModal();
       renderCards(postulacionesAdaptadas);
-      mostrarToast(`Estado actualizado a: ${nuevoEstado}`, "success");
+      mostrarToast(`${meta.icono} Proceso actualizado: ${meta.titulo}`, "success");
     } catch {
       mostrarToast("Error al cambiar estado.", "error");
     } finally {
       ocultarLoading();
     }
   });
+
+  document.querySelectorAll("[data-status-option]").forEach(option => {
+    option.addEventListener("click", () => {
+      document.querySelectorAll("[data-status-option]").forEach(el => el.classList.remove("is-selected"));
+      option.classList.add("is-selected");
+      option.querySelector('input').checked = true;
+    });
+  });
 }
 
-async function eliminarPostulacionConfirmada(id) {
-  mostrarLoading();
-  try {
-    await remove("posts", id);
-    postulacionesAdaptadas = postulacionesAdaptadas.filter((p) => p.id !== id);
-    mostrarToast("Postulación eliminada.", "success");
-    renderCards(postulacionesAdaptadas);
-  } catch {
-    mostrarToast("Error al eliminar.", "error");
-  } finally {
-    ocultarLoading();
-  }
-}
-
-cargarPostulaciones();

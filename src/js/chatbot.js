@@ -332,12 +332,12 @@ async function enviarMensaje(userMessage) {
     document.getElementById(loadingId)?.remove();
 
     const mensajeError = error?.message || "No se pudo obtener una respuesta de TicoBot.";
-    // El chat sigue siendo útil aunque Groq o el middleware no estén disponibles.
-    const fallback = respuestaLocal(userMessage);
-    conversationHistory.push({ role: "user", content: userMessage });
-    conversationHistory.push({ role: "assistant", content: fallback });
-    appendMessage("bot", fallback + "\n\nSi el servicio de IA vuelve a estar disponible, también podré darte respuestas más abiertas y contextuales.");
-    console.warn("TicoBot respondió en modo local:", mensajeError);
+    const esClaveInvalida = /invalid api key|invalid_api_key/i.test(mensajeError);
+    const mensajeVisible = esClaveInvalida
+      ? "⚠️ TicoBot no pudo autenticarse con Groq. Revisá la clave GROQ_API_KEY del archivo .env, guardá el cambio y reiniciá Vite."
+      : `⚠️ No pude completar la consulta con la IA: ${mensajeError}`;
+    appendMessage("bot", mensajeVisible);
+    console.error("TicoBot: respuesta de error del servicio:", mensajeError);
   } finally {
     isGenerating = false;
 

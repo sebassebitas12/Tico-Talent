@@ -46,56 +46,20 @@ function createTicobotMiddleware(server) {
 
       // Acepta GROQ_API_KEY (recomendado, solo servidor) y el nombre
       // VITE_GROQ_API_KEY usado por configuraciones anteriores del proyecto.
-      const apiKey =
+      const apiKey = (
         env.GROQ_API_KEY ||
         env.VITE_GROQ_API_KEY ||
         process.env.GROQ_API_KEY ||
         process.env.VITE_GROQ_API_KEY ||
-        "";
+        ""
+      ).trim();
 
-      /*
-       * Modo demo:
-       * Si todavía no existe GROQ_API_KEY, el bot sigue respondiendo.
-       */
       if (!apiKey.trim()) {
-        const lastMessage =
-          messages
-            .filter((message) => message?.role === "user")
-            .at(-1)
-            ?.content
-            ?.toLowerCase() || "";
-
-        let content =
-          "¡Claro! Soy TicoBot. Puedo ayudarte con vacantes, CV, entrevistas, salarios, postulaciones y desarrollo profesional en Costa Rica.";
-
-        if (
-          lastMessage.includes("cv") ||
-          lastMessage.includes("currículum") ||
-          lastMessage.includes("curriculum")
-        ) {
-          content =
-            "¡Claro! Puedo ayudarte a mejorar tu CV. En TicoTalent podés completar tu experiencia laboral, habilidades y datos profesionales desde Mi perfil y CV.";
-        } else if (
-          lastMessage.includes("vacante") ||
-          lastMessage.includes("trabajo") ||
-          lastMessage.includes("empleo")
-        ) {
-          content =
-            "Podés ir a Servicios → Buscar empleo para revisar las vacantes disponibles y utilizar los filtros de cargo, tecnología, empresa y ubicación.";
-        } else if (lastMessage.includes("entrevista")) {
-          content =
-            "Para una entrevista técnica, prepará ejemplos de tus proyectos, las tecnologías utilizadas y situaciones donde resolviste problemas. También podemos practicar preguntas juntos.";
-        } else if (
-          lastMessage.includes("salario") ||
-          lastMessage.includes("sueldo")
-        ) {
-          content =
-            "El salario depende del puesto, experiencia, especialidad y empresa. Si me indicás tu perfil profesional, puedo orientarte sobre cómo plantear una expectativa salarial.";
-        }
-
-        res.statusCode = 200;
+        res.statusCode = 503;
         res.setHeader("Content-Type", "application/json; charset=utf-8");
-        res.end(JSON.stringify({ content, demo: true }));
+        res.end(JSON.stringify({
+          error: "Falta configurar una GROQ_API_KEY válida en el archivo .env. Reiniciá Vite después de guardarla."
+        }));
         return;
       }
 
@@ -108,7 +72,7 @@ function createTicobotMiddleware(server) {
             Authorization: `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: "openai/gpt-oss-20b",
             messages,
             temperature: 0.7,
             max_completion_tokens: 600
