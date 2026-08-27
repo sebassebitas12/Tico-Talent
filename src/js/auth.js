@@ -235,22 +235,82 @@ function getDefaultPerfil(user, rol) {
       telefonoEmpresa: "+506 2298-6000",
       reclutadorCargo: "Reclutador Técnico Senior",
       descripcionEmpresa: "Líder global en innovación tecnológica y diseño de microarquitecturas presente en Costa Rica.",
-      beneficios: "Seguro médico privado, Asociación Solidarista, Bono de conectividad, Trabajo híbrido flexible, Fondo de retiro."
+      beneficios: "Seguro médico privado, Asociación Solidarista, Bono de conectividad, Trabajo híbrido flexible, Fondo de retiro.",
+      experienciaLaboral: [
+        {
+          cargo: "Reclutador Técnico Senior",
+          empresa: "Intel Costa Rica",
+          ubicacion: "Heredia, Costa Rica",
+          inicio: "2021-03",
+          fin: "",
+          actual: true,
+          descripcion: "Gestión de procesos de selección técnica para perfiles de tecnología, datos e ingeniería."
+        },
+        {
+          cargo: "Talent Acquisition Specialist",
+          empresa: "Empresa de Servicios Tecnológicos CR",
+          ubicacion: "San José, Costa Rica",
+          inicio: "2018-01",
+          fin: "2021-02",
+          actual: false,
+          descripcion: "Atracción, entrevistas y seguimiento de candidatos para posiciones profesionales."
+        }
+      ]
     };
   }
 
+  const esMaria = (user.username || "").toLowerCase() === "maria";
   return {
     nombre: `${user.firstName || "María"} ${user.lastName || "García"}`,
     email: user.email || "maria.dev@gmail.com",
     telefono: "+506 8899-3344",
     ubicacion: "San José, Costa Rica",
-    titular: "Desarrollador Full Stack Senior (React / Node.js)",
+    titular: "Desarrolladora Full Stack Senior (React / Node.js)",
     experienciaAnos: "5 años",
     pretensionSalarial: "$3,500 - $4,800 USD",
     modalidadPreferida: "Remoto 100% o Híbrido",
     skills: ["React", "TypeScript", "Node.js", "AWS", "Git", "PostgreSQL"],
     linkedin: `https://linkedin.com/in/${user.username || "maria"}`,
     github: `https://github.com/${user.username || "maria"}`,
-    bio: "Desarrolladora de software con pasión por crear aplicaciones web modernas, escalables y orientadas a una excelente experiencia de usuario."
+    bio: "Desarrolladora de software con pasión por crear aplicaciones web modernas, escalables y orientadas a una excelente experiencia de usuario.",
+    experienciaLaboral: esMaria ? [
+      {
+        cargo: "Desarrolladora Full Stack",
+        empresa: "SoftServe Costa Rica",
+        ubicacion: "San José, Costa Rica",
+        inicio: "2023-02",
+        fin: "",
+        actual: true,
+        descripcion: "Desarrollo de aplicaciones web con React, Node.js y servicios cloud. Participación en equipos ágiles y entregas de producto."
+      },
+      {
+        cargo: "Desarrolladora Frontend",
+        empresa: "Digital Solutions CR",
+        ubicacion: "San José, Costa Rica",
+        inicio: "2021-01",
+        fin: "2023-01",
+        actual: false,
+        descripcion: "Construcción de interfaces web responsivas, integración de APIs REST y mantenimiento de aplicaciones JavaScript."
+      }
+    ] : [
+      {
+        cargo: "Desarrollador Full Stack",
+        empresa: "Tech Solutions Costa Rica",
+        ubicacion: "Heredia, Costa Rica",
+        inicio: "2022-01",
+        fin: "",
+        actual: true,
+        descripcion: "Desarrollo de aplicaciones web y APIs REST con JavaScript, Node.js y bases de datos relacionales."
+      },
+      {
+        cargo: "Desarrollador Junior",
+        empresa: "Digital Labs CR",
+        ubicacion: "San José, Costa Rica",
+        inicio: "2020-01",
+        fin: "2021-12",
+        actual: false,
+        descripcion: "Desarrollo frontend, corrección de incidencias y soporte a proyectos web."
+      }
+    ]
   };
 }

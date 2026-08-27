@@ -59,9 +59,20 @@
 }
 
 @keyframes ticobot-pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.85; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Caja de Conversación / Ventana del Chat */
@@ -88,6 +99,7 @@
     opacity: 0;
     transform: scale(0.92) translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -224,8 +236,15 @@
 }
 
 @keyframes ticobot-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .ticobot-msg--bot {
@@ -290,12 +309,25 @@
   animation: ticobot-bounce 1.4s infinite ease-in-out both;
 }
 
-.ticobot-msg__bubble--typing .dot:nth-child(1) { animation-delay: -0.32s; }
-.ticobot-msg__bubble--typing .dot:nth-child(2) { animation-delay: -0.16s; }
+.ticobot-msg__bubble--typing .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.ticobot-msg__bubble--typing .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
 
 @keyframes ticobot-bounce {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
 }
 
 /* Footer / Formulario de Envío */
@@ -357,6 +389,7 @@
     bottom: 1rem;
     right: 1rem;
   }
+
   .ticobot-card {
     position: fixed;
     bottom: 80px;
@@ -366,4 +399,31 @@
     max-width: none;
     height: calc(100vh - 120px);
   }
+}
+
+
+/* TicoBot — evita que estilos globales del proyecto alteren el widget */
+.ticobot-widget,
+.ticobot-widget * {
+  box-sizing: border-box;
+}
+
+.ticobot-widget {
+  z-index: 2147483000 !important;
+}
+
+.ticobot-card {
+  z-index: 2147483001 !important;
+}
+
+.ticobot-card.d-none {
+  display: none !important;
+}
+
+.ticobot-messages {
+  min-height: 0;
+}
+
+.ticobot-msg__bubble br {
+  line-height: 1.45;
 }

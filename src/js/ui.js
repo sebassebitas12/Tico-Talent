@@ -64,31 +64,126 @@ export function initUserNav() {
       ? `<span id="notifBadge" style="background:#dc2626;color:#fff;font-size:0.65rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:10px;min-width:18px;text-align:center;">${noLeidas}</span>`
       : '';
 
-    // Configuración de items según rol
-    const items = [
-      { id: "explorar", label: "Inicio", href: "principal.html", visible: true },
-      { id: "vacantes", label: "Vacantes", href: "vacantes.html", visible: true },
-      { id: "postulaciones", label: rol === "empleador" ? "Pipeline" : "Postulaciones", href: "postulaciones.html", visible: true },
-      { id: "candidatos", label: "Candidatos", href: "candidatos.html", visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "entrevistas", label: "Entrevistas", href: "entrevistas.html", visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "empresas", label: "Empresas", href: "empresas.html", visible: true },
-      { id: "tareas", label: "Tareas", href: "tareas.html", visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "capacitacion", label: "Capacitacion", href: "capacitacion.html", visible: true },
-      { id: "notificaciones", label: "Notificaciones", href: "notificaciones.html", visible: false, badge: notifBadgeHtml },
-      { id: "perfil", label: "Mi Perfil", href: "perfil.html", visible: true }
+    // Navegación principal: se mantiene "Desarrollo Profesional" como
+    // opción independiente y no se repite dentro de Recursos.
+    const esEmpresa = rol === "empleador" || rol === "reclutador";
+    const servicios = esEmpresa
+      ? [
+          { label: "Gestionar vacantes", href: "vacantes.html", visible: true },
+          { label: "Gestionar postulaciones", href: "postulaciones.html", visible: true },
+          { label: "Buscar candidatos", href: "candidatos.html", visible: true },
+          { label: "Empresas", href: "empresas.html", visible: true },
+          { label: "Entrevistas", href: "entrevistas.html", visible: true }
+        ]
+      : [
+          { label: "Buscar empleo", href: "vacantes.html", visible: true },
+          { label: "Mis postulaciones", href: "postulaciones.html", visible: true },
+          { label: "Empresas", href: "empresas.html", visible: true }
+        ];
+
+    const recursos = [
+      { label: "Mi perfil y CV", href: "perfil.html", visible: true },
+      { label: "Entrevistas", href: "entrevistas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { label: "Tareas", href: "tareas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { label: "Notificaciones", href: "notificaciones.html", visible: false, badge: notifBadgeHtml }
     ];
 
-    navSection.innerHTML = items
+    const menuHTML = (items) => items
       .filter(item => item.visible)
       .map(item => {
         const isActive = currentPath.endsWith(item.href);
         return `
-          <a href="${item.href}" class="nav-link${isActive ? " nav-link--active" : ""}" style="display:flex;justify-content:space-between;align-items:center;">
-            <span class="nav-text">${item.label}</span>
+          <a href="${item.href}" class="nav-dropdown__item${isActive ? " is-active" : ""}">
+            <span>${item.label}</span>
             ${item.badge ? item.badge : ""}
           </a>
         `;
       }).join("");
+
+    const serviciosActivo = servicios.some(item => item.visible && currentPath.endsWith(item.href));
+    const recursosActivo = recursos.some(item => item.visible && currentPath.endsWith(item.href));
+
+    navSection.innerHTML = `
+      <a href="principal.html" class="nav-link${currentPath.endsWith("principal.html") ? " nav-link--active" : ""}">
+        <span class="nav-text">Inicio</span>
+      </a>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-link nav-dropdown__trigger${serviciosActivo ? " nav-link--active" : ""}" aria-expanded="false">
+          <span class="nav-text">Servicios</span>
+          <svg class="nav-dropdown__chevron" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown__menu">
+          ${menuHTML(servicios)}
+        </div>
+      </div>
+
+      <a href="desarrollo-profesional.html" class="nav-link${currentPath.endsWith("desarrollo-profesional.html") ? " nav-link--active" : ""}">
+        <span class="nav-text">Desarrollo Profesional</span>
+      </a>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-link nav-dropdown__trigger${recursosActivo ? " nav-link--active" : ""}" aria-expanded="false">
+          <span class="nav-text">Recursos</span>
+          <svg class="nav-dropdown__chevron" width="13" height="13" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown__menu">
+          ${menuHTML(recursos)}
+        </div>
+      </div>
+
+      <button type="button" class="nav-link nav-link--help" id="navOpenTicobot">
+        <span class="nav-text">Ayuda</span>
+      </button>
+    `;
+
+    navSection.querySelectorAll(".nav-dropdown").forEach(dropdown => {
+      const trigger = dropdown.querySelector(".nav-dropdown__trigger");
+      if (!trigger) return;
+
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const wasOpen = dropdown.classList.contains("is-open");
+
+        navSection.querySelectorAll(".nav-dropdown.is-open").forEach(openDropdown => {
+          openDropdown.classList.remove("is-open");
+          openDropdown.querySelector(".nav-dropdown__trigger")?.setAttribute("aria-expanded", "false");
+        });
+
+        if (!wasOpen) {
+          dropdown.classList.add("is-open");
+          trigger.setAttribute("aria-expanded", "true");
+        }
+      });
+
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        trigger.click();
+      });
+    });
+
+    if (!window.__ticoTalentNavOutsideClick) {
+      window.__ticoTalentNavOutsideClick = true;
+      document.addEventListener("click", (event) => {
+        if (!navSection.contains(event.target)) {
+          navSection.querySelectorAll(".nav-dropdown.is-open").forEach(dropdown => {
+            dropdown.classList.remove("is-open");
+            dropdown.querySelector(".nav-dropdown__trigger")?.setAttribute("aria-expanded", "false");
+          });
+        }
+      });
+    }
+
+    navSection.querySelector("#navOpenTicobot")?.addEventListener("click", () => {
+      document.getElementById("ticobotToggle")?.click();
+    });
   }
 
   // ── CAMPANITA DE NOTIFICACIONES ──────────────────────────────
@@ -97,7 +192,7 @@ export function initUserNav() {
     const NOTIF_BASE_DATA = [
       { id: 1, tipo: 'vacante', titulo: 'Nueva vacante compatible con tu perfil', detalle: 'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js.', tiempo: 'Hace 5 min', leida: false },
       { id: 2, tipo: 'postulacion', titulo: 'Tu postulación fue revisada por el reclutador', detalle: 'Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.', tiempo: 'Hace 23 min', leida: false },
-      { id: 3, tipo: 'capacitacion', titulo: 'Nuevo curso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.', tiempo: 'Hace 1 hora', leida: false },
+      { id: 3, tipo: 'capacitacion', titulo: 'Nuevo recurso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.', tiempo: 'Hace 1 hora', leida: false },
       { id: 4, tipo: 'sistema', titulo: 'Actualización de la plataforma TicoTalent', detalle: 'Hemos mejorado los algoritmos de compatibilidad de vacantes.', tiempo: 'Hace 2 horas', leida: false },
       { id: 5, tipo: 'vacante', titulo: '5 nuevas vacantes en tu área de interés', detalle: 'Se publicaron 5 nuevas posiciones en Tecnología y Datos en San José y Heredia.', tiempo: 'Hace 3 horas', leida: false },
       { id: 6, tipo: 'postulacion', titulo: 'Entrevista técnica programada', detalle: 'Tienes una entrevista virtual con HP Costa Rica para el martes a las 10:00 AM.', tiempo: 'Hace 5 horas', leida: true }
@@ -168,10 +263,37 @@ export function initUserNav() {
       const btn = notifWrapper.querySelector('#notifDropdownBtn');
       const drop = notifWrapper.querySelector('#notifDropdown');
 
+      // El dropdown se monta temporalmente en <body> al abrirse. Así no puede
+      // quedar cortado ni detrás del contenido por el stacking context del navbar.
+      const closeDropdown = () => {
+        if (!drop) return;
+        if (drop.parentElement === document.body) notifWrapper.appendChild(drop);
+        drop.style.display = 'none';
+        drop.style.position = 'absolute';
+        drop.style.top = 'calc(100% + 10px)';
+        drop.style.right = '0';
+        drop.style.left = 'auto';
+      };
+
+      const openDropdown = () => {
+        if (!drop || !btn) return;
+        const rect = btn.getBoundingClientRect();
+        document.body.appendChild(drop);
+        drop.style.display = 'block';
+        drop.style.position = 'fixed';
+        const top = Math.max(12, Math.min(rect.bottom + 10, window.innerHeight - Math.min(420, window.innerHeight - 24)));
+        drop.style.top = `${top}px`;
+        drop.style.right = `${Math.max(12, Math.min(window.innerWidth - 12, window.innerWidth - rect.right))}px`;
+        drop.style.maxHeight = `calc(100vh - ${top + 12}px)`;
+        drop.style.overflowY = 'auto';
+        drop.style.left = 'auto';
+        drop.style.zIndex = '2147483647';
+      };
+
       btn?.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isOpen = drop.style.display === 'block';
-        drop.style.display = isOpen ? 'none' : 'block';
+        const isOpen = drop && drop.style.display === 'block' && drop.parentElement === document.body;
+        if (isOpen) closeDropdown(); else openDropdown();
       });
 
       notifWrapper.querySelector('#btnMarcarDropdownLeidas')?.addEventListener('click', (e) => {
@@ -179,8 +301,7 @@ export function initUserNav() {
         const updated = getNotifs().map(n => ({ ...n, leida: true }));
         saveNotifs(updated);
         renderDropdown();
-        const newDrop = notifWrapper.querySelector('#notifDropdown');
-        if (newDrop) newDrop.style.display = 'block';
+        requestAnimationFrame(() => notifWrapper.querySelector('#notifDropdownBtn')?.click());
         mostrarToast('Notificaciones marcadas como leídas', 'success');
       });
 
@@ -194,8 +315,7 @@ export function initUserNav() {
             target.leida = true;
             saveNotifs(currentList);
             renderDropdown();
-            const newDrop = notifWrapper.querySelector('#notifDropdown');
-            if (newDrop) newDrop.style.display = 'block';
+            requestAnimationFrame(() => notifWrapper.querySelector('#notifDropdownBtn')?.click());
           }
         });
       });
@@ -204,18 +324,26 @@ export function initUserNav() {
     renderDropdown();
     sidebarFooter.insertBefore(notifWrapper, sidebarFooter.querySelector('.sidebar__logout'));
 
+    function closeGlobalNotifDropdown() {
+      const drop = document.getElementById('notifDropdown');
+      if (!drop) return;
+      if (drop.parentElement === document.body) notifWrapper.appendChild(drop);
+      drop.style.display = 'none';
+      drop.style.position = 'absolute';
+      drop.style.top = 'calc(100% + 10px)';
+      drop.style.right = '0';
+    }
+
     document.addEventListener('click', (e) => {
-      if (!notifWrapper.contains(e.target)) {
-        const drop = notifWrapper.querySelector('#notifDropdown');
-        if (drop) drop.style.display = 'none';
-      }
+      const drop = document.getElementById('notifDropdown');
+      if (!notifWrapper.contains(e.target) && !drop?.contains(e.target)) closeGlobalNotifDropdown();
     });
 
+    window.addEventListener('resize', closeGlobalNotifDropdown);
+    window.addEventListener('scroll', closeGlobalNotifDropdown, true);
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const drop = notifWrapper.querySelector('#notifDropdown');
-        if (drop) drop.style.display = 'none';
-      }
+      if (e.key === 'Escape') closeGlobalNotifDropdown();
     });
   }
 
@@ -260,7 +388,7 @@ export function renderAppFooter() {
           <div style="display:flex;flex-direction:column;gap:0.5rem;">
             <a href="vacantes.html" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;">Buscar empleo</a>
             <a href="perfil.html" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;">Mi Perfil y CV</a>
-            <a href="capacitacion.html" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;">Capacitacion</a>
+            <a href="desarrollo-profesional.html" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;">Desarrollo Profesional</a>
           </div>
         </div>
         <div>

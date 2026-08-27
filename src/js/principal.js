@@ -25,6 +25,23 @@ if (heroTitle && perfil.nombre) {
   }
 }
 
+// Adaptar el buscador principal al contexto del rol
+const esEmpresaDashboard = rol === "empleador" || rol === "reclutador";
+const heroSearch = document.querySelector(".hero-search");
+if (heroSearch && esEmpresaDashboard) {
+  heroSearch.action = "vacantes.html";
+  const inputs = heroSearch.querySelectorAll("input");
+  if (inputs[0]) { inputs[0].name = "q"; inputs[0].placeholder = "Vacante, puesto o tecnología..."; inputs[0].setAttribute("aria-label", "Buscar vacante"); }
+  if (inputs[1]) { inputs[1].name = "location"; inputs[1].placeholder = "Ubicación de la vacante..."; }
+  const button = heroSearch.querySelector("button[type=submit]");
+  if (button) button.textContent = "Gestionar Vacantes";
+}
+const recursosTitle = document.getElementById("recursosTitle");
+if (recursosTitle && esEmpresaDashboard) {
+  recursosTitle.textContent = "Recursos para impulsar tu contratación";
+  recursosTitle.parentElement?.querySelector("p") && (recursosTitle.parentElement.querySelector("p").textContent = "Herramientas y consejos para atraer, evaluar y gestionar talento.");
+}
+
 // Renderizar accesos directos dinámicos por rol
 const statsGrid = document.querySelector(".stats-grid");
 if (statsGrid) {

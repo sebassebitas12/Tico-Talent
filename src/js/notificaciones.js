@@ -19,7 +19,7 @@ const TIPOS = {
     icono: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>`
   },
   capacitacion: {
-    label: 'Capacitación', color: '#15803d', bg: '#f0fdf4',
+    label: 'Desarrollo Profesional', color: '#15803d', bg: '#f0fdf4',
     icono: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`
   }
 };
@@ -27,7 +27,7 @@ const TIPOS = {
 const BASE = [
   { id: 1, tipo: 'vacante', titulo: 'Nueva vacante compatible con tu perfil', detalle: 'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js. Nivel de compatibilidad: 94%.', tiempo: 'Hace 5 min', leida: false },
   { id: 2, tipo: 'postulacion', titulo: 'Tu postulación fue revisada por el reclutador', detalle: 'La empresa Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.', tiempo: 'Hace 23 min', leida: false },
-  { id: 3, tipo: 'capacitacion', titulo: 'Nuevo curso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, totalmente gratuito. Cupos limitados.', tiempo: 'Hace 1 hora', leida: false },
+  { id: 3, tipo: 'capacitacion', titulo: 'Nuevo recurso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, totalmente gratuito. Cupos limitados.', tiempo: 'Hace 1 hora', leida: false },
   { id: 4, tipo: 'sistema', titulo: 'Actualización de la plataforma TicoTalent', detalle: 'Hemos mejorado los algoritmos de compatibilidad de vacantes. Ahora verás resultados más precisos según tus habilidades.', tiempo: 'Hace 2 horas', leida: false },
   { id: 5, tipo: 'vacante', titulo: '5 nuevas vacantes en tu área de interés', detalle: 'Se publicaron 5 nuevas posiciones en Tecnología y Datos que coinciden con tu perfil profesional.', tiempo: 'Hace 3 horas', leida: false },
   { id: 6, tipo: 'postulacion', titulo: 'Entrevista programada exitosamente', detalle: 'Tienes una entrevista virtual con HP Costa Rica para el martes 2 de setiembre a las 10:00 AM. Revisa tu calendario.', tiempo: 'Hace 5 horas', leida: true },

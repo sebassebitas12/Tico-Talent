@@ -985,3 +985,25 @@
   text-decoration: underline;
 }
 
+
+
+/* ==========================================================================
+   CV EDITOR: MODAL AMPLIO Y EN DOS COLUMNAS
+   ========================================================================== */
+.modal-overlay.cv-editor-overlay { padding: 2vh 2vw; }
+.modal.cv-editor-modal { width: min(1180px, 96vw); max-width: 1180px; height: min(900px, 94vh); display: flex; flex-direction: column; }
+.cv-editor-modal .modal__body { padding: 1.25rem 1.5rem; overflow: auto; flex: 1; }
+.cv-editor-layout { display: grid; grid-template-columns: minmax(340px, .92fr) minmax(520px, 1.35fr); gap: 1.25rem; align-items: start; }
+.cv-editor-panel { min-width: 0; }
+.cv-preview-panel { position: sticky; top: 0; min-width: 0; }
+.cv-preview-frame { width: 100%; height: min(650px, 68vh); min-height: 560px; border: none; display: block; background: #fff; }
+@media (max-width: 900px) {
+  .modal-overlay.cv-editor-overlay { padding: 1rem; align-items: flex-start; overflow-y: auto; }
+  .modal.cv-editor-modal { width: 100%; height: auto; max-height: none; margin: 0; }
+  .cv-editor-layout { grid-template-columns: 1fr; }
+  .cv-preview-panel { position: static; }
+  .cv-preview-frame { height: 620px; min-height: 520px; }
+}
+
+/* El panel de notificaciones se portaliza a body para escapar de cualquier overflow del header */
+body > #notifDropdown { position: fixed !important; z-index: 2147483647 !important; isolation: isolate; }

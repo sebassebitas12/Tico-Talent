@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
-  <title>Tico Talent - Entrevistas</title>
+  <title>Tico Talent - Desarrollo Profesional</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -55,17 +55,30 @@
     <main class="main" id="main">
       <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
         <header class="main__content-header">
-          <h1 class="main__title" id="viewTitle">Agenda de Entrevistas</h1>
-          <p class="main__description">Calendario y citas programadas con candidatos y reclutadores.</p>
+          <h1 class="main__title" id="viewTitle">Desarrollo Profesional</h1>
+          <p class="main__description">Cursos y recursos para fortalecer tus habilidades, mejorar tu CV y prepararte para nuevas oportunidades.</p>
         </header>
 
         <div class="main__content-body" id="contentArea">
-          <section class="interviews" aria-labelledby="interviewsListTitle">
-            <h2 id="interviewsListTitle" class="sr-only">Listado de entrevistas</h2>
-            <div class="job-list" id="interviewsList">
-              <!-- Las entrevistas son renderizadas dinámicamente por entrevistas.js -->
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+            <div>
+              <h2 style="margin:0;color:var(--secondary-navy);font-size:1.25rem;">Aprende a tu ritmo</h2>
+              <p style="margin:.3rem 0 0;color:var(--text-muted);font-size:.88rem;">Contenido seleccionado para profesionales y personas en búsqueda de empleo.</p>
             </div>
-          </section>
+            <input id="cursosBusqueda" class="form-control" style="max-width:320px;" placeholder="Buscar curso o instructor..." aria-label="Buscar cursos">
+          </div>
+
+          <div id="cursosFiltros" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+            <button type="button" class="curso-filtro curso-filtro--activo btn btn-secondary" data-categoria="todos">Todos</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="tecnologia">Tecnología</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="rrhh">RRHH</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="liderazgo">Liderazgo</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="idiomas">Idiomas</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="finanzas">Finanzas</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="marketing">Marca personal</button>
+          </div>
+
+          <div id="cursosContainer" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;"></div>
         </div>
       </section>
     </main>
@@ -168,7 +181,7 @@
     </div>
   </div>
 
-  <script type="module" src="../js/entrevistas.js"></script>
+  <script type="module" src="../js/desarrolloProfesional.js"></script>
 </body>
 
 </html>

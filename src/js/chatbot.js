@@ -1,60 +1,68 @@
 // src/js/chatbot.js
-// Asistente Virtual TicoBot — Groq API (LLaMA 3.3 70B)
-// Contextualizado para TicoTalent y el mercado laboral tecnológico de Costa Rica.
+// Asistente Virtual TicoBot — TicoTalent
+// Compatible con la API /api/ticobot configurada en vite.config.js.
 
 import { getUser, getRole, getPerfilExtendido } from "./auth.js";
 
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const CANDIDATE_MODELS = [
-  "llama-3.3-70b-versatile",
-  "llama-3.1-8b-instant",
-  "mixtral-8x7b-32768"
-];
+const TICO_BOT_API_URL = "/api/ticobot";
 
 let conversationHistory = [];
 let isGenerating = false;
 
-/**
- * Genera el System Prompt contextualizado según el usuario activo
- */
 function getSystemPrompt() {
   const user = getUser();
   const perfil = getPerfilExtendido();
   const rol = getRole();
   const nombre = perfil?.nombre || user?.firstName || "Usuario";
 
-  return `Eres "TicoBot", el asistente virtual de IA de TicoTalent (JobConnect), la plataforma de empleabilidad tech en Costa Rica. Eres un asistente conversacional generativo, inteligente y empático.
+  return `Eres "TicoBot", el asistente virtual de IA de TicoTalent, una plataforma de empleabilidad tecnológica en Costa Rica.
 
 DATOS DEL USUARIO ACTUAL:
 - Nombre: ${nombre}
 - Rol: ${rol === "empleador" || rol === "reclutador" ? "Empleador / Reclutador de Empresa" : "Candidato / Profesional"}
-${rol === "empleador" ? `- Empresa: ${perfil?.empresaNombre || "Empresa Aliada"}` : `- Perfil/Titular: ${perfil?.titular || "Desarrollador / Profesional"}`}
+${rol === "empleador"
+      ? `- Empresa: ${perfil?.empresaNombre || "Empresa Aliada"}`
+      : `- Perfil/Titular: ${perfil?.titular || "Desarrollador / Profesional"}`}
 
-CONOCIMIENTO DE TICOTALENT & COSTA RICA:
-- Conecta profesionales de TI con empresas top en CR (Intel, AWS, BAC Digital Labs, SoftServe, Fiserv, Microsoft CR, zonas francas como América, UltraPark, Coyol, El Cafetal).
-- Módulos: Explorar/Inicio, Vacantes (con match de compatibilidad), Postulaciones (pipeline de 4 fases), Directorio de Candidatos (Talent Pool), Empresas, Entrevistas y Tareas.
-- Rango salarial de referencia en Costa Rica tech: Juniors ($1,200 - $2,000 USD), Mid ($2,200 - $3,800 USD), Seniors/Leads ($4,000 - $7,500+ USD). Modalidades: Remoto WFH, Híbrido, Presencial.
+CONOCIMIENTO DE TICOTALENT:
+- Vacantes y búsqueda de empleo.
+- Postulaciones.
+- Empresas.
+- Entrevistas.
+- Tareas.
+- Desarrollo Profesional.
+- Perfil y CV.
+- Directorio de candidatos.
+- Gestión de talento para empresas.
+
+CONTEXTO LABORAL:
+- La plataforma está orientada al mercado laboral tecnológico de Costa Rica.
+- Modalidades: remoto, híbrido y presencial.
+- Puedes orientar sobre CV, entrevistas, búsqueda de empleo, desarrollo profesional y procesos de selección.
 
 DIRECTRICES:
-- Responde de forma natural, conversacional y generativa. Adapta cada respuesta al contexto específico del mensaje.
-- Nunca uses respuestas enlatadas o repetitivas. Cada respuesta debe ser única y relevante.
-- Usa viñetas y negritas con moderación cuando la información lo amerite.
+- Responde de forma natural, conversacional y generativa.
 - Responde siempre en español de Costa Rica.
-- Si no sabes algo con certeza, dilo honestamente.
-- Mantén el contexto de la conversación para dar respuestas coherentes y continuas.`;
+- Sé claro y útil.
+- No inventes datos específicos sobre vacantes que no conozcas.
+- Si no sabes algo con certeza, dilo.
+- Mantén el contexto de la conversación.
+- No repitas respuestas enlatadas si el usuario continúa la conversación.`;
 }
 
-/**
- * Renderiza el Widget del Chatbot en el DOM si no existe
- */
 export function initChatbot() {
   if (document.getElementById("ticobotWidget")) return;
 
   const widgetHTML = `
     <div class="ticobot-widget" id="ticobotWidget">
-      <button class="ticobot-toggle-btn" id="ticobotToggle" aria-label="Abrir asistente TicoBot AI" title="Asistente Virtual TicoBot AI">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button
+        class="ticobot-toggle-btn"
+        id="ticobotToggle"
+        type="button"
+        aria-label="Abrir asistente TicoBot AI"
+        title="Asistente Virtual TicoBot AI"
+      >
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         <span class="ticobot-toggle-badge">AI</span>
@@ -63,30 +71,38 @@ export function initChatbot() {
       <div class="ticobot-card d-none" id="ticobotCard">
         <div class="ticobot-header">
           <div class="ticobot-header__avatar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="8" x2="12" y2="12"></line>
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
             <span class="ticobot-status-dot" title="En línea"></span>
           </div>
+
           <div class="ticobot-header__info">
             <h4 class="ticobot-title">TicoBot AI</h4>
             <span class="ticobot-subtitle">Asistente de Empleabilidad CR</span>
           </div>
+
           <div class="ticobot-header__actions">
-            <button class="ticobot-btn-action" id="ticobotClear" title="Limpiar conversación">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <button class="ticobot-btn-action" id="ticobotClear" type="button" title="Limpiar conversación" aria-label="Limpiar conversación">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
             </button>
-            <button class="ticobot-btn-action" id="ticobotClose" title="Minimizar">✕</button>
+
+            <button class="ticobot-btn-action" id="ticobotClose" type="button" title="Minimizar" aria-label="Minimizar">
+              ✕
+            </button>
           </div>
         </div>
 
         <div class="ticobot-suggestions" id="ticobotSuggestions">
-          <button class="ticobot-chip" data-prompt="¿Qué vacantes hay disponibles en Costa Rica?">Vacantes Activas</button>
-          <button class="ticobot-chip" data-prompt="¿Cuáles son los salarios promedio en tech en Costa Rica?">Salarios Tech CR</button>
-          <button class="ticobot-chip" data-prompt="Dame consejos para preparar mi CV y entrevista técnica">Tips de Entrevista</button>
-          <button class="ticobot-chip" data-prompt="Explícame cómo funciona TicoTalent paso a paso">Guía de la Web</button>
+          <button class="ticobot-chip" type="button" data-prompt="¿Qué vacantes hay disponibles en Costa Rica?">Vacantes Activas</button>
+          <button class="ticobot-chip" type="button" data-prompt="¿Cuáles son los salarios promedio en tecnología en Costa Rica?">Salarios Tech CR</button>
+          <button class="ticobot-chip" type="button" data-prompt="Dame consejos para preparar mi CV y entrevista técnica">Tips de CV</button>
+          <button class="ticobot-chip" type="button" data-prompt="Explícame cómo funciona TicoTalent paso a paso">Guía de la Web</button>
         </div>
 
         <div class="ticobot-messages" id="ticobotMessages">
@@ -99,16 +115,17 @@ export function initChatbot() {
         </div>
 
         <form class="ticobot-footer" id="ticobotForm">
-          <input 
-            type="text" 
-            class="ticobot-input" 
-            id="ticobotInput" 
-            placeholder="Pregúntale a TicoBot AI..." 
+          <input
+            type="text"
+            class="ticobot-input"
+            id="ticobotInput"
+            placeholder="Pregúntale a TicoBot AI..."
             autocomplete="off"
             required
           />
+
           <button type="submit" class="ticobot-send-btn" id="ticobotSend" aria-label="Enviar mensaje">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
@@ -122,9 +139,6 @@ export function initChatbot() {
   bindChatbotEvents();
 }
 
-/**
- * Conecta los event listeners del chatbot
- */
 function bindChatbotEvents() {
   const toggleBtn = document.getElementById("ticobotToggle");
   const card = document.getElementById("ticobotCard");
@@ -135,16 +149,25 @@ function bindChatbotEvents() {
   const suggestions = document.getElementById("ticobotSuggestions");
 
   toggleBtn?.addEventListener("click", () => {
+    if (!card) return;
+
     const isClosed = card.classList.contains("d-none");
     card.classList.toggle("d-none", !isClosed);
-    if (isClosed) setTimeout(() => input?.focus(), 150);
+
+    if (isClosed) {
+      window.setTimeout(() => input?.focus(), 120);
+    }
   });
 
-  closeBtn?.addEventListener("click", () => card.classList.add("d-none"));
+  closeBtn?.addEventListener("click", () => {
+    card?.classList.add("d-none");
+  });
 
   clearBtn?.addEventListener("click", () => {
     conversationHistory = [];
+
     const messagesEl = document.getElementById("ticobotMessages");
+
     if (messagesEl) {
       messagesEl.innerHTML = `
         <div class="ticobot-msg ticobot-msg--bot">
@@ -155,29 +178,47 @@ function bindChatbotEvents() {
         </div>
       `;
     }
-    if (suggestions) suggestions.style.display = "flex";
+
+    if (suggestions) {
+      suggestions.style.display = "flex";
+    }
+
+    input?.focus();
   });
 
-  suggestions?.querySelectorAll(".ticobot-chip").forEach(chip => {
+  suggestions?.querySelectorAll(".ticobot-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
-      const prompt = chip.dataset.prompt;
-      if (prompt) {
-        if (input) input.value = prompt;
-        enviarMensaje(prompt);
-      }
+      const prompt = chip.dataset.prompt || "";
+
+      if (!prompt || isGenerating) return;
+
+      if (input) input.value = prompt;
+
+      enviarMensaje(prompt);
     });
   });
 
-  form?.addEventListener("submit", (e) => {
-    e.preventDefault();
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!input || isGenerating) return;
+
     const texto = input.value.trim();
-    if (!texto || isGenerating) return;
+
+    if (!texto) return;
+
     enviarMensaje(texto);
   });
 }
 
 /**
- * Llama a la API de Groq con reintentos en modelos alternativos
+ * Llama a la API de TicoBot.
+ *
+ * El servidor de Vite devuelve:
+ * {
+ *   content: "...",
+ *   demo: false
+ * }
  */
 async function llamarGroqAPI(userMessage) {
   const messages = [
@@ -186,115 +227,153 @@ async function llamarGroqAPI(userMessage) {
     { role: "user", content: userMessage }
   ];
 
-  let lastError = null;
+  let response;
 
-  for (const model of CANDIDATE_MODELS) {
-    try {
-      const response = await fetch(GROQ_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${GROQ_API_KEY}`
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          temperature: 0.7,
-          max_tokens: 600
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
-        if (content) return content;
-        throw new Error("Respuesta vacía del modelo.");
-      }
-
-      const errJson = await response.json().catch(() => ({}));
-      lastError = new Error(errJson?.error?.message || `HTTP ${response.status}`);
-
-    } catch (err) {
-      lastError = err;
-    }
+  try {
+    response = await fetch(TICO_BOT_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ messages }),
+      cache: "no-store"
+    });
+  } catch (networkError) {
+    console.error("TicoBot: no se pudo conectar con Vite.", networkError);
+    throw new Error("No se pudo conectar con el servidor de TicoBot.");
   }
 
-  throw lastError || new Error("No se pudo obtener respuesta de Groq.");
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const detalle = data?.error || `TicoBot API respondió HTTP ${response.status}`;
+    throw new Error(detalle);
+  }
+
+  if (typeof data?.content !== "string" || !data.content.trim()) {
+    throw new Error("El servicio de TicoBot no devolvió contenido.");
+  }
+
+  return data.content.trim();
 }
 
-/**
- * Envía el mensaje y maneja la respuesta generativa
- */
+function respuestaLocal(userMessage) {
+  const q = String(userMessage || "").toLowerCase();
+  const esEmpresa = ["empleador", "reclutador"].includes(getRole());
+  if (q.includes("cv") || q.includes("currículum") || q.includes("curriculum")) return "Podés crear tu CV desde Mi perfil y CV. Elegí una plantilla, revisá la vista previa y editá tu información antes de descargarlo como PDF.";
+  if (q.includes("vacante") || q.includes("empleo") || q.includes("trabajo")) return esEmpresa ? "Como empleador, podés gestionar tus vacantes desde Servicios → Gestionar vacantes y revisar las postulaciones asociadas." : "Podés explorar oportunidades desde Servicios → Buscar empleo y filtrar por puesto, tecnología, empresa y ubicación.";
+  if (q.includes("candidato") || q.includes("postul")) return esEmpresa ? "Podés buscar candidatos y gestionar postulaciones desde el menú Servicios. También podés usar el pipeline para dar seguimiento a cada proceso." : "Podés revisar el estado de tus postulaciones desde Servicios → Mis postulaciones.";
+  if (q.includes("entrevista")) return "Para prepararte, definí ejemplos concretos de tus proyectos, logros y problemas que resolviste. Si querés, escribime el puesto y practicamos preguntas específicas.";
+  return esEmpresa ? "Puedo ayudarte a gestionar vacantes, candidatos, postulaciones, entrevistas y procesos de contratación." : "Puedo ayudarte con tu CV, vacantes, postulaciones, entrevistas y desarrollo profesional.";
+}
+
 async function enviarMensaje(userMessage) {
   const input = document.getElementById("ticobotInput");
   const sendBtn = document.getElementById("ticobotSend");
   const messagesEl = document.getElementById("ticobotMessages");
   const suggestions = document.getElementById("ticobotSuggestions");
 
-  if (suggestions) suggestions.style.display = "none";
-  if (input) input.value = "";
+  if (!messagesEl || isGenerating) return;
+
+  if (suggestions) {
+    suggestions.style.display = "none";
+  }
+
+  if (input) {
+    input.value = "";
+  }
 
   appendMessage("user", userMessage);
 
-  const loadingId = "typing-" + Date.now();
-  messagesEl.insertAdjacentHTML("beforeend", `
-    <div class="ticobot-msg ticobot-msg--bot" id="${loadingId}">
-      <div class="ticobot-msg__avatar">AI</div>
-      <div class="ticobot-msg__bubble ticobot-msg__bubble--typing">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  const loadingId = `typing-${Date.now()}`;
+
+  messagesEl.insertAdjacentHTML(
+    "beforeend",
+    `
+      <div class="ticobot-msg ticobot-msg--bot" id="${loadingId}">
+        <div class="ticobot-msg__avatar">AI</div>
+        <div class="ticobot-msg__bubble ticobot-msg__bubble--typing">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
       </div>
-    </div>
-  `);
+    `
+  );
+
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
   isGenerating = true;
-  if (sendBtn) sendBtn.disabled = true;
+
+  if (sendBtn) {
+    sendBtn.disabled = true;
+  }
 
   try {
     const botReply = await llamarGroqAPI(userMessage);
 
-    conversationHistory.push({ role: "user", content: userMessage });
-    conversationHistory.push({ role: "assistant", content: botReply });
+    conversationHistory.push({
+      role: "user",
+      content: userMessage
+    });
+
+    conversationHistory.push({
+      role: "assistant",
+      content: botReply
+    });
 
     document.getElementById(loadingId)?.remove();
-    appendMessage("bot", botReply);
 
+    appendMessage("bot", botReply);
   } catch (error) {
     console.error("TicoBot Groq error:", error);
+
     document.getElementById(loadingId)?.remove();
-    appendMessage("bot", `⚠️ No pude conectarme al servicio de IA en este momento. Verificá tu conexión o intentá de nuevo en unos segundos.`);
+
+    const mensajeError = error?.message || "No se pudo obtener una respuesta de TicoBot.";
+    // El chat sigue siendo útil aunque Groq o el middleware no estén disponibles.
+    const fallback = respuestaLocal(userMessage);
+    conversationHistory.push({ role: "user", content: userMessage });
+    conversationHistory.push({ role: "assistant", content: fallback });
+    appendMessage("bot", fallback + "\n\nSi el servicio de IA vuelve a estar disponible, también podré darte respuestas más abiertas y contextuales.");
+    console.warn("TicoBot respondió en modo local:", mensajeError);
   } finally {
     isGenerating = false;
-    if (sendBtn) sendBtn.disabled = false;
-    if (input) input.focus();
+
+    if (sendBtn) {
+      sendBtn.disabled = false;
+    }
+
+    input?.focus();
   }
 }
 
-/**
- * Agrega un mensaje formateado al contenedor
- */
 function appendMessage(sender, text) {
   const messagesEl = document.getElementById("ticobotMessages");
+
   if (!messagesEl) return;
 
   const isBot = sender === "bot";
   const formattedText = formatMarkdownToHTML(text);
 
-  messagesEl.insertAdjacentHTML("beforeend", `
-    <div class="ticobot-msg ticobot-msg--${sender}">
-      ${isBot ? '<div class="ticobot-msg__avatar">AI</div>' : ''}
-      <div class="ticobot-msg__bubble">${formattedText}</div>
-    </div>
-  `);
+  messagesEl.insertAdjacentHTML(
+    "beforeend",
+    `
+      <div class="ticobot-msg ticobot-msg--${sender}">
+        ${isBot ? '<div class="ticobot-msg__avatar">AI</div>' : ""}
+        <div class="ticobot-msg__bubble">${formattedText}</div>
+      </div>
+    `
+  );
+
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-/**
- * Convierte Markdown básico a HTML seguro
- */
 function formatMarkdownToHTML(str) {
   if (!str) return "";
-  let html = str
+
+  let html = String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");

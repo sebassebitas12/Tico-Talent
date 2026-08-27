@@ -307,7 +307,7 @@ function aplicarFiltros() {
     );
   }
 
-  if (location) {
+  if (location && location !== "mi ubicación") {
     resultado = resultado.filter(v =>
       (v.ubicacion && v.ubicacion.toLowerCase().includes(location)) ||
       (v.empresa && v.empresa.toLowerCase().includes(location))

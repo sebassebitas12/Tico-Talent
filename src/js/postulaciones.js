@@ -24,15 +24,14 @@ function renderCards(lista) {
     contenedor.innerHTML = `
       <div style="text-align: center; padding: 2.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
         <p style="color: var(--text-muted); margin-bottom: 1rem;">No hay postulaciones registradas en el sistema.</p>
-        <button class="btn btn-cta" id="btnNuevaEmpty">+ Registrar postulación</button>
+  
       </div>
     `;
-    document.getElementById("btnNuevaEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
   const headerTitle = esEmpleador ? "Pipeline de Postulaciones Recibidas (Gestión de Reclutamiento)" : "Mis Postulaciones en Seguimiento";
-  const btnLabel = esEmpleador ? "+ Registrar Postulación Manual" : "+ Nueva Postulación Directa";
+  const btnLabel = "+ Registrar Postulación Manual";
 
   contenedor.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%; flex-wrap: wrap; gap: 1rem;">
@@ -40,7 +39,7 @@ function renderCards(lista) {
         <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0;">${headerTitle}</h2>
         <span style="font-size: 0.9rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> procesos activos</span>
       </div>
-      <button class="btn btn-cta" id="btnNuevaPostulacion">${btnLabel}</button>
+${esEmpleador ? `<button class="btn btn-cta" id="btnNuevaPostulacion">${btnLabel}</button>` : ""}
     </div>
 
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">

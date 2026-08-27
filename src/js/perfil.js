@@ -11,6 +11,7 @@ initUserNav();
 let perfil = getPerfilExtendido();
 let rolActual = getRole();
 let skillsTags = Array.isArray(perfil.skills) ? [...perfil.skills] : ["React", "TypeScript", "Node.js"];
+let experienciaLaboral = Array.isArray(perfil.experienciaLaboral) ? [...perfil.experienciaLaboral] : [];
 
 function renderHero() {
   const user = getUser() || {};
@@ -49,6 +50,57 @@ function renderHero() {
     }
     if (heroSubtitle) heroSubtitle.textContent = `${perfil.titular || "Desarrollador"} • ${perfil.ubicacion || "Costa Rica"}`;
   }
+}
+
+function experienciaSectionHTML() {
+  return `
+    <section class="perfil-experiencia" style="margin-top:1.75rem;padding-top:1.5rem;border-top:1px solid var(--border-subtle);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <div>
+          <h3 style="margin:0;font-size:1.05rem;color:var(--secondary-navy);">Experiencia laboral</h3>
+          <p style="margin:.25rem 0 0;color:var(--text-muted);font-size:.84rem;">Agrega tus puestos anteriores. Esta información se incluirá automáticamente en tu CV.</p>
+        </div>
+        <button type="button" class="btn btn-secondary" id="btnAddExperiencia">+ Agregar experiencia</button>
+      </div>
+      <div id="experienciaContainer" style="display:grid;gap:.8rem;"></div>
+
+      <div id="experienciaEditor" style="display:none;margin-top:1rem;padding:1rem;border:1px solid var(--border-subtle);border-radius:12px;background:var(--surface-subtle);">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+          <div class="form-group">
+            <label class="login__label">Cargo / Puesto</label>
+            <input class="login__input" id="expCargo" placeholder="Ej: Desarrollador Full Stack">
+          </div>
+          <div class="form-group">
+            <label class="login__label">Empresa</label>
+            <input class="login__input" id="expEmpresa" placeholder="Ej: Intel Costa Rica">
+          </div>
+          <div class="form-group">
+            <label class="login__label">Ubicación</label>
+            <input class="login__input" id="expUbicacion" placeholder="Ej: Heredia, Costa Rica">
+          </div>
+          <div class="form-group">
+            <label class="login__label">Fecha de inicio</label>
+            <input class="login__input" type="month" id="expInicio">
+          </div>
+          <div class="form-group">
+            <label class="login__label">Fecha de finalización</label>
+            <input class="login__input" type="month" id="expFin">
+          </div>
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.86rem;color:var(--text-main);align-self:end;padding-bottom:.65rem;">
+            <input type="checkbox" id="expActual"> Trabajo actualmente aquí
+          </label>
+        </div>
+        <div class="form-group" style="margin-top:1rem;">
+          <label class="login__label">Descripción / logros</label>
+          <textarea class="login__input" id="expDescripcion" rows="3" placeholder="Describe responsabilidades, tecnologías o logros relevantes."></textarea>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:.5rem;">
+          <button type="button" class="btn btn-secondary" id="btnCancelarExperiencia">Cancelar</button>
+          <button type="button" class="btn btn-cta" id="btnGuardarExperiencia">Guardar experiencia</button>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderFormFields() {
@@ -115,7 +167,10 @@ function renderFormFields() {
         <label class="login__label">Beneficios para Colaboradores en CR</label>
         <textarea class="login__input" id="fBeneficios" rows="3" placeholder="Ej: Seguro médico privado, Asociación Solidarista, Teletrabajo, Bonos">${escapeHTML(perfil.beneficios || "")}</textarea>
       </div>
+
+      ${experienciaSectionHTML()}
     `;
+    setupExperienciaEvents();
   } else {
     container.innerHTML = `
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
@@ -191,10 +246,13 @@ function renderFormFields() {
         <label class="login__label">Resumen Profesional & Biografía</label>
         <textarea class="login__input" id="fBio" rows="3" placeholder="Cuéntanos sobre tus logros y metas profesionales">${escapeHTML(perfil.bio || "")}</textarea>
       </div>
+
+      ${experienciaSectionHTML()}
     `;
 
     renderSkillsChips();
     setupSkillsEvents();
+    setupExperienciaEvents();
   }
 }
 
@@ -215,6 +273,104 @@ function renderSkillsChips() {
       renderSkillsChips();
     });
   });
+}
+
+function renderExperienciaLaboral() {
+  const container = document.getElementById("experienciaContainer");
+  if (!container) return;
+  if (!experienciaLaboral.length) {
+    container.innerHTML = `<div style="padding:1rem;border:1px dashed var(--border-subtle);border-radius:10px;color:var(--text-muted);font-size:.84rem;">Aún no has agregado experiencia laboral.</div>`;
+    return;
+  }
+
+  container.innerHTML = experienciaLaboral.map((exp, index) => `
+    <article style="border:1px solid var(--border-subtle);border-radius:12px;padding:1rem;background:#fff;">
+      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
+        <div>
+          <h4 style="margin:0;color:var(--text-main);font-size:.95rem;">${escapeHTML(exp.cargo || "Puesto")}</h4>
+          <p style="margin:.25rem 0;color:var(--primary-purple);font-weight:600;font-size:.84rem;">${escapeHTML(exp.empresa || "Empresa")}</p>
+          <p style="margin:0;color:var(--text-muted);font-size:.78rem;">
+            ${escapeHTML(exp.ubicacion || "")}${exp.ubicacion ? " • " : ""}${escapeHTML(exp.inicio || "")} — ${exp.actual ? "Actualidad" : escapeHTML(exp.fin || "Sin fecha")}
+          </p>
+        </div>
+        <div style="display:flex;gap:.35rem;">
+          <button type="button" class="btn btn-secondary btn-editar-exp" data-index="${index}" style="padding:.35rem .65rem;font-size:.75rem;">Editar</button>
+          <button type="button" class="btn btn-secondary btn-eliminar-exp" data-index="${index}" style="padding:.35rem .65rem;font-size:.75rem;">Eliminar</button>
+        </div>
+      </div>
+      ${exp.descripcion ? `<p style="margin:.7rem 0 0;color:var(--text-muted);font-size:.82rem;line-height:1.5;">${escapeHTML(exp.descripcion)}</p>` : ""}
+    </article>
+  `).join("");
+
+  container.querySelectorAll(".btn-eliminar-exp").forEach(btn => {
+    btn.addEventListener("click", () => {
+      experienciaLaboral.splice(Number(btn.dataset.index), 1);
+      renderExperienciaLaboral();
+    });
+  });
+
+  container.querySelectorAll(".btn-editar-exp").forEach(btn => {
+    btn.addEventListener("click", () => abrirEditorExperiencia(Number(btn.dataset.index)));
+  });
+}
+
+function abrirEditorExperiencia(index = null) {
+  const editor = document.getElementById("experienciaEditor");
+  if (!editor) return;
+  editor.style.display = "block";
+  editor.dataset.index = index == null ? "" : String(index);
+  const exp = index == null ? {} : (experienciaLaboral[index] || {});
+  document.getElementById("expCargo").value = exp.cargo || "";
+  document.getElementById("expEmpresa").value = exp.empresa || "";
+  document.getElementById("expUbicacion").value = exp.ubicacion || "";
+  document.getElementById("expInicio").value = exp.inicio || "";
+  document.getElementById("expFin").value = exp.fin || "";
+  document.getElementById("expActual").checked = !!exp.actual;
+  document.getElementById("expDescripcion").value = exp.descripcion || "";
+  document.getElementById("expFin").disabled = !!exp.actual;
+}
+
+function setupExperienciaEvents() {
+  const editor = document.getElementById("experienciaEditor");
+  const add = document.getElementById("btnAddExperiencia");
+  const cancel = document.getElementById("btnCancelarExperiencia");
+  const save = document.getElementById("btnGuardarExperiencia");
+  const actual = document.getElementById("expActual");
+  if (!editor || !add || !save) return;
+
+  add.addEventListener("click", () => abrirEditorExperiencia());
+  cancel?.addEventListener("click", () => { editor.style.display = "none"; });
+
+  actual?.addEventListener("change", () => {
+    const fin = document.getElementById("expFin");
+    if (fin) {
+      fin.disabled = actual.checked;
+      if (actual.checked) fin.value = "";
+    }
+  });
+
+  save.addEventListener("click", () => {
+    const item = {
+      cargo: document.getElementById("expCargo").value.trim(),
+      empresa: document.getElementById("expEmpresa").value.trim(),
+      ubicacion: document.getElementById("expUbicacion").value.trim(),
+      inicio: document.getElementById("expInicio").value,
+      fin: actual.checked ? "" : document.getElementById("expFin").value,
+      actual: actual.checked,
+      descripcion: document.getElementById("expDescripcion").value.trim()
+    };
+    if (!item.cargo || !item.empresa || !item.inicio) {
+      mostrarToast("Indica al menos cargo, empresa y fecha de inicio.", "warning");
+      return;
+    }
+    const idx = editor.dataset.index;
+    if (idx === "") experienciaLaboral.push(item);
+    else experienciaLaboral[Number(idx)] = item;
+    editor.style.display = "none";
+    renderExperienciaLaboral();
+  });
+
+  renderExperienciaLaboral();
 }
 
 function setupSkillsEvents() {
@@ -256,7 +412,8 @@ if (form) {
         reclutadorCargo: document.getElementById("fCargoContacto").value.trim(),
         emailCorporativo: document.getElementById("fEmailCorp").value.trim(),
         descripcionEmpresa: document.getElementById("fDescripcion").value.trim(),
-        beneficios: document.getElementById("fBeneficios").value.trim()
+        beneficios: document.getElementById("fBeneficios").value.trim(),
+        experienciaLaboral
       };
       savePerfilExtendido(datos);
     } else {
@@ -272,12 +429,14 @@ if (form) {
         skills: skillsTags,
         linkedin: document.getElementById("fLinkedin").value.trim(),
         github: document.getElementById("fGithub").value.trim(),
-        bio: document.getElementById("fBio").value.trim()
+        bio: document.getElementById("fBio").value.trim(),
+        experienciaLaboral
       };
       savePerfilExtendido(datos);
     }
 
     perfil = getPerfilExtendido();
+    experienciaLaboral = Array.isArray(perfil.experienciaLaboral) ? [...perfil.experienciaLaboral] : [];
     renderHero();
     initUserNav();
     mostrarToast("¡Perfil y configuración actualizados correctamente!", "success");
@@ -324,6 +483,16 @@ function buildCVHTML(p, skills, template) {
   const linkedin = p.linkedin || "";
   const github = p.github || "";
   const skillsList = (skills.length ? skills : ["JavaScript", "React", "Node.js", "Git"]);
+  const experienciaList = Array.isArray(p.experienciaLaboral) ? p.experienciaLaboral : [];
+  const experienciaHTML = experienciaList.length
+    ? experienciaList.map(exp => `
+        <div style="margin-bottom:.9rem;">
+          <div style="font-weight:700;color:#1e293b;">${escapeHTML(exp.cargo || "Puesto")}</div>
+          <div style="font-size:.82rem;color:${t.accent};font-weight:600;">${escapeHTML(exp.empresa || "")}${exp.ubicacion ? ` · ${escapeHTML(exp.ubicacion)}` : ""}</div>
+          <div style="font-size:.76rem;color:#64748b;margin:.1rem 0 .25rem;">${escapeHTML(exp.inicio || "")} — ${exp.actual ? "Actualidad" : escapeHTML(exp.fin || "Sin fecha")}</div>
+          ${exp.descripcion ? `<p style="font-size:.82rem;color:#475569;margin:0;">${escapeHTML(exp.descripcion)}</p>` : ""}
+        </div>`).join("")
+    : `<p class="bio">Agrega tu experiencia laboral desde Mi Perfil para verla aquí.</p>`;
 
   if (template === "clasico") {
     return `
@@ -364,6 +533,9 @@ function buildCVHTML(p, skills, template) {
         <hr>
         <div class="section-title">Perfil Profesional</div>
         <p class="bio">${bio}</p>
+        <hr>
+        <div class="section-title">Experiencia Laboral</div>
+        ${experienciaHTML}
         <hr>
         <div class="section-title">Habilidades Técnicas</div>
         <div class="skills-wrap">
@@ -433,8 +605,10 @@ function buildCVHTML(p, skills, template) {
         <div class="main">
           <div class="section-title">Perfil Profesional</div>
           <p class="bio" style="margin-bottom:1.5rem;">${bio}</p>
-          <div class="section-title">Experiencia & Competencias</div>
-          <p class="bio">Profesional con experiencia en ${skillsList.slice(0, 3).join(", ")} y otras tecnologías modernas. Orientado a resultados y trabajo colaborativo en equipos ágiles.</p>
+          <div class="section-title">Experiencia Laboral</div>
+          ${experienciaHTML}
+          <div class="section-title" style="margin-top:1.25rem;">Competencias</div>
+          <p class="bio">Profesional orientado a resultados, trabajo colaborativo y mejora continua.</p>
         </div>
       </body>
       </html>
@@ -481,7 +655,9 @@ function buildCVHTML(p, skills, template) {
         <div>
           <div class="section-title">Perfil Ejecutivo</div>
           <p class="bio" style="margin-bottom:1.5rem;">${bio}</p>
-          <div class="section-title">Competencias Técnicas</div>
+          <div class="section-title">Experiencia Laboral</div>
+          ${experienciaHTML}
+          <div class="section-title" style="margin-top:1.25rem;">Competencias Técnicas</div>
           <div style="margin-bottom:1.5rem;">${skillsList.map(s => `<span class="skill-tag">${s}</span>`).join("")}</div>
         </div>
         <div>
@@ -507,8 +683,24 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
   }
 
   const selectorHTML = `
+    <div class="cv-editor-layout">
+      <div class="cv-editor-panel">
+    <div style="padding:1rem;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <div><strong style="color:#1e293b;">1. Editá el contenido</strong><p style="font-size:.82rem;color:#64748b;margin:.25rem 0 0;">Estos cambios se reflejan de inmediato en la vista previa.</p></div>
+        <button type="button" class="btn btn-secondary" id="cvSaveChanges" style="padding:.45rem .8rem;font-size:.82rem;">Guardar cambios en mi perfil</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-top:.9rem;">
+        <input class="login__input" id="cvNombre" value="${escapeHTML(p.nombre || '')}" placeholder="Nombre completo">
+        <input class="login__input" id="cvTitular" value="${escapeHTML(p.titular || '')}" placeholder="Titular profesional">
+        <input class="login__input" id="cvUbicacion" value="${escapeHTML(p.ubicacion || '')}" placeholder="Ubicación">
+        <input class="login__input" id="cvTelefono" value="${escapeHTML(p.telefono || '')}" placeholder="Teléfono">
+      </div>
+      <textarea class="login__input" id="cvBio" rows="3" style="margin-top:.75rem;">${escapeHTML(p.bio || '')}</textarea>
+      <input class="login__input" id="cvSkills" value="${escapeHTML(skillsTags.join(', '))}" placeholder="Habilidades separadas por comas" style="margin-top:.75rem;">
+    </div>
     <div style="margin-bottom:1rem;">
-      <p style="font-size:0.9rem;color:#475569;margin-bottom:0.75rem;">Elige el diseño de tu CV:</p>
+      <p style="font-size:0.9rem;color:#475569;margin-bottom:0.75rem;"><strong>2. Elegí una plantilla</strong></p>
       <div style="display:flex;gap:0.75rem;flex-wrap:wrap;" id="cvTemplateSelector">
         ${Object.entries(CV_TEMPLATES).map(([key, tmpl]) => `
           <label style="cursor:pointer;flex:1;min-width:120px;">
@@ -535,8 +727,16 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
       </div>
     </div>
 
-    <div id="cvPreviewWrapper" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;max-height:50vh;overflow-y:auto;background:#fff;">
-      <iframe id="cvPreviewFrame" style="width:100%;height:420px;border:none;" title="Vista previa del CV"></iframe>
+      </div>
+      <div class="cv-preview-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;">
+          <strong style="color:#334155;font-size:.95rem;">Vista previa</strong>
+          <span style="font-size:.78rem;color:#64748b;">Se actualiza en tiempo real</span>
+        </div>
+        <div id="cvPreviewWrapper" style="border:1px solid #d8dee8;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 28px rgba(15,30,60,.10);">
+          <iframe id="cvPreviewFrame" class="cv-preview-frame" title="Vista previa del CV"></iframe>
+        </div>
+      </div>
     </div>
   `;
 
@@ -556,15 +756,34 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
   if (btnFormCancel) btnFormCancel.textContent = "Cerrar";
 
   modalOverlay?.classList.remove("d-none");
+  modalOverlay?.classList.add("cv-editor-overlay");
+  modalOverlay?.querySelector(".modal")?.classList.add("cv-editor-modal");
 
-  // Render inicial
+  // Render inicial y edición en vivo
+  function getDraft() {
+    return { ...p,
+      nombre: document.getElementById("cvNombre")?.value.trim() || p.nombre,
+      titular: document.getElementById("cvTitular")?.value.trim() || p.titular,
+      ubicacion: document.getElementById("cvUbicacion")?.value.trim() || p.ubicacion,
+      telefono: document.getElementById("cvTelefono")?.value.trim() || p.telefono,
+      bio: document.getElementById("cvBio")?.value.trim() || p.bio
+    };
+  }
+  function getDraftSkills() { return (document.getElementById("cvSkills")?.value || skillsTags.join(",")).split(",").map(x => x.trim()).filter(Boolean); }
   function renderPreview() {
     const frame = document.getElementById("cvPreviewFrame");
     if (!frame) return;
-    const html = buildCVHTML(p, skillsTags, selectedTemplate);
-    frame.srcdoc = html;
+    frame.srcdoc = buildCVHTML(getDraft(), getDraftSkills(), selectedTemplate);
   }
-
+  modalBody?.querySelectorAll("#cvNombre,#cvTitular,#cvUbicacion,#cvTelefono,#cvBio,#cvSkills").forEach(el => el.addEventListener("input", renderPreview));
+  modalBody?.querySelector("#cvSaveChanges")?.addEventListener("click", () => {
+    const draft = getDraft();
+    skillsTags = getDraftSkills();
+    savePerfilExtendido({ ...p, ...draft, skills: skillsTags, experienciaLaboral });
+    perfil = getPerfilExtendido();
+    renderHero();
+    mostrarToast("Los cambios del CV se guardaron en tu perfil.", "success");
+  });
   renderPreview();
 
   // Cambio de template
@@ -585,7 +804,7 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
   // Imprimir: abre ventana nueva con solo el CV
   if (btnFormSubmit) {
     btnFormSubmit.onclick = () => {
-      const html = buildCVHTML(p, skillsTags, selectedTemplate);
+      const html = buildCVHTML(getDraft(), getDraftSkills(), selectedTemplate);
       const win = window.open("", "_blank", "width=900,height=700");
       if (win) {
         win.document.open();
@@ -603,6 +822,8 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
 
   const cerrar = () => {
     modalOverlay?.classList.add("d-none");
+    modalOverlay?.classList.remove("cv-editor-overlay");
+    modalOverlay?.querySelector(".modal")?.classList.remove("cv-editor-modal");
     if (btnFormSubmit) {
       btnFormSubmit.classList.add("d-none");
       btnFormSubmit.onclick = null;
@@ -620,6 +841,7 @@ document.getElementById("btnToggleRol")?.addEventListener("click", () => {
   rolActual = nuevoRol;
   perfil = getPerfilExtendido();
   skillsTags = Array.isArray(perfil.skills) ? [...perfil.skills] : ["React", "TypeScript", "Node.js"];
+  experienciaLaboral = Array.isArray(perfil.experienciaLaboral) ? [...perfil.experienciaLaboral] : [];
   renderHero();
   renderFormFields();
   initUserNav();
