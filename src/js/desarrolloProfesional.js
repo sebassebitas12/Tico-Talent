@@ -6,18 +6,18 @@ requireAuth();
 initUserNav();
 
 const CURSOS = [
-  { id: 1, titulo: 'Desarrollo Web Full Stack con React y Node.js', instructor: 'Carlos Vargas', horas: 48, nivel: 'Intermedio', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.8, inscritos: 1240, descripcion: 'Aprende a construir aplicaciones web modernas con las tecnologias mas demandadas del mercado laboral costarricense.' },
-  { id: 2, titulo: 'Gestion del Talento Humano y Seleccion por Competencias', instructor: 'Maria Solano', horas: 24, nivel: 'Basico', categoria: 'rrhh', precio: 'Gratis', calificacion: 4.7, inscritos: 876, descripcion: 'Domina los procesos de reclutamiento, evaluacion y seleccion de talento con enfoque basado en competencias.' },
-  { id: 3, titulo: 'Liderazgo Transformacional y Gestion de Equipos', instructor: 'Roberto Alvarado', horas: 16, nivel: 'Intermedio', categoria: 'liderazgo', precio: 'Gratis', calificacion: 4.9, inscritos: 2100, descripcion: 'Desarrolla habilidades de liderazgo efectivo para motivar equipos de alto rendimiento en entornos VUCA.' },
-  { id: 4, titulo: 'Ingles de Negocios para Profesionales de TI', instructor: 'Ana Benavides', horas: 40, nivel: 'Intermedio', categoria: 'idiomas', precio: 'Gratis', calificacion: 4.6, inscritos: 3450, descripcion: 'Mejora tu fluidez en ingles tecnico para entrevistas internacionales, reuniones y documentacion profesional.' },
-  { id: 5, titulo: 'Finanzas Personales e Inversion para Profesionales', instructor: 'Diego Mora', horas: 12, nivel: 'Basico', categoria: 'finanzas', precio: 'Gratis', calificacion: 4.5, inscritos: 1890, descripcion: 'Aprende a gestionar tus finanzas, construir un fondo de emergencia e iniciar tu camino en la inversion.' },
-  { id: 6, titulo: 'Marketing Digital y Marca Personal en LinkedIn', instructor: 'Valeria Castro', horas: 20, nivel: 'Basico', categoria: 'marketing', precio: 'Gratis', calificacion: 4.8, inscritos: 2780, descripcion: 'Construye una presencia digital poderosa y aprende a usar LinkedIn para conseguir oportunidades de empleo.' },
-  { id: 7, titulo: 'Cloud Computing con AWS para Desarrolladores', instructor: 'Luis Fernandez', horas: 36, nivel: 'Avanzado', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.7, inscritos: 654, descripcion: 'Certificate en los servicios fundamentales de AWS: EC2, S3, Lambda, RDS y arquitecturas serverless.' },
-  { id: 8, titulo: 'Derecho Laboral Costarricense para Empresas', instructor: 'Gabriela Hidalgo', horas: 10, nivel: 'Basico', categoria: 'legal', precio: 'Gratis', calificacion: 4.6, inscritos: 430, descripcion: 'Conoce la legislacion laboral vigente en Costa Rica: contratos, despidos, beneficios y cumplimiento normativo.' },
-  { id: 9, titulo: 'Inteligencia Artificial Aplicada al Reclutamiento', instructor: 'Marco Rodriguez', horas: 18, nivel: 'Intermedio', categoria: 'rrhh', precio: 'Gratis', calificacion: 4.9, inscritos: 1120, descripcion: 'Descubre como usar herramientas de IA para optimizar la busqueda, evaluacion y contratacion de candidatos.' },
-  { id: 10, titulo: 'Python para Ciencia de Datos y Machine Learning', instructor: 'Sofia Pizarro', horas: 60, nivel: 'Avanzado', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.8, inscritos: 987, descripcion: 'Domina Python, Pandas, NumPy y scikit-learn para analizar datos y construir modelos predictivos.' },
-  { id: 11, titulo: 'Comunicacion Efectiva y Presentaciones Ejecutivas', instructor: 'Patricia Gamboa', horas: 8, nivel: 'Basico', categoria: 'liderazgo', precio: 'Gratis', calificacion: 4.7, inscritos: 3200, descripcion: 'Desarrolla habilidades de comunicacion oral y escrita para presentar ideas con impacto y claridad.' },
-  { id: 12, titulo: 'Contabilidad y Tributacion para PYMES en Costa Rica', instructor: 'Juan Esquivel', horas: 14, nivel: 'Basico', categoria: 'finanzas', precio: 'Gratis', calificacion: 4.5, inscritos: 760, descripcion: 'Comprende los principios contables y las obligaciones fiscales de tu empresa ante el Ministerio de Hacienda.' }
+  { id: 1, titulo: 'Desarrollo Web Full Stack con React y Node.js', instructor: 'Carlos Vargas', horas: 48, nivel: 'Intermedio', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.8, inscritos: 1240, descripcion: 'Aprende a construir aplicaciones web modernas con las tecnologias mas demandadas del mercado laboral costarricense.', imagen: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80' },
+  { id: 2, titulo: 'Gestion del Talento Humano y Seleccion por Competencias', instructor: 'Maria Solano', horas: 24, nivel: 'Basico', categoria: 'rrhh', precio: 'Gratis', calificacion: 4.7, inscritos: 876, descripcion: 'Domina los procesos de reclutamiento, evaluacion y seleccion de talento con enfoque basado en competencias.', imagen: 'https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?w=600&q=80' },
+  { id: 3, titulo: 'Liderazgo Transformacional y Gestion de Equipos', instructor: 'Roberto Alvarado', horas: 16, nivel: 'Intermedio', categoria: 'liderazgo', precio: 'Gratis', calificacion: 4.9, inscritos: 2100, descripcion: 'Desarrolla habilidades de liderazgo efectivo para motivar equipos de alto rendimiento en entornos VUCA.', imagen: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80' },
+  { id: 4, titulo: 'Ingles de Negocios para Profesionales de TI', instructor: 'Ana Benavides', horas: 40, nivel: 'Intermedio', categoria: 'idiomas', precio: 'Gratis', calificacion: 4.6, inscritos: 3450, descripcion: 'Mejora tu fluidez en ingles tecnico para entrevistas internacionales, reuniones y documentacion profesional.', imagen: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=80' },
+  { id: 5, titulo: 'Finanzas Personales e Inversion para Profesionales', instructor: 'Diego Mora', horas: 12, nivel: 'Basico', categoria: 'finanzas', precio: 'Gratis', calificacion: 4.5, inscritos: 1890, descripcion: 'Aprende a gestionar tus finanzas, construir un fondo de emergencia e iniciar tu camino en la inversion.', imagen: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80' },
+  { id: 6, titulo: 'Marketing Digital y Marca Personal en LinkedIn', instructor: 'Valeria Castro', horas: 20, nivel: 'Basico', categoria: 'marketing', precio: 'Gratis', calificacion: 4.8, inscritos: 2780, descripcion: 'Construye una presencia digital poderosa y aprende a usar LinkedIn para conseguir oportunidades de empleo.', imagen: 'https://images.unsplash.com/photo-1432888622747-4eb9a8f5a07d?w=600&q=80' },
+  { id: 7, titulo: 'Cloud Computing con AWS para Desarrolladores', instructor: 'Luis Fernandez', horas: 36, nivel: 'Avanzado', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.7, inscritos: 654, descripcion: 'Certificate en los servicios fundamentales de AWS: EC2, S3, Lambda, RDS y arquitecturas serverless.', imagen: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=600&q=80' },
+  { id: 8, titulo: 'Derecho Laboral Costarricense para Empresas', instructor: 'Gabriela Hidalgo', horas: 10, nivel: 'Basico', categoria: 'legal', precio: 'Gratis', calificacion: 4.6, inscritos: 430, descripcion: 'Conoce la legislacion laboral vigente en Costa Rica: contratos, despidos, beneficios y cumplimiento normativo.', imagen: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80' },
+  { id: 9, titulo: 'Inteligencia Artificial Aplicada al Reclutamiento', instructor: 'Marco Rodriguez', horas: 18, nivel: 'Intermedio', categoria: 'rrhh', precio: 'Gratis', calificacion: 4.9, inscritos: 1120, descripcion: 'Descubre como usar herramientas de IA para optimizar la busqueda, evaluacion y contratacion de candidatos.', imagen: 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80' },
+  { id: 10, titulo: 'Python para Ciencia de Datos y Machine Learning', instructor: 'Sofia Pizarro', horas: 60, nivel: 'Avanzado', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.8, inscritos: 987, descripcion: 'Domina Python, Pandas, NumPy y scikit-learn para analizar datos y construir modelos predictivos.', imagen: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&q=80' },
+  { id: 11, titulo: 'Comunicacion Efectiva y Presentaciones Ejecutivas', instructor: 'Patricia Gamboa', horas: 8, nivel: 'Basico', categoria: 'liderazgo', precio: 'Gratis', calificacion: 4.7, inscritos: 3200, descripcion: 'Desarrolla habilidades de comunicacion oral y escrita para presentar ideas con impacto y claridad.', imagen: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&q=80' },
+  { id: 12, titulo: 'Contabilidad y Tributacion para PYMES en Costa Rica', instructor: 'Juan Esquivel', horas: 14, nivel: 'Basico', categoria: 'finanzas', precio: 'Gratis', calificacion: 4.5, inscritos: 760, descripcion: 'Comprende los principios contables y las obligaciones fiscales de tu empresa ante el Ministerio de Hacienda.', imagen: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80' }
 ];
 
 const COLORES = {
@@ -61,11 +61,12 @@ function renderCursos() {
     const badge2 = `<span style="background:${nColor}18;color:${nColor};font-size:0.73rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:12px;">${escapeHTML(c.nivel)}</span>`;
     return `
       <article class="job-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-        <div style="height:140px;background:linear-gradient(135deg,#531068 0%,#1e3a8a 100%);display:flex;align-items:center;justify-content:center;">
-          <div style="text-align:center;">
-            <div style="font-size:2.5rem;">&#128218;</div>
-            <div style="color:rgba(255,255,255,0.85);font-size:0.75rem;font-weight:600;letter-spacing:0.5px;margin-top:0.4rem;">DESARROLLO PROFESIONAL</div>
-          </div>
+        <div style="height:160px;overflow:hidden;position:relative;">
+          <img src="${c.imagen}" alt="${escapeHTML(c.titulo)}" loading="lazy"
+            style="width:100%;height:100%;object-fit:cover;display:block;"
+            onerror="this.parentElement.style.background='linear-gradient(135deg,#531068 0%,#1e3a8a 100%)';this.style.display='none';">
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1),rgba(0,0,0,0.45));"></div>
+          <span style="position:absolute;bottom:0.6rem;left:0.75rem;color:#fff;font-size:0.7rem;font-weight:700;letter-spacing:0.5px;text-shadow:0 1px 3px rgba(0,0,0,0.6);">DESARROLLO PROFESIONAL</span>
         </div>
         <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;">
           <div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;gap:0.5rem;">
@@ -89,6 +90,7 @@ function renderCursos() {
               ${inscritosIds.includes(c.id) ? 'Inscrito' : 'Inscribirse'}
             </button>
           </div>
+        </div>
       </article>
     `;
   }).join('');

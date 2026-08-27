@@ -685,35 +685,44 @@
   box-shadow: 0 0 0 3px rgba(83, 16, 104, 0.15);
 }
 
-/* Toasts */
+/* Toasts: capa global, por encima del header y cualquier panel */
 .toast-container {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 2000;
-  display: flex;
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 1rem) !important;
+  right: 1rem !important;
+  z-index: 2147483647 !important;
+  isolation: isolate;
+  display: flex !important;
   flex-direction: column;
+  align-items: stretch;
   gap: 0.75rem;
+  width: min(430px, calc(100vw - 2rem));
+  pointer-events: none;
 }
 
 .toast {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.9rem 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.95rem 1rem;
   border-radius: var(--radius-md);
   background: var(--secondary-navy);
   color: #fff;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.28);
   font-size: 0.9rem;
   opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
+  transform: translateX(24px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .toast--visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
 .toast--success {
@@ -732,17 +741,38 @@
   border-left: 5px solid var(--primary-purple);
 }
 
+.toast__icon {
+  flex: 0 0 auto;
+  font-size: 1rem;
+}
+
+.toast__msg {
+  flex: 1;
+  min-width: 0;
+}
+
 .toast__close {
+  flex: 0 0 auto;
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: #cbd5e1;
   cursor: pointer;
   margin-left: auto;
   font-size: 1rem;
+  line-height: 1;
+  padding: 0.25rem;
 }
 
 .toast__close:hover {
   color: #fff;
+}
+
+@media (max-width: 640px) {
+  .toast-container {
+    top: calc(env(safe-area-inset-top, 0px) + 0.75rem) !important;
+    right: 0.75rem !important;
+    width: calc(100vw - 1.5rem);
+  }
 }
 
 /* Loading */
@@ -1052,6 +1082,9 @@
    ========================================================================== */
 .modal-overlay.cv-editor-overlay {
   padding: 2vh 2vw;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-color: rgba(8, 20, 40, 0.72);
 }
 
 .modal.cv-editor-modal {

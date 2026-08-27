@@ -270,13 +270,25 @@ export function adaptarPostulacion(p, index = 0) {
 /**
  * Adapta un comentario de DummyJSON (/comments) a una Entrevista / Nota Técnica.
  */
+
+const NOTAS_ENTREVISTA = [
+  "Revisar experiencia en desarrollo y resolver ejercicio de arquitectura de software.",
+  "Evaluacion de habilidades tecnicas y presentacion de caso practico.",
+  "Sesion de preguntas sobre experiencia laboral y competencias clave del puesto.",
+  "Entrevista tecnica enfocada en resolucion de problemas y buenas practicas.",
+  "Revision de portafolio y discusion de proyectos anteriores del candidato.",
+  "Evaluacion de fit cultural y alineacion con los valores de la empresa.",
+  "Entrevista de competencias: liderazgo, trabajo en equipo y gestion del tiempo.",
+  "Prueba tecnica en vivo y revision de conocimientos especificos del area."
+];
+
 export function adaptarEntrevista(c, index = 0) {
   if (!c) return {};
   const empresaRef = EMPRESAS_CR[(c.id + index) % EMPRESAS_CR.length];
   const plataformas = [
-    { nombre: "Google Meet", link: `https://meet.google.com/tt-${c.id}-cr`, icono: "📹" },
-    { nombre: "Microsoft Teams", link: `https://teams.microsoft.com/l/meetup-join/tt-${c.id}`, icono: "💻" },
-    { nombre: "Presencial (Oficinas CR)", link: "#", icono: "🏢" }
+    { nombre: "Google Meet", link: `https://meet.google.com/tt-${c.id}-cr`, icono: "" },
+    { nombre: "Microsoft Teams", link: `https://teams.microsoft.com/l/meetup-join/tt-${c.id}`, icono: "" },
+    { nombre: "Presencial (Oficinas CR)", link: "#", icono: "" }
   ];
   const plat = plataformas[(c.id + index) % plataformas.length];
   const day = 25 + (c.id % 5);
@@ -285,7 +297,7 @@ export function adaptarEntrevista(c, index = 0) {
   return {
     id: c.id,
     postId: c.postId || 1,
-    notas: c.body || "Revisión de experiencia técnica y resolución de caso práctico.",
+    notas: NOTAS_ENTREVISTA[(c.id + index) % NOTAS_ENTREVISTA.length],
     candidatoUsuario: c.user?.username || "candidato.demo",
     candidatoNombre: c.user?.fullName || `@${c.user?.username || "candidato"}`,
     empresa: empresaRef.nombre,

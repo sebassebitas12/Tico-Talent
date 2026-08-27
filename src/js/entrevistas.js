@@ -42,10 +42,10 @@ function renderCards(lista) {
 
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
       ${lista.map((ent) => {
-        return `
+    return `
           <article class="job-card" data-id="${ent.id}">
             <div class="job-card__header">
-              <div class="job-card__company-logo">${ent.modalidadIcono || "📹"}</div>
+              <div class="job-card__company-logo">${ent.modalidadIcono || ""}</div>
               <div class="job-card__title-area">
                 <h3 class="job-card__title">Entrevista con ${escapeHTML(ent.candidatoNombre)}</h3>
                 <div class="job-card__company-name">
@@ -53,19 +53,19 @@ function renderCards(lista) {
                 </div>
               </div>
               <span class="badge-match" style="background-color: #fff3e0; color: #e65100;">
-                ⚡ En Proceso
+                En Proceso
               </span>
             </div>
 
             <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.75rem 0; line-height: 1.5;">
-              📝 <strong>Notas:</strong> ${escapeHTML(ent.notas)}
+               <strong>Notas:</strong> ${escapeHTML(ent.notas)}
             </p>
 
             <div class="job-card__details">
-              <span class="job-tag">📅 ${escapeHTML(ent.fechaHora)}</span>
-              <span class="job-tag">🌐 ${escapeHTML(ent.modalidad)}</span>
-              <span class="job-tag">👤 Usuario: @${escapeHTML(ent.candidatoUsuario)}</span>
-              <span class="job-tag">🆔 Postulación Ref: #${ent.postId}</span>
+              <span class="job-tag"> ${escapeHTML(ent.fechaHora)}</span>
+              <span class="job-tag"> ${escapeHTML(ent.modalidad)}</span>
+              <span class="job-tag"> Usuario: @${escapeHTML(ent.candidatoUsuario)}</span>
+              <span class="job-tag"> Postulación Ref: #${ent.postId}</span>
             </div>
 
             <div class="job-card__footer">
@@ -74,13 +74,13 @@ function renderCards(lista) {
               </div>
               <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
                 ${ent.linkReunion !== "#" ? `<a href="${ent.linkReunion}" target="_blank" rel="noreferrer" class="btn btn-cta" style="padding: 0.55rem 0.9rem; text-decoration: none;">Ingresar a Sala</a>` : ''}
-                <button type="button" class="btn btn-secondary btn-editar" data-id="${ent.id}">✏️ Notas</button>
-                <button type="button" class="btn btn--danger btn-eliminar" data-id="${ent.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">🗑️</button>
+                <button type="button" class="btn btn-secondary btn-editar" data-id="${ent.id}">Notas</button>
+                <button type="button" class="btn btn--danger btn-eliminar" data-id="${ent.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 0.8rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;"></button>
               </div>
             </div>
           </article>
         `;
-      }).join("")}
+  }).join("")}
     </div>
   `;
 
@@ -131,7 +131,7 @@ function abrirFormulario(id = null) {
 
   abrirModal(titulo, formularioHTML(ent), async () => {
     const datos = {
-      body:   document.getElementById("fBody").value.trim(),
+      body: document.getElementById("fBody").value.trim(),
       postId: Number(document.getElementById("fPostId").value) || 1,
       user: {
         id: 1,

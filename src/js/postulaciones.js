@@ -289,3 +289,6 @@ function abrirModalCambioEstado(id) {
   });
 }
 
+
+// ── INICIALIZACIÓN ──────────────────────────────────────────────
+cargarPostulaciones();
