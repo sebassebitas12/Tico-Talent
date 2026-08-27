@@ -5,14 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Favicon -->
-  <link rel="icon" href="../../public/favicon.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="32x32" href="../../public/favicon_32.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="../../public/favicon_192.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="../../public/favicon_192.png">
-  <title>Tico Talent - Centro de Capacitación</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
+  <title>Tico Talent - Empresas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
@@ -21,15 +22,21 @@
 </head>
 
 <body class="main-page">
+
+  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
   <header class="sidebar" id="sidebar">
     <div class="sidebar__header">
       <a href="principal.html" class="sidebar__brand">Tico Talent</a>
     </div>
+
     <nav class="sidebar__nav">
-      <div class="sidebar__nav-section"></div>
+      <div class="sidebar__nav-section">
+        <!-- Renderizado dinámicamente por ui.js según rol -->
+      </div>
     </nav>
+
     <div class="sidebar__footer">
-      <div class="sidebar__user-card" style="cursor:pointer;" title="Ver mi perfil">
+      <div class="sidebar__user-card">
         <div class="sidebar__user-avatar" id="userAvatar">U</div>
         <div class="sidebar__user-info">
           <span class="sidebar__user-name" id="userName">Usuario</span>
@@ -42,52 +49,25 @@
     </div>
   </header>
 
+  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
     <main class="main" id="main">
-      <div class="main__header">
-        <h1 class="main__title">Centro de Capacitación</h1>
-        <p class="main__subtitle">Cursos, certificaciones y programas de formación para impulsar tu carrera profesional
-          en Costa Rica.</p>
-      </div>
+      <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
+        <header class="main__content-header">
+          <h1 class="main__title" id="viewTitle">Empresas Aliadas</h1>
+          <p class="main__description">Organizaciones líderes que contratan talento calificado a través de Tico Talent.
+          </p>
+        </header>
 
-      <div id="cursosFiltros" style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:2rem;">
-        <button class="curso-filtro curso-filtro--activo" data-categoria="todos">Todos</button>
-        <button class="curso-filtro" data-categoria="tecnologia">Tecnología</button>
-        <button class="curso-filtro" data-categoria="rrhh">Recursos Humanos</button>
-        <button class="curso-filtro" data-categoria="liderazgo">Liderazgo</button>
-        <button class="curso-filtro" data-categoria="idiomas">Idiomas</button>
-        <button class="curso-filtro" data-categoria="finanzas">Finanzas</button>
-        <button class="curso-filtro" data-categoria="marketing">Marketing Digital</button>
-        <button class="curso-filtro" data-categoria="legal">Legal y Cumplimiento</button>
-      </div>
-
-      <div
-        style="background:linear-gradient(135deg,var(--primary-purple),#1e3a8a);border-radius:var(--radius-lg);padding:2rem 2.5rem;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;box-shadow:0 8px 32px rgba(83,16,104,0.25);">
-        <div>
-          <span
-            style="background:rgba(255,255,255,0.15);color:#fff;font-size:0.78rem;font-weight:700;padding:0.3rem 0.75rem;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;">Destacado</span>
-          <h2 style="font-size:1.6rem;font-weight:800;color:#fff;margin:0.75rem 0 0.4rem 0;">Programa Integral de
-            Empleabilidad TicoTalent</h2>
-          <p style="color:rgba(255,255,255,0.8);font-size:0.95rem;margin:0;max-width:520px;">12 semanas de formación
-            intensiva en tecnología, comunicación efectiva y preparación para entrevistas. Completamente gratuito para
-            candidatos registrados.</p>
+        <div class="main__content-body" id="contentArea">
+          <section class="companies" aria-labelledby="companiesListTitle">
+            <h2 id="companiesListTitle" class="sr-only">Listado de empresas</h2>
+            <div class="job-list" id="companiesList">
+              <!-- Las empresas son renderizadas dinámicamente por empresas.js -->
+            </div>
+          </section>
         </div>
-        <button id="btnInscribirDestacado" class="btn btn-cta"
-          style="background:#fff;color:var(--primary-purple);flex-shrink:0;font-weight:700;">Inscribirse Ahora</button>
-      </div>
-
-      <div style="position:relative;margin-bottom:1.5rem;max-width:480px;">
-        <input type="text" id="cursosBusqueda" placeholder="Buscar cursos por nombre, instructor o área..."
-          class="login__input" style="padding-left:2.5rem;">
-        <svg style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);"
-          width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
-      </div>
-
-      <div id="cursosContainer"
-        style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;"></div>
+      </section>
     </main>
 
     <!-- ========== FOOTER ========== -->
@@ -157,10 +137,11 @@
     </footer>
   </div>
 
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
-    <p class="loading__text">Cargando cursos...</p>
+    <p class="loading__text">Cargando...</p>
   </div>
   <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
@@ -182,12 +163,12 @@
       <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
       <div class="confirm__actions">
         <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
-        <button class="btn btn--danger" id="btnConfirmYes">Confirmar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="../js/capacitacion.js"></script>
+  <script type="module" src="../js/empresas.js"></script>
 </body>
 
 </html>

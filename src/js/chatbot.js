@@ -1,10 +1,16 @@
 // src/js/chatbot.js
-// Asistente Virtual TicoBot — Anthropic Claude API (claude-sonnet-4-6)
+// Asistente Virtual TicoBot — Groq API (LLaMA 3.3 70B)
 // Contextualizado para TicoTalent y el mercado laboral tecnológico de Costa Rica.
 
 import { getUser, getRole, getPerfilExtendido } from "./auth.js";
 
-const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
+const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const CANDIDATE_MODELS = [
+  "llama-3.3-70b-versatile",
+  "llama-3.1-8b-instant",
+  "mixtral-8x7b-32768"
+];
 
 let conversationHistory = [];
 let isGenerating = false;
@@ -33,9 +39,9 @@ CONOCIMIENTO DE TICOTALENT & COSTA RICA:
 DIRECTRICES:
 - Responde de forma natural, conversacional y generativa. Adapta cada respuesta al contexto específico del mensaje.
 - Nunca uses respuestas enlatadas o repetitivas. Cada respuesta debe ser única y relevante.
-- Usa viñetas y negritas con moderación para facilitar la lectura cuando la información lo amerite.
-- Responde siempre en español de Costa Rica (podés usar "tico" coloquialmente cuando sea apropiado).
-- Si no sabes algo con certeza, dilo honestamente y ofrece orientar al usuario.
+- Usa viñetas y negritas con moderación cuando la información lo amerite.
+- Responde siempre en español de Costa Rica.
+- Si no sabes algo con certeza, dilo honestamente.
 - Mantén el contexto de la conversación para dar respuestas coherentes y continuas.`;
 }
 
@@ -47,7 +53,6 @@ export function initChatbot() {
 
   const widgetHTML = `
     <div class="ticobot-widget" id="ticobotWidget">
-      <!-- Botón Flotante de Activación -->
       <button class="ticobot-toggle-btn" id="ticobotToggle" aria-label="Abrir asistente TicoBot AI" title="Asistente Virtual TicoBot AI">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -55,9 +60,7 @@ export function initChatbot() {
         <span class="ticobot-toggle-badge">AI</span>
       </button>
 
-      <!-- Caja / Ventana del Chat Flotante -->
       <div class="ticobot-card d-none" id="ticobotCard">
-        <!-- Header -->
         <div class="ticobot-header">
           <div class="ticobot-header__avatar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -79,7 +82,6 @@ export function initChatbot() {
           </div>
         </div>
 
-        <!-- Sugerencias Rápidas / Pills -->
         <div class="ticobot-suggestions" id="ticobotSuggestions">
           <button class="ticobot-chip" data-prompt="¿Qué vacantes hay disponibles en Costa Rica?">Vacantes Activas</button>
           <button class="ticobot-chip" data-prompt="¿Cuáles son los salarios promedio en tech en Costa Rica?">Salarios Tech CR</button>
@@ -87,7 +89,6 @@ export function initChatbot() {
           <button class="ticobot-chip" data-prompt="Explícame cómo funciona TicoTalent paso a paso">Guía de la Web</button>
         </div>
 
-        <!-- Área de Mensajes -->
         <div class="ticobot-messages" id="ticobotMessages">
           <div class="ticobot-msg ticobot-msg--bot">
             <div class="ticobot-msg__avatar">AI</div>
@@ -97,7 +98,6 @@ export function initChatbot() {
           </div>
         </div>
 
-        <!-- Footer / Input -->
         <form class="ticobot-footer" id="ticobotForm">
           <input 
             type="text" 
@@ -137,14 +137,10 @@ function bindChatbotEvents() {
   toggleBtn?.addEventListener("click", () => {
     const isClosed = card.classList.contains("d-none");
     card.classList.toggle("d-none", !isClosed);
-    if (isClosed) {
-      setTimeout(() => input?.focus(), 150);
-    }
+    if (isClosed) setTimeout(() => input?.focus(), 150);
   });
 
-  closeBtn?.addEventListener("click", () => {
-    card.classList.add("d-none");
-  });
+  closeBtn?.addEventListener("click", () => card.classList.add("d-none"));
 
   clearBtn?.addEventListener("click", () => {
     conversationHistory = [];
@@ -181,42 +177,53 @@ function bindChatbotEvents() {
 }
 
 /**
- * Llama a la Anthropic API (claude-sonnet-4-6) de forma generativa
+ * Llama a la API de Groq con reintentos en modelos alternativos
  */
-async function llamarAnthropicAPI(userMessage) {
+async function llamarGroqAPI(userMessage) {
   const messages = [
-    ...conversationHistory.slice(-10), // últimos 10 turnos para contexto
+    { role: "system", content: getSystemPrompt() },
+    ...conversationHistory.slice(-10),
     { role: "user", content: userMessage }
   ];
 
-  const response = await fetch(ANTHROPIC_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true"
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 600,
-      system: getSystemPrompt(),
-      messages: messages
-    })
-  });
+  let lastError = null;
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `HTTP ${response.status}`);
+  for (const model of CANDIDATE_MODELS) {
+    try {
+      const response = await fetch(GROQ_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          temperature: 0.7,
+          max_tokens: 600
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+        if (content) return content;
+        throw new Error("Respuesta vacía del modelo.");
+      }
+
+      const errJson = await response.json().catch(() => ({}));
+      lastError = new Error(errJson?.error?.message || `HTTP ${response.status}`);
+
+    } catch (err) {
+      lastError = err;
+    }
   }
 
-  const data = await response.json();
-  const content = data.content?.[0]?.text;
-  if (!content) throw new Error("Respuesta vacía de la API.");
-  return content;
+  throw lastError || new Error("No se pudo obtener respuesta de Groq.");
 }
 
 /**
- * Envía el mensaje del usuario a la Anthropic API con streaming visual
+ * Envía el mensaje y maneja la respuesta generativa
  */
 async function enviarMensaje(userMessage) {
   const input = document.getElementById("ticobotInput");
@@ -230,33 +237,32 @@ async function enviarMensaje(userMessage) {
   appendMessage("user", userMessage);
 
   const loadingId = "typing-" + Date.now();
-  const loadingHTML = `
+  messagesEl.insertAdjacentHTML("beforeend", `
     <div class="ticobot-msg ticobot-msg--bot" id="${loadingId}">
       <div class="ticobot-msg__avatar">AI</div>
       <div class="ticobot-msg__bubble ticobot-msg__bubble--typing">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
     </div>
-  `;
-  messagesEl.insertAdjacentHTML("beforeend", loadingHTML);
+  `);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
   isGenerating = true;
   if (sendBtn) sendBtn.disabled = true;
 
   try {
-    const botReply = await llamarAnthropicAPI(userMessage);
+    const botReply = await llamarGroqAPI(userMessage);
 
-    // Guardar en historial DESPUÉS de obtener respuesta
     conversationHistory.push({ role: "user", content: userMessage });
     conversationHistory.push({ role: "assistant", content: botReply });
 
     document.getElementById(loadingId)?.remove();
     appendMessage("bot", botReply);
+
   } catch (error) {
-    console.error("Error en TicoBot API:", error);
+    console.error("TicoBot Groq error:", error);
     document.getElementById(loadingId)?.remove();
-    appendMessage("bot", `Lo siento, tuve un problema para conectarme en este momento. Por favor intenta de nuevo en unos segundos. Si el error persiste, podés escribirnos a soporte@ticotalent.com 🙏`);
+    appendMessage("bot", `⚠️ No pude conectarme al servicio de IA en este momento. Verificá tu conexión o intentá de nuevo en unos segundos.`);
   } finally {
     isGenerating = false;
     if (sendBtn) sendBtn.disabled = false;
@@ -274,16 +280,12 @@ function appendMessage(sender, text) {
   const isBot = sender === "bot";
   const formattedText = formatMarkdownToHTML(text);
 
-  const msgHTML = `
+  messagesEl.insertAdjacentHTML("beforeend", `
     <div class="ticobot-msg ticobot-msg--${sender}">
       ${isBot ? '<div class="ticobot-msg__avatar">AI</div>' : ''}
-      <div class="ticobot-msg__bubble">
-        ${formattedText}
-      </div>
+      <div class="ticobot-msg__bubble">${formattedText}</div>
     </div>
-  `;
-
-  messagesEl.insertAdjacentHTML("beforeend", msgHTML);
+  `);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
@@ -297,18 +299,11 @@ function formatMarkdownToHTML(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 
-  // Negrita **texto**
   html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
-  // Cursiva *texto*
   html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
-
-  // Listas con viñetas
   html = html.replace(/^[-•]\s+(.+)$/gm, "<li>$1</li>");
   html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
   html = html.replace(/<\/ul>\s*<ul>/g, "");
-
-  // Saltos de línea
   html = html.replace(/\n/g, "<br>");
 
   return html;
