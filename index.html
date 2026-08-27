@@ -4,6 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon -->
+  <link rel="icon" href="/public/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/public/favicon_192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/public/favicon_192.png">
   <title>Tico Talent - Tu plataforma de empleo en Costa Rica</title>
   <meta name="description"
     content="Tico Talent conecta el talento costarricense con las mejores empresas. Miles de vacantes de empleo. Crea tu perfil gratis.">
@@ -45,74 +50,65 @@
     </div>
   </nav>
 
-  <!-- ========== HERO ========== -->
+  <!-- ========== HERO ESTILO COMPUTRABAJO ========== -->
   <section class="landing-hero">
-    <!-- Video de fondo animado -->
+    <!-- Video de fondo difuminado -->
     <video class="landing-hero__video-bg" autoplay muted loop playsinline preload="metadata">
       <source src="https://videos.pexels.com/video-files/3252000/3252000-hd_1280_720_30fps.mp4" type="video/mp4">
     </video>
-    <div class="landing-hero__bg"></div>
-    <div class="landing-hero__container">
-      <div class="landing-hero__content">
-        <span class="landing-hero__badge">La plataforma #1 en empleo</span>
-        <h1 class="landing-hero__title">Encuentra tu proximo empleo ideal</h1>
-        <p class="landing-hero__subtitle">Conectamos talento costarricense con las mejores empresas. Miles de ofertas de
-          empleo esperandote en todo el pais.</p>
+    <!-- Overlay oscuro sobre el video -->
+    <div class="landing-hero__overlay"></div>
 
-        <div class="landing-hero__search">
-          <div class="landing-hero__search-group">
-            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input type="text" class="landing-hero__search-input" placeholder="Puesto, empresa o palabra clave"
-              id="heroSearchJob">
-          </div>
-          <div class="landing-hero__search-divider"></div>
-          <div class="landing-hero__search-group">
-            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <input type="text" class="landing-hero__search-input" placeholder="San Jose, Heredia, Alajuela..."
-              id="heroSearchLocation">
-          </div>
-          <button class="landing-hero__search-btn" id="heroSearchBtn">Buscar</button>
-        </div>
+    <!-- Contenido centrado -->
+    <div class="landing-hero__center">
+      <h1 class="landing-hero__title">¡Ahora es el momento de cambiar!</h1>
+      <p class="landing-hero__subtitle">Encuentra el empleo que encaja contigo, más de <strong>1,665 ofertas</strong>
+      </p>
 
-        <div class="landing-hero__tags">
-          <span class="landing-hero__tag">Desarrollador</span>
-          <span class="landing-hero__tag">Marketing</span>
-          <span class="landing-hero__tag">Contabilidad</span>
-          <span class="landing-hero__tag">Diseño</span>
-          <span class="landing-hero__tag">Recursos Humanos</span>
+      <!-- BUSCADOR ESTILO COMPUTRABAJO -->
+      <div class="landing-hero__search">
+        <div class="landing-hero__search-group">
+          <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+          <input type="text" class="landing-hero__search-input" placeholder="Cargo o categoría" id="heroSearchJob"
+            autocomplete="off">
         </div>
-
-        <div class="landing-hero__ctas">
-          <a href="login.html?rol=solicitante" class="landing-hero__cta landing-hero__cta--primary">Soy Candidato</a>
-          <a href="login.html?rol=empleador" class="landing-hero__cta landing-hero__cta--secondary">Soy Empleador</a>
+        <div class="landing-hero__search-divider"></div>
+        <div class="landing-hero__search-group">
+          <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <input type="text" class="landing-hero__search-input" placeholder="Lugar" id="heroSearchLocation"
+            autocomplete="off">
         </div>
+        <button class="landing-hero__search-btn" id="heroSearchBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Buscar empleos
+        </button>
       </div>
 
-      <div class="landing-hero__visual">
-        <div class="landing-hero__image-wrapper">
-          <video class="landing-hero__img" autoplay muted loop playsinline preload="metadata">
-            <source src="https://videos.pexels.com/video-files/7580211/7580211-hd_1280_720_30fps.mp4" type="video/mp4">
-          </video>
-          <div class="landing-hero__img-accent"></div>
-        </div>
-        <div class="landing-hero__stats">
-          <div class="landing-hero__stat">
-            <span class="landing-hero__stat-number">5,000+</span>
-            <span class="landing-hero__stat-label">Vacantes activas</span>
-          </div>
-          <div class="landing-hero__stat">
-            <span class="landing-hero__stat-number">200+</span>
-            <span class="landing-hero__stat-label">Empresas aliadas</span>
-          </div>
-        </div>
+      <!-- Tags populares -->
+      <div class="landing-hero__tags">
+        <span class="landing-hero__tag" data-tag="Desarrollador">Desarrollador</span>
+        <span class="landing-hero__tag" data-tag="Marketing">Marketing</span>
+        <span class="landing-hero__tag" data-tag="Contabilidad">Contabilidad</span>
+        <span class="landing-hero__tag" data-tag="Diseño">Diseño</span>
+        <span class="landing-hero__tag" data-tag="Recursos Humanos">Recursos Humanos</span>
+      </div>
+
+      <!-- CTAs secundarios -->
+      <div class="landing-hero__ctas">
+        <a href="login.html?rol=solicitante" class="landing-hero__cta landing-hero__cta--primary">Soy Candidato</a>
+        <a href="login.html?rol=empleador" class="landing-hero__cta landing-hero__cta--secondary">Soy Empleador</a>
       </div>
     </div>
   </section>
@@ -459,7 +455,198 @@
     </div>
   </footer>
 
+  <!-- ========== MODAL CV TEMPLATES ========== -->
+  <div id="cvModalOverlay"
+    style="display:none;position:fixed;inset:0;background:rgba(12,35,64,0.6);backdrop-filter:blur(4px);z-index:9999;overflow-y:auto;padding:2rem 1rem;">
+    <div
+      style="max-width:900px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+
+      <!-- Header -->
+      <div
+        style="background:linear-gradient(135deg,#531068 0%,#0C2340 100%);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0;">Elige tu plantilla de CV</h2>
+          <p style="color:rgba(255,255,255,0.8);font-size:0.9rem;margin:0.4rem 0 0;">Selecciona un diseño y se llenará
+            con tus datos de perfil automáticamente</p>
+        </div>
+        <button id="cvModalClose"
+          style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- Aviso login -->
+      <div id="cvLoginNotice"
+        style="display:none;padding:1.5rem 2.5rem;background:#fef3c7;border-bottom:1px solid #fde68a;">
+        <p style="margin:0;font-size:0.9rem;color:#92400e;">⚠️ <strong>Inicia sesión</strong> para que la plantilla se
+          llene con tus datos automáticamente. <a href="login.html" style="color:#531068;font-weight:700;">Iniciar
+            sesión →</a></p>
+      </div>
+
+      <!-- Grid de templates -->
+      <div
+        style="padding:2rem 2.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;">
+
+        <!-- Template 1: Moderno -->
+        <div class="cv-template-card" data-template="moderno"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:linear-gradient(135deg,#531068,#7c3aed);display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;">
+            <div
+              style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.6rem;font-size:0.7rem;color:#fff;font-weight:700;">
+              POPULAR</div>
+            <div
+              style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.25);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.4);border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:rgba(255,255,255,0.25);border-radius:4px;width:70%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Moderno</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Diseño con barra lateral colorida. Ideal para tech y
+              startups.</p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="moderno"
+              style="width:100%;background:#531068;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+        <!-- Template 2: Ejecutivo -->
+        <div class="cv-template-card" data-template="ejecutivo"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:#0C2340;display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#D8006E;"></div>
+            <div
+              style="width:48px;height:48px;border-radius:4px;background:rgba(255,255,255,0.1);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.35);border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:rgba(255,255,255,0.2);border-radius:4px;width:60%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Ejecutivo</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Clásico y formal. Perfecto para finanzas, legal y
+              gerencia.</p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="ejecutivo"
+              style="width:100%;background:#0C2340;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+        <!-- Template 3: Minimalista -->
+        <div class="cv-template-card" data-template="minimalista"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:#f8fafc;display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;border-bottom:1px solid #e5e7eb;">
+            <div style="position:absolute;top:1rem;left:1.25rem;width:40px;height:2px;background:#531068;"></div>
+            <div
+              style="width:48px;height:48px;border-radius:50%;border:2px solid #531068;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#531068" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div style="height:8px;background:#e2e8f0;border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:#e2e8f0;border-radius:4px;width:55%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Minimalista</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Limpio y elegante. Deja que tu experiencia hable por ti.
+            </p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="minimalista"
+              style="width:100%;background:#374151;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer del modal -->
+      <div style="padding:1rem 2.5rem 1.5rem;text-align:center;border-top:1px solid #f1f5f9;">
+        <p style="font-size:0.8rem;color:#9ca3af;margin:0;">Todos los templates son gratuitos para usuarios registrados
+          · Los datos se toman de tu perfil</p>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="src/js/landing.js"></script>
+  <script>
+    // Modal CV — lógica inline para no depender de módulos
+    (function () {
+      const overlay = document.getElementById('cvModalOverlay');
+      const closeBtn = document.getElementById('cvModalClose');
+      const loginNotice = document.getElementById('cvLoginNotice');
+
+      function openCvModal() {
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        // Verificar si está logueado
+        const token = localStorage.getItem('token');
+        if (!token) loginNotice.style.display = 'block';
+        else loginNotice.style.display = 'none';
+      }
+
+      function closeCvModal() {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      // Abrir con el botón "Crear CV Gratis"
+      document.querySelectorAll('a[href="login.html"]').forEach(btn => {
+        if (btn.textContent.trim().includes('CV')) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            openCvModal();
+          });
+        }
+      });
+
+      closeBtn?.addEventListener('click', closeCvModal);
+      overlay?.addEventListener('click', function (e) {
+        if (e.target === overlay) closeCvModal();
+      });
+
+      // Hover en cards
+      document.querySelectorAll('.cv-template-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.borderColor = '#531068';
+          card.style.transform = 'translateY(-4px)';
+          card.style.boxShadow = '0 12px 28px rgba(83,16,104,0.15)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.borderColor = '#e5e7eb';
+          card.style.transform = '';
+          card.style.boxShadow = '';
+        });
+      });
+
+      // Click en "Usar esta plantilla"
+      document.querySelectorAll('.cv-usar-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const token = localStorage.getItem('token');
+          const template = this.dataset.template;
+          if (!token) {
+            window.location.href = `login.html?action=crearcv&template=${template}`;
+          } else {
+            window.location.href = `src/html/perfil.html?template=${template}`;
+          }
+        });
+      });
+    })();
+  </script>
 
 </body>
 

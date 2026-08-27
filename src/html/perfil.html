@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon -->
+  <link rel="icon" href="../../public/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../public/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../public/favicon_192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="../../public/favicon_192.png">
   <title>Tico Talent - Mi Perfil y Configuración</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
 </head>
+
 <body class="main-page">
 
   <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
@@ -43,56 +52,78 @@
   <!-- ========== ÁREA DE CONTENIDO (PERFIL) ========== -->
   <div class="main-page__wrapper">
     <main class="main" id="main">
-      
-      <div class="main__header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+
+      <div class="main__header"
+        style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
         <div>
           <h1 class="main__title">Mi Perfil & Configuración</h1>
           <p class="main__subtitle">Administra tus datos, preferencias laborales y visibilidad en la plataforma.</p>
         </div>
         <!-- Selector rápido de rol para demo de exposición -->
-        <div style="background: var(--surface-card); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.75rem;">
+        <div
+          style="background: var(--surface-card); padding: 0.5rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 0.75rem;">
           <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Modo Demo:</span>
-          <button type="button" class="btn btn-secondary" id="btnToggleRol" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; font-weight: 600;">
+          <button type="button" class="btn btn-secondary" id="btnToggleRol"
+            style="padding: 0.4rem 0.8rem; font-size: 0.85rem; font-weight: 600;">
             Cambiar Rol (Candidato / Empresa)
           </button>
         </div>
       </div>
 
       <!-- Tarjeta Hero del Perfil -->
-      <section class="job-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, var(--surface-card) 0%, rgba(83, 16, 104, 0.04) 100%);">
+      <section class="job-card"
+        style="margin-bottom: 2rem; background: linear-gradient(135deg, var(--surface-card) 0%, rgba(83, 16, 104, 0.04) 100%);">
         <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
           <!-- Avatar con opción de cambio de foto -->
           <div style="position:relative;">
-            <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--primary-purple); color: #fff; font-size: 2rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 12px rgba(83, 16, 104, 0.2); overflow:hidden;" id="heroAvatar">
+            <div
+              style="width: 76px; height: 76px; border-radius: 50%; background: var(--primary-purple); color: #fff; font-size: 2rem; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 4px 12px rgba(83, 16, 104, 0.2); overflow:hidden;"
+              id="heroAvatar">
               U
             </div>
-            <label for="fotoPerfilInput" title="Cambiar foto de perfil" style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--action-pink);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <label for="fotoPerfilInput" title="Cambiar foto de perfil"
+              style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--action-pink);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
             </label>
             <input type="file" id="fotoPerfilInput" accept="image/*" style="display:none;">
           </div>
           <div style="flex: 1; min-width: 240px;">
             <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-              <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0;" id="heroName">Nombre de Usuario</h2>
-              <span class="badge-match" id="heroRoleBadge" style="background: #f0ebf5; color: var(--primary-purple);">Rol</span>
+              <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin: 0;" id="heroName">Nombre
+                de Usuario</h2>
+              <span class="badge-match" id="heroRoleBadge"
+                style="background: #f0ebf5; color: var(--primary-purple);">Rol</span>
             </div>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="heroSubtitle">Detalle del perfil</p>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">Haz clic en el ícono de cámara para cambiar tu foto de perfil.</p>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;" id="heroSubtitle">Detalle del
+              perfil</p>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.25rem;">Haz clic en el ícono de cámara para
+              cambiar tu foto de perfil.</p>
           </div>
         </div>
       </section>
 
       <!-- Formulario de Configuración Dinámico según Rol -->
-      <div style="background: var(--surface-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); padding: 2rem; box-shadow: var(--shadow-sm);">
+      <div
+        style="background: var(--surface-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); padding: 2rem; box-shadow: var(--shadow-sm);">
         <form id="perfilForm">
-          
+
           <!-- Contenedor renderizado por perfil.js -->
           <div id="perfilFieldsContainer"></div>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
             <div>
-              <button type="button" class="btn btn-secondary" id="btnExportarCV" style="display: inline-flex; align-items: center; gap: 0.5rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <button type="button" class="btn btn-secondary" id="btnExportarCV"
+                style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
                 Generar / Descargar CV
               </button>
             </div>
@@ -105,37 +136,70 @@
         </form>
       </div>
 
+    </main>
+
     <!-- ========== FOOTER ========== -->
-    <footer class="landing-footer" style="margin-top: auto; padding: 2.5rem 1.5rem 2rem; background: linear-gradient(135deg, #0f1e3c 0%, #1e1b4b 100%); color: #ffffff;">
+    <footer class="landing-footer"
+      style="margin-top: auto; padding: 2.5rem 1.5rem 2rem; background: linear-gradient(135deg, var(--secondary-navy) 0%, #1e1b4b 100%); color: #ffffff;">
       <div class="landing-footer__container" style="max-width: 1200px; margin: 0 auto;">
-        <div class="landing-footer__grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
+        <div class="landing-footer__grid"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
           <div class="landing-footer__brand">
-            <span class="landing-footer__logo" style="font-size: 1.6rem; font-weight: 800; color: #ffffff;">Tico Talent</span>
-            <p class="landing-footer__desc" style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; margin-top: 0.75rem;">La plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
+            <span class="landing-footer__logo"
+              style="font-size: 1.6rem; font-weight: 800; color: #ffffff; font-family: var(--font-display); font-style: italic;">Tico
+              Talent</span>
+            <p class="landing-footer__desc"
+              style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; margin-top: 0.75rem;">La
+              plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
           </div>
           <div class="landing-footer__col">
-            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Candidatos</h4>
-            <a href="vacantes.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar empleo</a>
-            <a href="perfil.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Mi Perfil</a>
-            <a href="capacitacion.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Capacitación</a>
-            <a href="notificaciones.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Notificaciones</a>
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Candidatos</h4>
+            <a href="vacantes.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar
+              empleo</a>
+            <a href="perfil.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Mi
+              Perfil</a>
+            <a href="capacitacion.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Capacitación</a>
+            <a href="notificaciones.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Notificaciones</a>
           </div>
           <div class="landing-footer__col">
-            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Empresas</h4>
-            <a href="vacantes.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Publicar vacante</a>
-            <a href="candidatos.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar candidatos</a>
-            <a href="empresas.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Empresas aliadas</a>
-            <a href="entrevistas.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Entrevistas</a>
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Empresas</h4>
+            <a href="vacantes.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Publicar
+              vacante</a>
+            <a href="candidatos.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar
+              candidatos</a>
+            <a href="empresas.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Empresas
+              aliadas</a>
+            <a href="entrevistas.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Entrevistas</a>
           </div>
           <div class="landing-footer__col">
-            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Contacto</h4>
-            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">info@ticotalent.com</a>
-            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">+506 2222-3333</a>
-            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">San José, Costa Rica</a>
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Contacto</h4>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">info@ticotalent.com</a>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">+506
+              2222-3333</a>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">San José, Costa Rica</a>
           </div>
         </div>
-        <div class="landing-footer__bottom" style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: center;">
-          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">&copy; 2026 Tico Talent. Todos los derechos reservados.</p>
+        <div class="landing-footer__bottom"
+          style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: center;">
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">&copy; 2026 Tico Talent. Todos los
+            derechos reservados.</p>
         </div>
       </div>
     </footer>
@@ -174,4 +238,5 @@
 
   <script type="module" src="../js/perfil.js"></script>
 </body>
+
 </html>

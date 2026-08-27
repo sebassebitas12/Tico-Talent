@@ -1,10 +1,9 @@
 // src/js/capacitacion.js
 import { requireAuth } from './auth.js';
-import { mostrarToast, initUserNav, escapeHTML, renderAppFooter } from './ui.js';
+import { mostrarToast, initUserNav, escapeHTML } from './ui.js';
 
 requireAuth();
 initUserNav();
-if (typeof renderAppFooter === 'function') renderAppFooter();
 
 const CURSOS = [
   { id: 1, titulo: 'Desarrollo Web Full Stack con React y Node.js', instructor: 'Carlos Vargas', horas: 48, nivel: 'Intermedio', categoria: 'tecnologia', precio: 'Gratis', calificacion: 4.8, inscritos: 1240, descripcion: 'Aprende a construir aplicaciones web modernas con las tecnologias mas demandadas del mercado laboral costarricense.' },

@@ -1,16 +1,10 @@
 // src/js/chatbot.js
-// Asistente Virtual Inteligente con IA (Groq API + LLaMA con fallback resiliente)
+// Asistente Virtual TicoBot — Anthropic Claude API (claude-sonnet-4-6)
 // Contextualizado para TicoTalent y el mercado laboral tecnológico de Costa Rica.
 
 import { getUser, getRole, getPerfilExtendido } from "./auth.js";
 
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const CANDIDATE_MODELS = [
-  "llama-3.3-70b-versatile",
-  "llama-3.1-8b-instant",
-  "mixtral-8x7b-32768"
-];
+const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
 
 let conversationHistory = [];
 let isGenerating = false;
@@ -24,7 +18,7 @@ function getSystemPrompt() {
   const rol = getRole();
   const nombre = perfil?.nombre || user?.firstName || "Usuario";
 
-  return `Eres "TicoBot", el asistente virtual de IA de TicoTalent (JobConnect), la plataforma de empleabilidad tech en Costa Rica.
+  return `Eres "TicoBot", el asistente virtual de IA de TicoTalent (JobConnect), la plataforma de empleabilidad tech en Costa Rica. Eres un asistente conversacional generativo, inteligente y empático.
 
 DATOS DEL USUARIO ACTUAL:
 - Nombre: ${nombre}
@@ -37,9 +31,12 @@ CONOCIMIENTO DE TICOTALENT & COSTA RICA:
 - Rango salarial de referencia en Costa Rica tech: Juniors ($1,200 - $2,000 USD), Mid ($2,200 - $3,800 USD), Seniors/Leads ($4,000 - $7,500+ USD). Modalidades: Remoto WFH, Híbrido, Presencial.
 
 DIRECTRICES:
-- Sé servicial, profesional y conciso.
-- Usa viñetas y negritas para facilitar la lectura.
-- Responde siempre en español.`;
+- Responde de forma natural, conversacional y generativa. Adapta cada respuesta al contexto específico del mensaje.
+- Nunca uses respuestas enlatadas o repetitivas. Cada respuesta debe ser única y relevante.
+- Usa viñetas y negritas con moderación para facilitar la lectura cuando la información lo amerite.
+- Responde siempre en español de Costa Rica (podés usar "tico" coloquialmente cuando sea apropiado).
+- Si no sabes algo con certeza, dilo honestamente y ofrece orientar al usuario.
+- Mantén el contexto de la conversación para dar respuestas coherentes y continuas.`;
 }
 
 /**
@@ -184,118 +181,42 @@ function bindChatbotEvents() {
 }
 
 /**
- * Intenta llamar a la API de Groq con reintentos en modelos alternativos
+ * Llama a la Anthropic API (claude-sonnet-4-6) de forma generativa
  */
-async function llamarGroqAPI(userMessage) {
-  let lastError = null;
+async function llamarAnthropicAPI(userMessage) {
+  const messages = [
+    ...conversationHistory.slice(-10), // últimos 10 turnos para contexto
+    { role: "user", content: userMessage }
+  ];
 
-  for (const model of CANDIDATE_MODELS) {
-    try {
-      const payload = {
-        model: model,
-        messages: [
-          { role: "system", content: getSystemPrompt() },
-          ...conversationHistory.slice(-6)
-        ],
-        temperature: 0.7,
-        max_tokens: 500
-      };
+  const response = await fetch(ANTHROPIC_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 600,
+      system: getSystemPrompt(),
+      messages: messages
+    })
+  });
 
-      const response = await fetch(GROQ_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${GROQ_API_KEY}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
-        if (content) return content;
-      } else {
-        const errJson = await response.json().catch(() => ({}));
-        lastError = new Error(errJson?.error?.message || `HTTP ${response.status}`);
-      }
-    } catch (err) {
-      lastError = err;
-    }
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `HTTP ${response.status}`);
   }
 
-  throw lastError || new Error("No se pudo obtener respuesta de los modelos de IA.");
+  const data = await response.json();
+  const content = data.content?.[0]?.text;
+  if (!content) throw new Error("Respuesta vacía de la API.");
+  return content;
 }
 
 /**
- * Motor de Respuestas de Respaldo Heurístico
- * Garantiza que el chatbot SIEMPRE responda incluso sin conexión de red o API limitada.
- */
-function generarRespuestaFallback(query) {
-  const q = query.toLowerCase();
-  const rol = getRole();
-  const perfil = getPerfilExtendido();
-  const nombre = perfil?.nombre || "Profesional";
-
-  if (q.includes("salario") || q.includes("sueldo") || q.includes("cuanto ganan") || q.includes("usd")) {
-    return `En el mercado tecnológico de **Costa Rica (2026)**, los rangos salariales promedio en zonas francas y empresas multinacionales son:
-
-- **Desarrollador Junior (0-2 años):** $1,400 - $2,200 USD / mes.
-- **Ingeniero Semi-Senior (2-5 años):** $2,500 - $3,800 USD / mes.
-- **Especialista Senior / Líder Técnico (5+ años):** $4,200 - $6,500+ USD / mes.
-- **Arquitecto Cloud / DevOps / Datos:** $5,000 - $7,800 USD / mes.
-
-*Nota:* La mayoría de posiciones en TicoTalent ofrecen esquema híbrido o 100% remoto con seguro médico privado.`;
-  }
-
-  if (q.includes("vacante") || q.includes("empleo") || q.includes("trabajo") || q.includes("plaza")) {
-    return `Actualmente en **TicoTalent** contamos con vacantes activas en las principales empresas tecnológicas de Costa Rica:
-
-- **Desarrollador Full Stack Senior (React / Node):** Intel Costa Rica ($4,500 USD)
-- **Ingeniero Frontend (React / TypeScript):** BAC Digital Labs ($3,800 USD)
-- **Arquitecto Cloud & DevOps (AWS):** Amazon Web Services CR ($5,500 USD)
-- **Ingeniero de Automatización QA:** SoftServe Costa Rica ($3,400 USD)
-- **Diseñador de Producto UI/UX:** Align Technology ($3,200 USD)
-
-Puedes ingresar a la sección de **Vacantes** en el menú superior para postularte con tu porcentaje de compatibilidad.`;
-  }
-
-  if (q.includes("entrevista") || q.includes("cv") || q.includes("tips") || q.includes("consejo") || q.includes("preparar")) {
-    return `Aquí tienes **3 recomendaciones clave** para procesos de selección tech en Costa Rica:
-
-1. **Estructura tu CV en formato STAR:** Destaca logros medibles (ej: *"Optimicé el tiempo de carga un 35% usando React y Vite"*).
-2. **Prepara los Fundamentos:** Repasa algoritmos, estructuras de datos y preguntas de diseño de sistemas.
-3. **Inglés Técnico:** La mayoría de empresas multinacionales en zonas francas (Heredia, San José) realizan entrevistas en inglés. Demuestra fluidez en tu experiencia técnica.`;
-  }
-
-  if (q.includes("como funciona") || q.includes("guia") || q.includes("plataforma") || q.includes("ticotalent")) {
-    return `**TicoTalent** funciona de forma sencilla y eficiente:
-
-1. **Explorar:** Revisa el resumen métrico de vacantes y candidatos del país.
-2. **Vacantes:** Aplica filtros por modalidad (Remoto, Híbrido), nivel de experiencia y postúlate en un click.
-3. **Seguimiento:** Monitorea tu postulación en el pipeline de 4 fases (*CV Recibido ➔ Revisión Técnica ➔ Entrevista ➔ Oferta*).
-4. **Mi Perfil:** Mantén actualizadas tus habilidades, pretensión salarial y enlaces a GitHub/LinkedIn.`;
-  }
-
-  if (rol === "empleador") {
-    return `Estimado/a ${nombre}, desde tu **Panel de Empleador** puedes:
-- Publicar y gestionar vacantes laborales.
-- Buscar profesionales en el **Talent Pool de Candidatos**.
-- Administrar el embudo de postulaciones y agendar entrevistas técnicas.
-
-¿Deseas ayuda con algún módulo específico?`;
-  }
-
-  return `Hola ${nombre}, un gusto saludarte. Como asistente de **TicoTalent**, puedo orientarte con:
-- Información de vacantes activas en Costa Rica.
-- Bandas salariales y modalidades (Remoto / Híbrido).
-- Consejos para optimizar tu CV y entrevistas técnicas.
-- Guía de uso de los módulos de la plataforma.
-
-¿Qué consulta te gustaría realizar?`;
-}
-
-/**
- * Envía el mensaje del usuario a la API de Groq con fallback automático
+ * Envía el mensaje del usuario a la Anthropic API con streaming visual
  */
 async function enviarMensaje(userMessage) {
   const input = document.getElementById("ticobotInput");
@@ -307,7 +228,6 @@ async function enviarMensaje(userMessage) {
   if (input) input.value = "";
 
   appendMessage("user", userMessage);
-  conversationHistory.push({ role: "user", content: userMessage });
 
   const loadingId = "typing-" + Date.now();
   const loadingHTML = `
@@ -325,18 +245,18 @@ async function enviarMensaje(userMessage) {
   if (sendBtn) sendBtn.disabled = true;
 
   try {
-    // 1. Intentar con API de Groq
-    const botReply = await llamarGroqAPI(userMessage);
+    const botReply = await llamarAnthropicAPI(userMessage);
+
+    // Guardar en historial DESPUÉS de obtener respuesta
+    conversationHistory.push({ role: "user", content: userMessage });
     conversationHistory.push({ role: "assistant", content: botReply });
+
     document.getElementById(loadingId)?.remove();
     appendMessage("bot", botReply);
   } catch (error) {
-    console.warn("Groq API no disponible, activando motor contextual local:", error);
-    // 2. Fallback inteligente instantáneo (nunca deja al usuario sin respuesta)
-    const fallbackReply = generarRespuestaFallback(userMessage);
-    conversationHistory.push({ role: "assistant", content: fallbackReply });
+    console.error("Error en TicoBot API:", error);
     document.getElementById(loadingId)?.remove();
-    appendMessage("bot", fallbackReply);
+    appendMessage("bot", `Lo siento, tuve un problema para conectarme en este momento. Por favor intenta de nuevo en unos segundos. Si el error persiste, podés escribirnos a soporte@ticotalent.com 🙏`);
   } finally {
     isGenerating = false;
     if (sendBtn) sendBtn.disabled = false;
@@ -384,8 +304,9 @@ function formatMarkdownToHTML(str) {
   html = html.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
   // Listas con viñetas
-  html = html.replace(/^[•\-\*]\s+(.+)$/gm, "<li>$1</li>");
-  html = html.replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>");
+  html = html.replace(/^[-•]\s+(.+)$/gm, "<li>$1</li>");
+  html = html.replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>");
+  html = html.replace(/<\/ul>\s*<ul>/g, "");
 
   // Saltos de línea
   html = html.replace(/\n/g, "<br>");

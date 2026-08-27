@@ -95,12 +95,12 @@ export function initUserNav() {
   const sidebarFooter = document.querySelector('.sidebar__footer');
   if (sidebarFooter && !document.getElementById('notifDropdownBtn')) {
     const NOTIF_BASE_DATA = [
-      { id:1,  tipo:'vacante',      titulo:'Nueva vacante compatible con tu perfil',         detalle:'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js.',                                        tiempo:'Hace 5 min',   leida:false },
-      { id:2,  tipo:'postulacion',  titulo:'Tu postulación fue revisada por el reclutador',  detalle:'Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.',                                      tiempo:'Hace 23 min',  leida:false },
-      { id:3,  tipo:'capacitacion', titulo:'Nuevo curso disponible: IA para RRHH',           detalle:'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.',                                     tiempo:'Hace 1 hora',  leida:false },
-      { id:4,  tipo:'sistema',      titulo:'Actualización de la plataforma TicoTalent',      detalle:'Hemos mejorado los algoritmos de compatibilidad de vacantes.',                                                                           tiempo:'Hace 2 horas', leida:false },
-      { id:5,  tipo:'vacante',      titulo:'5 nuevas vacantes en tu área de interés',        detalle:'Se publicaron 5 nuevas posiciones en Tecnología y Datos en San José y Heredia.',                                                         tiempo:'Hace 3 horas', leida:false },
-      { id:6,  tipo:'postulacion',  titulo:'Entrevista técnica programada',                  detalle:'Tienes una entrevista virtual con HP Costa Rica para el martes a las 10:00 AM.',                                                         tiempo:'Hace 5 horas', leida:true  }
+      { id: 1, tipo: 'vacante', titulo: 'Nueva vacante compatible con tu perfil', detalle: 'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js.', tiempo: 'Hace 5 min', leida: false },
+      { id: 2, tipo: 'postulacion', titulo: 'Tu postulación fue revisada por el reclutador', detalle: 'Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.', tiempo: 'Hace 23 min', leida: false },
+      { id: 3, tipo: 'capacitacion', titulo: 'Nuevo curso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.', tiempo: 'Hace 1 hora', leida: false },
+      { id: 4, tipo: 'sistema', titulo: 'Actualización de la plataforma TicoTalent', detalle: 'Hemos mejorado los algoritmos de compatibilidad de vacantes.', tiempo: 'Hace 2 horas', leida: false },
+      { id: 5, tipo: 'vacante', titulo: '5 nuevas vacantes en tu área de interés', detalle: 'Se publicaron 5 nuevas posiciones en Tecnología y Datos en San José y Heredia.', tiempo: 'Hace 3 horas', leida: false },
+      { id: 6, tipo: 'postulacion', titulo: 'Entrevista técnica programada', detalle: 'Tienes una entrevista virtual con HP Costa Rica para el martes a las 10:00 AM.', tiempo: 'Hace 5 horas', leida: true }
     ];
 
     function getNotifs() {
@@ -117,7 +117,7 @@ export function initUserNav() {
     function saveNotifs(list) {
       try {
         localStorage.setItem('tt_notificaciones', JSON.stringify(list));
-      } catch {}
+      } catch { }
     }
 
     const notifWrapper = document.createElement('div');
@@ -145,7 +145,7 @@ export function initUserNav() {
 
           <div id="notifDropdownList" style="max-height:300px;overflow-y:auto;">
             ${list.length === 0 ? '<p style="text-align:center;padding:1.5rem;color:#6b7280;font-size:0.85rem;margin:0;">Sin notificaciones</p>' :
-              list.slice(0, 6).map(n => `
+          list.slice(0, 6).map(n => `
                 <div class="notif-drop-item" data-id="${n.id}" style="padding:0.75rem 1rem;border-bottom:1px solid #f8fafc;display:flex;gap:0.75rem;align-items:flex-start;cursor:pointer;transition:background 0.15s;${n.leida ? 'opacity:0.65;background:#ffffff;' : 'background:rgba(83,16,104,0.03);border-left:3px solid #531068;'}">
                   <span style="font-size:1.1rem;line-height:1;margin-top:2px;">${n.tipo === 'vacante' ? '💼' : n.tipo === 'postulacion' ? '📄' : n.tipo === 'capacitacion' ? '🎓' : '🔔'}</span>
                   <div style="flex:1;min-width:0;">
@@ -156,7 +156,7 @@ export function initUserNav() {
                   ${!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#531068;flex-shrink:0;margin-top:6px;"></span>' : ''}
                 </div>
               `).join('')
-            }
+        }
           </div>
           <div style="padding:0.6rem 1rem;background:#f8fafc;border-top:1px solid #e5e7eb;text-align:center;">
             <a href="notificaciones.html" style="font-size:0.8rem;font-weight:600;color:#531068;text-decoration:none;">Ir al Centro de Notificaciones →</a>

@@ -51,7 +51,7 @@ function renderCards(lista) {
     ${headerNotice}
     <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
       ${lista.map((c) => {
-        return `
+    return `
           <article class="job-card" data-id="${c.id}">
             <div class="job-card__header">
               <div class="job-card__company-logo" style="overflow: hidden; padding: 0;">
@@ -96,13 +96,13 @@ function renderCards(lista) {
             </div>
           </article>
         `;
-      }).join("")}
+  }).join("")}
     </div>
   `;
 
   if (esEmpleador) {
     document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
-    
+
     contenedor.querySelectorAll(".btn-contactar").forEach(btn => {
       btn.addEventListener("click", () => {
         mostrarToast(`Iniciando contacto con ${btn.dataset.nombre} (${btn.dataset.email})`, "info");
@@ -166,10 +166,10 @@ function abrirFormulario(id = null) {
   abrirModal(tituloModal, formularioHTML(c), async () => {
     const datos = {
       firstName: document.getElementById("fNombre").value.trim(),
-      lastName:  document.getElementById("fApellido").value.trim(),
-      username:  document.getElementById("fUsername").value.trim() || "usuario",
-      email:     document.getElementById("fEmail").value.trim(),
-      phone:     document.getElementById("fTelefono").value.trim(),
+      lastName: document.getElementById("fApellido").value.trim(),
+      username: document.getElementById("fUsername").value.trim() || "usuario",
+      email: document.getElementById("fEmail").value.trim(),
+      phone: document.getElementById("fTelefono").value.trim(),
     };
 
     if (!datos.firstName || !datos.email) {
@@ -225,7 +225,7 @@ if (searchCandidateInput) {
       renderCards(candidatosAdaptados);
       return;
     }
-    const filtrados = candidatosAdaptados.filter(c => 
+    const filtrados = candidatosAdaptados.filter(c =>
       c.nombreCompleto.toLowerCase().includes(term) ||
       c.titulo.toLowerCase().includes(term) ||
       c.ubicacion.toLowerCase().includes(term) ||

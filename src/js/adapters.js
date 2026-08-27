@@ -15,15 +15,27 @@
  */
 
 // Listas de referencia para contextualización costarricense
+// Genera un logo con imagen real (Clearbit) + fallback a avatar con iniciales
+function logoEmpresa(nombre, dominio, color = '#531068') {
+  const iniciales = nombre.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  if (dominio) {
+    return `<img src="https://logo.clearbit.com/${dominio}" alt="${nombre}" 
+      style="width:100%;height:100%;object-fit:contain;border-radius:8px;padding:4px;"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <span style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-weight:800;font-size:0.95rem;color:${color};">${iniciales}</span>`;
+  }
+  return `<span style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-weight:800;font-size:0.95rem;color:${color};">${iniciales}</span>`;
+}
+
 const EMPRESAS_CR = [
-  { nombre: "Intel Costa Rica", sector: "Semiconductores & Cloud", sede: "Zona Franca América, Heredia", logo: "🏢" },
-  { nombre: "Amazon Web Services CR", sector: "Cloud Computing & Tech", sede: "Calle Blancos, San José", logo: "☁️" },
-  { nombre: "SoftServe Costa Rica", sector: "Software Engineering & IA", sede: "Torre Universal, Sabana Sur", logo: "💻" },
-  { nombre: "BAC Digital Labs", sector: "Fintech & Banca Digital", sede: "San José Centro, Costa Rica", logo: "🏦" },
-  { nombre: "Fiserv Global Services", sector: "Tecnología Financiera", sede: "El Cafetal Corporate Center, Belén", logo: "💳" },
-  { nombre: "Align Technology CR", sector: "Medical Devices & Software", sede: "UltraPark II, Lagunilla Heredia", logo: "🩺" },
-  { nombre: "Microsoft Costa Rica", sector: "Enterprise Software & Cloud", sede: "Plaza Roble, Escazú", logo: "🖥️" },
-  { nombre: "Pura Vida Tech Solutions", sector: "Consultoría & Desarrollo Web", sede: "Cartago Tech Park, Cartago", logo: "🚀" }
+  { nombre: "Intel Costa Rica", sector: "Semiconductores & Cloud", sede: "Zona Franca América, Heredia", dominio: "intel.com", color: "#0071c5" },
+  { nombre: "Amazon Web Services CR", sector: "Cloud Computing & Tech", sede: "Calle Blancos, San José", dominio: "aws.amazon.com", color: "#ff9900" },
+  { nombre: "SoftServe Costa Rica", sector: "Software Engineering & IA", sede: "Torre Universal, Sabana Sur", dominio: "softserveinc.com", color: "#f05a22" },
+  { nombre: "BAC Digital Labs", sector: "Fintech & Banca Digital", sede: "San José Centro, Costa Rica", dominio: "bac.net", color: "#e30613" },
+  { nombre: "Fiserv Global Services", sector: "Tecnología Financiera", sede: "El Cafetal Corporate Center, Belén", dominio: "fiserv.com", color: "#ff6600" },
+  { nombre: "Align Technology CR", sector: "Medical Devices & Software", sede: "UltraPark II, Lagunilla Heredia", dominio: "aligntech.com", color: "#00a8e0" },
+  { nombre: "Microsoft Costa Rica", sector: "Enterprise Software & Cloud", sede: "Plaza Roble, Escazú", dominio: "microsoft.com", color: "#00a4ef" },
+  { nombre: "Pura Vida Tech Solutions", sector: "Consultoría & Desarrollo Web", sede: "Cartago Tech Park, Cartago", dominio: null, color: "#531068" }
 ];
 
 const UBICACIONES_CR = [
@@ -118,7 +130,7 @@ export function adaptarVacante(p, index = 0) {
     descripcion: `Oportunidad laboral en ${empresaRef.nombre}. Se requiere profesional con experiencia comprobada en desarrollo, metodologías ágiles y trabajo en equipo para proyectos de alto impacto.`,
     empresa: empresaRef.nombre,
     empresaSector: empresaRef.sector,
-    empresaLogo: empresaRef.logo,
+    empresaLogo: logoEmpresa(empresaRef.nombre, empresaRef.dominio, empresaRef.color),
     ubicacion: ubicacion,
     modalidad: modalidad,
     nivel: nivel,
@@ -191,7 +203,7 @@ export function adaptarEmpresa(c, index = 0) {
     nombre: c.nombre || ref.nombre,
     sector: ref.sector,
     ubicacion: ref.sede,
-    logo: ref.logo,
+    logo: logoEmpresa(ref.nombre, ref.dominio, ref.color),
     colaboradores: `${colaboradores}+ colaboradores`,
     vacantesActivas: totalVacantes,
     rating: Number((4.7 + ((c.id % 3) * 0.1)).toFixed(1)),
@@ -241,7 +253,7 @@ export function adaptarPostulacion(p, index = 0) {
     titulo: TITULOS_POSTULACION[(p.id - 1) % TITULOS_POSTULACION.length] || "Postulación a Posición Técnica",
     detalle: DETALLES_POSTULACION[(p.id - 1) % DETALLES_POSTULACION.length] || "Candidato con perfil calificado postulando para vacante activa.",
     empresa: empresaRef.nombre,
-    empresaLogo: empresaRef.logo,
+    empresaLogo: logoEmpresa(empresaRef.nombre, empresaRef.dominio, empresaRef.color),
     ubicacion: empresaRef.sede,
     estado: estadoObj.texto,
     estadoColor: estadoObj.color,
@@ -277,7 +289,7 @@ export function adaptarEntrevista(c, index = 0) {
     candidatoUsuario: c.user?.username || "candidato.demo",
     candidatoNombre: c.user?.fullName || `@${c.user?.username || "candidato"}`,
     empresa: empresaRef.nombre,
-    empresaLogo: empresaRef.logo,
+    empresaLogo: logoEmpresa(empresaRef.nombre, empresaRef.dominio, empresaRef.color),
     fechaHora: `${day} de Agosto, 2026 - ${hour}:00 ${hour >= 12 ? 'PM' : 'AM'} (Hora CR)`,
     modalidad: plat.nombre,
     modalidadIcono: plat.icono,

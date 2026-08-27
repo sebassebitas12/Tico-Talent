@@ -33,7 +33,7 @@ function renderHero() {
     }
   }
   if (heroName) heroName.textContent = displayName;
-  
+
   if (rolActual === "empleador" || rolActual === "reclutador") {
     if (heroRoleBadge) {
       heroRoleBadge.textContent = "Empresa / Reclutador";
@@ -56,7 +56,6 @@ function renderFormFields() {
   if (!container) return;
 
   if (rolActual === "empleador" || rolActual === "reclutador") {
-    // ── FORMULARIO EMPRESA ──
     container.innerHTML = `
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
         
@@ -118,7 +117,6 @@ function renderFormFields() {
       </div>
     `;
   } else {
-    // ── FORMULARIO CANDIDATO ──
     container.innerHTML = `
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
         
@@ -287,52 +285,258 @@ if (form) {
 }
 
 // ── GENERADOR Y DESCARGA DE CV ──
+// Estilos de CV disponibles
+const CV_TEMPLATES = {
+  clasico: {
+    label: "Clásico Profesional",
+    accent: "#531068",
+    bg: "#ffffff",
+    headerBg: "#ffffff",
+    font: "Georgia, 'Times New Roman', serif"
+  },
+  moderno: {
+    label: "Moderno Minimalista",
+    accent: "#531068",
+    bg: "#ffffff",
+    headerBg: "#531068",
+    font: "'Segoe UI', system-ui, sans-serif"
+  },
+  ejecutivo: {
+    label: "Ejecutivo Bicolor",
+    accent: "#1e3a5f",
+    bg: "#ffffff",
+    headerBg: "#1e3a5f",
+    font: "'Calibri', 'Trebuchet MS', sans-serif"
+  }
+};
+
+let selectedTemplate = "moderno";
+
+function buildCVHTML(p, skills, template) {
+  const t = CV_TEMPLATES[template];
+  const nombre = p.nombre || "Candidato";
+  const titular = p.titular || "Profesional de Software";
+  const ubicacion = p.ubicacion || "Costa Rica";
+  const email = p.email || "";
+  const telefono = p.telefono || "";
+  const salario = p.pretensionSalarial || "";
+  const bio = p.bio || "Profesional con experiencia comprobada en desarrollo y proyectos tecnológicos.";
+  const linkedin = p.linkedin || "";
+  const github = p.github || "";
+  const skillsList = (skills.length ? skills : ["JavaScript", "React", "Node.js", "Git"]);
+
+  if (template === "clasico") {
+    return `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <title>CV — ${nombre}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: ${t.font}; color: #1e293b; background: #fff; padding: 2.5rem; font-size: 13px; line-height: 1.6; }
+          h1 { font-size: 2rem; font-weight: 700; color: ${t.accent}; }
+          h2 { font-size: 0.85rem; font-weight: 400; color: #475569; margin-top: 0.2rem; }
+          .contact { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; }
+          .contact span { display: flex; align-items: center; gap: 0.3rem; }
+          hr { border: none; border-top: 2px solid ${t.accent}; margin: 1.25rem 0; }
+          .section-title { font-size: 0.78rem; font-weight: 700; color: ${t.accent}; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.6rem; }
+          .bio { font-size: 0.88rem; color: #334155; }
+          .skills-wrap { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+          .skill-tag { background: #f1f5f9; color: #334155; padding: 0.25rem 0.7rem; border-radius: 4px; font-size: 0.78rem; font-weight: 600; border: 1px solid #e2e8f0; }
+          .link { color: ${t.accent}; font-size: 0.83rem; text-decoration: none; }
+          .link-row { margin: 0.25rem 0; }
+          @media print {
+            body { padding: 1.5rem; }
+            a { color: ${t.accent}; }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${nombre}</h1>
+        <h2>${titular}</h2>
+        <div class="contact">
+          <span>📍 ${ubicacion}</span>
+          ${email ? `<span>✉️ ${email}</span>` : ""}
+          ${telefono ? `<span>📞 ${telefono}</span>` : ""}
+          ${salario ? `<span>💵 ${salario}</span>` : ""}
+        </div>
+        <hr>
+        <div class="section-title">Perfil Profesional</div>
+        <p class="bio">${bio}</p>
+        <hr>
+        <div class="section-title">Habilidades Técnicas</div>
+        <div class="skills-wrap">
+          ${skillsList.map(s => `<span class="skill-tag">${s}</span>`).join("")}
+        </div>
+        ${(linkedin || github) ? `
+        <hr>
+        <div class="section-title">Presencia Profesional</div>
+        ${linkedin ? `<div class="link-row"><strong>LinkedIn:</strong> <a class="link" href="${linkedin}">${linkedin}</a></div>` : ""}
+        ${github ? `<div class="link-row"><strong>GitHub / Portafolio:</strong> <a class="link" href="${github}">${github}</a></div>` : ""}
+        ` : ""}
+      </body>
+      </html>
+    `;
+  }
+
+  if (template === "moderno") {
+    return `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <title>CV — ${nombre}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: ${t.font}; color: #1e293b; background: #fff; font-size: 13px; line-height: 1.6; display: flex; min-height: 100vh; }
+          .sidebar { width: 220px; background: ${t.accent}; color: #fff; padding: 2rem 1.25rem; flex-shrink: 0; }
+          .main { flex: 1; padding: 2rem 1.75rem; }
+          .avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; margin: 0 auto 1rem; border: 3px solid rgba(255,255,255,0.4); }
+          .s-name { font-size: 1.1rem; font-weight: 700; text-align: center; line-height: 1.3; }
+          .s-titular { font-size: 0.72rem; text-align: center; opacity: 0.85; margin-top: 0.25rem; margin-bottom: 1.5rem; }
+          .s-section { margin-bottom: 1.25rem; }
+          .s-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 0.4rem; font-weight: 700; }
+          .s-value { font-size: 0.78rem; opacity: 0.9; word-break: break-all; }
+          .s-link { color: #fff; font-size: 0.75rem; word-break: break-all; }
+          .skill-pill { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); padding: 0.2rem 0.55rem; border-radius: 20px; font-size: 0.7rem; margin: 0.15rem 0.1rem; }
+          .section-title { font-size: 0.82rem; font-weight: 700; color: ${t.accent}; text-transform: uppercase; letter-spacing: 0.8px; padding-bottom: 0.4rem; border-bottom: 2px solid ${t.accent}; margin-bottom: 0.75rem; }
+          .bio { font-size: 0.87rem; color: #334155; }
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .sidebar { background: ${t.accent} !important; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="sidebar">
+          <div class="avatar">${nombre.charAt(0).toUpperCase()}</div>
+          <div class="s-name">${nombre}</div>
+          <div class="s-titular">${titular}</div>
+
+          <div class="s-section">
+            <div class="s-label">Ubicación</div>
+            <div class="s-value">📍 ${ubicacion}</div>
+          </div>
+          ${email ? `<div class="s-section"><div class="s-label">Correo</div><div class="s-value">${email}</div></div>` : ""}
+          ${telefono ? `<div class="s-section"><div class="s-label">Teléfono</div><div class="s-value">${telefono}</div></div>` : ""}
+          ${salario ? `<div class="s-section"><div class="s-label">Pretensión</div><div class="s-value">${salario}</div></div>` : ""}
+
+          <div class="s-section">
+            <div class="s-label">Habilidades</div>
+            <div>${skillsList.map(s => `<span class="skill-pill">${s}</span>`).join("")}</div>
+          </div>
+
+          ${linkedin ? `<div class="s-section"><div class="s-label">LinkedIn</div><a class="s-link" href="${linkedin}">${linkedin.replace("https://", "")}</a></div>` : ""}
+          ${github ? `<div class="s-section"><div class="s-label">GitHub</div><a class="s-link" href="${github}">${github.replace("https://", "")}</a></div>` : ""}
+        </div>
+        <div class="main">
+          <div class="section-title">Perfil Profesional</div>
+          <p class="bio" style="margin-bottom:1.5rem;">${bio}</p>
+          <div class="section-title">Experiencia & Competencias</div>
+          <p class="bio">Profesional con experiencia en ${skillsList.slice(0, 3).join(", ")} y otras tecnologías modernas. Orientado a resultados y trabajo colaborativo en equipos ágiles.</p>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  // ejecutivo
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>CV — ${nombre}</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: ${t.font}; color: #1e293b; background: #fff; font-size: 13px; line-height: 1.6; }
+        .header { background: ${t.accent}; color: #fff; padding: 2rem 2.5rem; }
+        .header h1 { font-size: 1.9rem; font-weight: 700; }
+        .header h2 { font-size: 1rem; opacity: 0.85; margin-top: 0.2rem; }
+        .contact-bar { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 0.75rem; font-size: 0.78rem; opacity: 0.9; }
+        .body { padding: 2rem 2.5rem; display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .section-title { font-size: 0.78rem; font-weight: 700; color: ${t.accent}; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid ${t.accent}; padding-bottom: 0.3rem; margin-bottom: 0.75rem; }
+        .bio { font-size: 0.87rem; color: #334155; }
+        .skill-tag { display: inline-block; background: #eef2f7; color: #1e3a5f; padding: 0.25rem 0.65rem; border-radius: 4px; font-size: 0.76rem; font-weight: 600; margin: 0.15rem; }
+        .link { color: ${t.accent}; font-size: 0.82rem; }
+        @media print {
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          .header { background: ${t.accent} !important; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>${nombre}</h1>
+        <h2>${titular}</h2>
+        <div class="contact-bar">
+          <span>📍 ${ubicacion}</span>
+          ${email ? `<span>✉️ ${email}</span>` : ""}
+          ${telefono ? `<span>📞 ${telefono}</span>` : ""}
+          ${salario ? `<span>💵 ${salario}</span>` : ""}
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <div class="section-title">Perfil Ejecutivo</div>
+          <p class="bio" style="margin-bottom:1.5rem;">${bio}</p>
+          <div class="section-title">Competencias Técnicas</div>
+          <div style="margin-bottom:1.5rem;">${skillsList.map(s => `<span class="skill-tag">${s}</span>`).join("")}</div>
+        </div>
+        <div>
+          ${(linkedin || github) ? `
+          <div class="section-title">Presencia Digital</div>
+          ${linkedin ? `<p style="margin-bottom:0.4rem;"><strong>LinkedIn</strong><br><a class="link" href="${linkedin}">${linkedin.replace("https://", "")}</a></p>` : ""}
+          ${github ? `<p><strong>GitHub</strong><br><a class="link" href="${github}">${github.replace("https://", "")}</a></p>` : ""}
+          ` : ""}
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 document.getElementById("btnExportarCV")?.addEventListener("click", () => {
   const p = getPerfilExtendido();
   const esEmpresa = (rolActual === "empleador" || rolActual === "reclutador");
-  
+
   if (esEmpresa) {
     mostrarToast("La generación de CV está diseñada para perfiles de Candidatos.", "info");
     return;
   }
 
-  const cvHTML = `
-    <div id="cvPreviewDoc" style="font-family: var(--font-family, sans-serif); color: #1e293b; line-height: 1.6; max-height: 65vh; overflow-y: auto; padding: 1.5rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px;">
-      <div style="border-bottom: 2px solid var(--primary-purple, #531068); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-        <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--primary-purple, #531068); margin: 0 0 0.25rem 0;">${escapeHTML(p.nombre || "Candidato")}</h1>
-        <h2 style="font-size: 1.1rem; font-weight: 600; color: #475569; margin: 0 0 0.5rem 0;">${escapeHTML(p.titular || "Desarrollador de Software")}</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: #64748b;">
-          <span>📍 ${escapeHTML(p.ubicacion || "Costa Rica")}</span>
-          <span>✉️ ${escapeHTML(p.email || "")}</span>
-          <span>📞 ${escapeHTML(p.telefono || "")}</span>
-          <span>💵 Pretensión: ${escapeHTML(p.pretensionSalarial || "")}</span>
-        </div>
-      </div>
-
-      <div style="margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Perfil Profesional</h3>
-        <p style="font-size: 0.9rem; color: #334155; margin: 0;">${escapeHTML(p.bio || "Profesional con experiencia comprobada en desarrollo y proyectos tecnológicos.")}</p>
-      </div>
-
-      <div style="margin-bottom: 1.5rem;">
-        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Habilidades Técnicas</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
-          ${(skillsTags.length ? skillsTags : ["JavaScript", "React", "Node.js", "Git"]).map(s => `
-            <span style="background: #f1f5f9; color: #334155; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${escapeHTML(s)}</span>
-          `).join("")}
-        </div>
-      </div>
-
-      <div style="margin-bottom: 1rem;">
-        <h3 style="font-size: 1rem; font-weight: 700; color: var(--primary-purple, #531068); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Presencia Profesional</h3>
-        <p style="font-size: 0.85rem; margin: 0.2rem 0;"><strong>LinkedIn:</strong> <a href="${escapeHTML(p.linkedin || "#")}" target="_blank" style="color: var(--primary-purple);">${escapeHTML(p.linkedin || "linkedin.com")}</a></p>
-        <p style="font-size: 0.85rem; margin: 0.2rem 0;"><strong>GitHub / Portafolio:</strong> <a href="${escapeHTML(p.github || "#")}" target="_blank" style="color: var(--primary-purple);">${escapeHTML(p.github || "github.com")}</a></p>
+  const selectorHTML = `
+    <div style="margin-bottom:1rem;">
+      <p style="font-size:0.9rem;color:#475569;margin-bottom:0.75rem;">Elige el diseño de tu CV:</p>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;" id="cvTemplateSelector">
+        ${Object.entries(CV_TEMPLATES).map(([key, tmpl]) => `
+          <label style="cursor:pointer;flex:1;min-width:120px;">
+            <input type="radio" name="cvTemplate" value="${key}" ${key === selectedTemplate ? "checked" : ""} style="display:none;">
+            <div class="cv-template-card" data-key="${key}" style="
+              border: 2px solid ${key === selectedTemplate ? tmpl.accent : '#e2e8f0'};
+              border-radius: 10px;
+              padding: 0.75rem;
+              text-align: center;
+              transition: all 0.2s;
+              background: ${key === selectedTemplate ? '#f8f0fc' : '#fff'};
+            ">
+              <div style="width:40px;height:52px;margin:0 auto 0.5rem;border-radius:4px;overflow:hidden;border:1px solid #e2e8f0;background:${tmpl.headerBg}">
+                <div style="height:16px;background:${tmpl.accent};"></div>
+                <div style="padding:3px 4px;">
+                  <div style="height:3px;background:#ddd;border-radius:2px;margin-bottom:2px;"></div>
+                  <div style="height:3px;background:#ddd;border-radius:2px;width:70%;"></div>
+                </div>
+              </div>
+              <div style="font-size:0.75rem;font-weight:600;color:#334155;">${tmpl.label}</div>
+            </div>
+          </label>
+        `).join("")}
       </div>
     </div>
-    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1rem;">
-      <button class="btn btn-cta" id="btnPrintCV" style="display: inline-flex; align-items: center; gap: 0.4rem;">
-        🖨️ Imprimir / Guardar en PDF
-      </button>
+
+    <div id="cvPreviewWrapper" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;max-height:50vh;overflow-y:auto;background:#fff;">
+      <iframe id="cvPreviewFrame" style="width:100%;height:420px;border:none;" title="Vista previa del CV"></iframe>
     </div>
   `;
 
@@ -344,19 +548,65 @@ document.getElementById("btnExportarCV")?.addEventListener("click", () => {
   const modalClose = document.getElementById("modalClose");
 
   if (modalTitle) modalTitle.textContent = "Vista Previa de tu Currículum Vitae (CV)";
-  if (modalBody) modalBody.innerHTML = cvHTML;
-  if (btnFormSubmit) btnFormSubmit.classList.add("d-none");
+  if (modalBody) modalBody.innerHTML = selectorHTML;
+  if (btnFormSubmit) {
+    btnFormSubmit.classList.remove("d-none");
+    btnFormSubmit.textContent = "🖨️ Imprimir / Guardar en PDF";
+  }
   if (btnFormCancel) btnFormCancel.textContent = "Cerrar";
 
   modalOverlay?.classList.remove("d-none");
 
-  document.getElementById("btnPrintCV")?.addEventListener("click", () => {
-    window.print();
+  // Render inicial
+  function renderPreview() {
+    const frame = document.getElementById("cvPreviewFrame");
+    if (!frame) return;
+    const html = buildCVHTML(p, skillsTags, selectedTemplate);
+    frame.srcdoc = html;
+  }
+
+  renderPreview();
+
+  // Cambio de template
+  modalBody?.querySelectorAll("input[name='cvTemplate']").forEach(radio => {
+    radio.addEventListener("change", () => {
+      selectedTemplate = radio.value;
+      // Actualizar estilos visuales de las cards
+      modalBody.querySelectorAll(".cv-template-card").forEach(card => {
+        const key = card.dataset.key;
+        const t = CV_TEMPLATES[key];
+        card.style.border = `2px solid ${key === selectedTemplate ? t.accent : '#e2e8f0'}`;
+        card.style.background = key === selectedTemplate ? '#f8f0fc' : '#fff';
+      });
+      renderPreview();
+    });
   });
+
+  // Imprimir: abre ventana nueva con solo el CV
+  if (btnFormSubmit) {
+    btnFormSubmit.onclick = () => {
+      const html = buildCVHTML(p, skillsTags, selectedTemplate);
+      const win = window.open("", "_blank", "width=900,height=700");
+      if (win) {
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+        win.onload = () => {
+          win.focus();
+          win.print();
+        };
+      } else {
+        mostrarToast("Habilita las ventanas emergentes para imprimir.", "warning");
+      }
+    };
+  }
 
   const cerrar = () => {
     modalOverlay?.classList.add("d-none");
-    if (btnFormSubmit) btnFormSubmit.classList.remove("d-none");
+    if (btnFormSubmit) {
+      btnFormSubmit.classList.add("d-none");
+      btnFormSubmit.onclick = null;
+    }
   };
 
   if (modalClose) modalClose.onclick = cerrar;
@@ -376,7 +626,7 @@ document.getElementById("btnToggleRol")?.addEventListener("click", () => {
   mostrarToast(`Rol cambiado a: ${nuevoRol === "empleador" ? "Empleador" : "Candidato"}`, "info");
 });
 
-// ── SUBIDA DE FOTO DE PERFIL CON VISTA PREVIA ──
+// ── SUBIDA DE FOTO DE PERFIL ──
 function setupFotoPerfil() {
   const input = document.getElementById("fotoPerfilInput");
   if (!input) return;

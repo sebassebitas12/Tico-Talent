@@ -26,3 +26,12 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# Dependencias
+node_modules/
+
+# Build
+dist/
+
+# Vite
+.vite/
