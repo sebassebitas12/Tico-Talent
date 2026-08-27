@@ -187,164 +187,140 @@ export function initUserNav() {
   }
 
   // ── CAMPANITA DE NOTIFICACIONES ──────────────────────────────
+  // El botón vive en el header, pero el panel vive SIEMPRE como hijo directo
+  // de <body>. Esto evita recortes por overflow y stacking contexts.
   const sidebarFooter = document.querySelector('.sidebar__footer');
   if (sidebarFooter && !document.getElementById('notifDropdownBtn')) {
     const NOTIF_BASE_DATA = [
-      { id: 1, tipo: 'vacante', titulo: 'Nueva vacante compatible con tu perfil', detalle: 'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js.', tiempo: 'Hace 5 min', leida: false },
-      { id: 2, tipo: 'postulacion', titulo: 'Tu postulación fue revisada por el reclutador', detalle: 'Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.', tiempo: 'Hace 23 min', leida: false },
-      { id: 3, tipo: 'capacitacion', titulo: 'Nuevo recurso disponible: IA para RRHH', detalle: 'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.', tiempo: 'Hace 1 hora', leida: false },
-      { id: 4, tipo: 'sistema', titulo: 'Actualización de la plataforma TicoTalent', detalle: 'Hemos mejorado los algoritmos de compatibilidad de vacantes.', tiempo: 'Hace 2 horas', leida: false },
-      { id: 5, tipo: 'vacante', titulo: '5 nuevas vacantes en tu área de interés', detalle: 'Se publicaron 5 nuevas posiciones en Tecnología y Datos en San José y Heredia.', tiempo: 'Hace 3 horas', leida: false },
-      { id: 6, tipo: 'postulacion', titulo: 'Entrevista técnica programada', detalle: 'Tienes una entrevista virtual con HP Costa Rica para el martes a las 10:00 AM.', tiempo: 'Hace 5 horas', leida: true }
+      { id: 1, tipo: 'vacante', titulo: 'Nueva vacante compatible con tu perfil', detalle: 'Intel Costa Rica busca un Desarrollador Full Stack Senior.', tiempo: 'Hace 5 min', leida: false },
+      { id: 2, tipo: 'postulacion', titulo: 'Tu postulación fue revisada', detalle: 'Tu proceso avanzó a la siguiente etapa.', tiempo: 'Hace 23 min', leida: false },
+      { id: 3, tipo: 'capacitacion', titulo: 'Nuevo recurso disponible', detalle: 'Hay un nuevo curso disponible para tu desarrollo profesional.', tiempo: 'Hace 1 hora', leida: false },
+      { id: 4, tipo: 'sistema', titulo: 'Actualización de Tico Talent', detalle: 'Hemos mejorado la plataforma.', tiempo: 'Hace 2 horas', leida: false }
     ];
 
-    function getNotifs() {
+    const getNotifs = () => {
       try {
         const raw = localStorage.getItem('tt_notificaciones');
-        if (raw && JSON.parse(raw).length > 0) return JSON.parse(raw);
-        localStorage.setItem('tt_notificaciones', JSON.stringify(NOTIF_BASE_DATA));
-        return JSON.parse(JSON.stringify(NOTIF_BASE_DATA));
-      } catch {
-        return JSON.parse(JSON.stringify(NOTIF_BASE_DATA));
-      }
-    }
-
-    function saveNotifs(list) {
-      try {
-        localStorage.setItem('tt_notificaciones', JSON.stringify(list));
+        if (raw) {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data) && data.length) return data;
+        }
       } catch { }
-    }
+      localStorage.setItem('tt_notificaciones', JSON.stringify(NOTIF_BASE_DATA));
+      return [...NOTIF_BASE_DATA];
+    };
+    const saveNotifs = (list) => localStorage.setItem('tt_notificaciones', JSON.stringify(list));
 
     const notifWrapper = document.createElement('div');
     notifWrapper.id = 'notifWrapper';
-    notifWrapper.style.cssText = 'position:relative;display:inline-flex;align-items:center;z-index:9999;';
-
-    function renderDropdown() {
-      const list = getNotifs();
-      const noLeidas = list.filter(n => !n.leida).length;
-
-      notifWrapper.innerHTML = `
-        <button id="notifDropdownBtn" type="button" title="Notificaciones" aria-label="Notificaciones" style="position:relative;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-main,#0f1e3c);display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          ${noLeidas > 0 ? `<span id="notifBadge" style="position:absolute;top:2px;right:2px;background:#dc2626;color:#ffffff;font-size:0.65rem;font-weight:700;border-radius:10px;min-width:18px;height:18px;padding:0 4px;display:flex;align-items:center;justify-content:center;border:2px solid #ffffff;box-shadow:0 2px 4px rgba(220,38,38,0.3);">${noLeidas}</span>` : ''}
-        </button>
-
-        <div id="notifDropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;width:340px;max-width:calc(100vw - 2rem);background:#ffffff;border:1px solid var(--border-subtle,#e5e7eb);border-radius:14px;box-shadow:0 14px 38px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1rem;border-bottom:1px solid #f1f5f9;background:#fafafa;">
-            <span style="font-weight:700;font-size:0.92rem;color:#0f1e3c;">Notificaciones ${noLeidas > 0 ? `<span style="font-size:0.75rem;background:#531068;color:#fff;padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.25rem;">${noLeidas}</span>` : ''}</span>
-            <div style="display:flex;gap:0.5rem;align-items:center;">
-              ${noLeidas > 0 ? `<button type="button" id="btnMarcarDropdownLeidas" style="background:none;border:none;color:#531068;font-size:0.75rem;font-weight:600;cursor:pointer;padding:0.2rem 0.4rem;border-radius:4px;">Marcar leídas</button>` : ''}
-              <a href="notificaciones.html" style="font-size:0.78rem;color:#531068;text-decoration:none;font-weight:600;">Ver todas</a>
-            </div>
-          </div>
-
-          <div id="notifDropdownList" style="max-height:300px;overflow-y:auto;">
-            ${list.length === 0 ? '<p style="text-align:center;padding:1.5rem;color:#6b7280;font-size:0.85rem;margin:0;">Sin notificaciones</p>' :
-          list.slice(0, 6).map(n => `
-                <div class="notif-drop-item" data-id="${n.id}" style="padding:0.75rem 1rem;border-bottom:1px solid #f8fafc;display:flex;gap:0.75rem;align-items:flex-start;cursor:pointer;transition:background 0.15s;${n.leida ? 'opacity:0.65;background:#ffffff;' : 'background:rgba(83,16,104,0.03);border-left:3px solid #531068;'}">
-                  <span style="font-size:1.1rem;line-height:1;margin-top:2px;">${n.tipo === 'vacante' ? '💼' : n.tipo === 'postulacion' ? '📄' : n.tipo === 'capacitacion' ? '🎓' : '🔔'}</span>
-                  <div style="flex:1;min-width:0;">
-                    <p style="font-size:0.82rem;font-weight:${n.leida ? '500' : '700'};color:#111827;margin:0 0 0.15rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(n.titulo)}</p>
-                    <p style="font-size:0.75rem;color:#6b7280;margin:0 0 0.25rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHTML(n.detalle || '')}</p>
-                    <span style="font-size:0.7rem;color:#9ca3af;">${escapeHTML(n.tiempo)}</span>
-                  </div>
-                  ${!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#531068;flex-shrink:0;margin-top:6px;"></span>' : ''}
-                </div>
-              `).join('')
-        }
-          </div>
-          <div style="padding:0.6rem 1rem;background:#f8fafc;border-top:1px solid #e5e7eb;text-align:center;">
-            <a href="notificaciones.html" style="font-size:0.8rem;font-weight:600;color:#531068;text-decoration:none;">Ir al Centro de Notificaciones →</a>
-          </div>
-        </div>
-      `;
-
-      // Eventos
-      const btn = notifWrapper.querySelector('#notifDropdownBtn');
-      const drop = notifWrapper.querySelector('#notifDropdown');
-
-      // El dropdown se monta temporalmente en <body> al abrirse. Así no puede
-      // quedar cortado ni detrás del contenido por el stacking context del navbar.
-      const closeDropdown = () => {
-        if (!drop) return;
-        if (drop.parentElement === document.body) notifWrapper.appendChild(drop);
-        drop.style.display = 'none';
-        drop.style.position = 'absolute';
-        drop.style.top = 'calc(100% + 10px)';
-        drop.style.right = '0';
-        drop.style.left = 'auto';
-      };
-
-      const openDropdown = () => {
-        if (!drop || !btn) return;
-        const rect = btn.getBoundingClientRect();
-        document.body.appendChild(drop);
-        drop.style.display = 'block';
-        drop.style.position = 'fixed';
-        const top = Math.max(12, Math.min(rect.bottom + 10, window.innerHeight - Math.min(420, window.innerHeight - 24)));
-        drop.style.top = `${top}px`;
-        drop.style.right = `${Math.max(12, Math.min(window.innerWidth - 12, window.innerWidth - rect.right))}px`;
-        drop.style.maxHeight = `calc(100vh - ${top + 12}px)`;
-        drop.style.overflowY = 'auto';
-        drop.style.left = 'auto';
-        drop.style.zIndex = '2147483647';
-      };
-
-      btn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = drop && drop.style.display === 'block' && drop.parentElement === document.body;
-        if (isOpen) closeDropdown(); else openDropdown();
-      });
-
-      notifWrapper.querySelector('#btnMarcarDropdownLeidas')?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const updated = getNotifs().map(n => ({ ...n, leida: true }));
-        saveNotifs(updated);
-        renderDropdown();
-        requestAnimationFrame(() => notifWrapper.querySelector('#notifDropdownBtn')?.click());
-        mostrarToast('Notificaciones marcadas como leídas', 'success');
-      });
-
-      notifWrapper.querySelectorAll('.notif-drop-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = Number(item.dataset.id);
-          const currentList = getNotifs();
-          const target = currentList.find(n => n.id === id);
-          if (target && !target.leida) {
-            target.leida = true;
-            saveNotifs(currentList);
-            renderDropdown();
-            requestAnimationFrame(() => notifWrapper.querySelector('#notifDropdownBtn')?.click());
-          }
-        });
-      });
-    }
-
-    renderDropdown();
+    notifWrapper.style.cssText = 'display:inline-flex;align-items:center;';
     sidebarFooter.insertBefore(notifWrapper, sidebarFooter.querySelector('.sidebar__logout'));
 
-    function closeGlobalNotifDropdown() {
-      const drop = document.getElementById('notifDropdown');
-      if (!drop) return;
-      if (drop.parentElement === document.body) notifWrapper.appendChild(drop);
-      drop.style.display = 'none';
-      drop.style.position = 'absolute';
-      drop.style.top = 'calc(100% + 10px)';
-      drop.style.right = '0';
+    // Capa global: no depende de ningún contenedor del navbar.
+    const portal = document.createElement('div');
+    portal.id = 'notifPortal';
+    portal.style.cssText = [
+      'position:fixed',
+      'inset:0',
+      'z-index:2147483647',
+      'pointer-events:none',
+      'display:none'
+    ].join(';');
+    document.body.appendChild(portal);
+
+    const iconFor = (tipo) => ({
+      vacante: '💼', postulacion: '📄', capacitacion: '🎓', sistema: '🔔'
+    }[tipo] || '🔔');
+
+    let open = false;
+
+    function renderButton() {
+      const unread = getNotifs().filter(n => !n.leida).length;
+      notifWrapper.innerHTML = `
+        <button id="notifDropdownBtn" type="button" title="Notificaciones" aria-label="Notificaciones" aria-expanded="${open}"
+          style="position:relative;background:none;border:0;cursor:pointer;padding:.5rem;color:var(--text-main,#0f1e3c);display:flex;align-items:center;justify-content:center;border-radius:50%;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          ${unread ? `<span style="position:absolute;top:1px;right:1px;min-width:18px;height:18px;padding:0 4px;border-radius:10px;background:#dc2626;color:#fff;border:2px solid #fff;font-size:.65rem;font-weight:700;display:grid;place-items:center;">${unread}</span>` : ''}
+        </button>`;
+      notifWrapper.querySelector('#notifDropdownBtn')?.addEventListener('click', (event) => {
+        event.stopPropagation();
+        open ? closeDropdown() : openDropdown();
+      });
     }
 
-    document.addEventListener('click', (e) => {
-      const drop = document.getElementById('notifDropdown');
-      if (!notifWrapper.contains(e.target) && !drop?.contains(e.target)) closeGlobalNotifDropdown();
-    });
+    function renderPortal() {
+      const list = getNotifs();
+      const unread = list.filter(n => !n.leida).length;
+      portal.innerHTML = `
+        <div id="notifDropdown" role="dialog" aria-label="Notificaciones"
+          style="pointer-events:auto;position:absolute;width:min(360px,calc(100vw - 24px));max-height:min(460px,calc(100vh - 24px));background:#fff;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 22px 60px rgba(15,23,42,.28);overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;border-bottom:1px solid #e5e7eb;">
+            <strong style="color:#0f1e3c;font-size:.95rem;">🔔 Notificaciones${unread ? ` <span style="display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:#531068;color:#fff;font-size:.7rem;">${unread}</span>` : ''}</strong>
+            <button id="notifMarkAll" type="button" style="border:0;background:transparent;color:#531068;font-weight:700;font-size:.75rem;cursor:pointer;">Marcar leídas</button>
+          </div>
+          <div style="max-height:340px;overflow:auto;">
+            ${list.map(n => `<button class="notif-item-global" data-id="${n.id}" type="button" style="width:100%;text-align:left;border:0;border-bottom:1px solid #f1f5f9;padding:.8rem 1rem;display:flex;gap:.75rem;background:${n.leida ? '#fff' : 'rgba(83,16,104,.045)'};cursor:pointer;">
+              <span style="font-size:1.1rem;">${iconFor(n.tipo)}</span>
+              <span style="min-width:0;flex:1;"><strong style="display:block;font-size:.82rem;color:#111827;margin-bottom:.15rem;">${escapeHTML(n.titulo)}</strong><span style="display:block;font-size:.75rem;color:#64748b;line-height:1.35;">${escapeHTML(n.detalle || '')}</span><small style="display:block;margin-top:.25rem;color:#94a3b8;">${escapeHTML(n.tiempo)}</small></span>
+              ${!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#d4006e;margin-top:6px;"></span>' : ''}
+            </button>`).join('') || '<p style="padding:1.5rem;text-align:center;color:#64748b;">No tienes notificaciones.</p>'}
+          </div>
+          <div style="padding:.7rem;text-align:center;background:#f8fafc;"><a href="notificaciones.html" style="color:#531068;font-size:.82rem;font-weight:700;text-decoration:none;">Ver todas las notificaciones →</a></div>
+        </div>`;
 
-    window.addEventListener('resize', closeGlobalNotifDropdown);
-    window.addEventListener('scroll', closeGlobalNotifDropdown, true);
+      portal.querySelector('#notifMarkAll')?.addEventListener('click', () => {
+        saveNotifs(getNotifs().map(n => ({ ...n, leida: true })));
+        renderPortal();
+        positionDropdown();
+        renderButton();
+      });
+      portal.querySelectorAll('.notif-item-global').forEach(item => item.addEventListener('click', () => {
+        const id = Number(item.dataset.id);
+        const updated = getNotifs().map(n => n.id === id ? { ...n, leida: true } : n);
+        saveNotifs(updated);
+        renderPortal();
+        positionDropdown();
+        renderButton();
+      }));
+    }
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeGlobalNotifDropdown();
+    function positionDropdown() {
+      const btn = notifWrapper.querySelector('#notifDropdownBtn');
+      const panel = portal.querySelector('#notifDropdown');
+      if (!btn || !panel) return;
+      const rect = btn.getBoundingClientRect();
+      const gap = 10;
+      const width = Math.min(360, window.innerWidth - 24);
+      const left = Math.max(12, Math.min(rect.right - width, window.innerWidth - width - 12));
+      let top = rect.bottom + gap;
+      if (top + 420 > window.innerHeight && rect.top - gap > 260) {
+        top = Math.max(12, rect.top - Math.min(420, window.innerHeight - 24) - gap);
+      }
+      panel.style.left = `${left}px`;
+      panel.style.top = `${Math.max(12, top)}px`;
+    }
+
+    function openDropdown() {
+      open = true;
+      renderPortal();
+      portal.style.display = 'block';
+      positionDropdown();
+      renderButton();
+    }
+    function closeDropdown() {
+      open = false;
+      portal.style.display = 'none';
+      portal.innerHTML = '';
+      renderButton();
+    }
+
+    renderButton();
+    document.addEventListener('click', (event) => {
+      if (open && !portal.contains(event.target) && !notifWrapper.contains(event.target)) closeDropdown();
     });
+    window.addEventListener('resize', () => open && positionDropdown());
+    window.addEventListener('scroll', () => open && positionDropdown(), true);
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && open) closeDropdown(); });
   }
 
   // Actualizar foto de perfil en sidebar si existe
