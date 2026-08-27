@@ -51,31 +51,31 @@ export function initUserNav() {
   const navSection = document.querySelector(".sidebar__nav-section");
   if (navSection) {
     const currentPath = window.location.pathname;
-    
+
     // Contar notificaciones no leidas
     let noLeidas = 0;
     try {
       const raw = localStorage.getItem('tt_notificaciones');
       if (raw) noLeidas = JSON.parse(raw).filter(n => !n.leida).length;
       else noLeidas = 5; // default para nuevos usuarios
-    } catch {}
+    } catch { }
 
-    const notifBadgeHtml = noLeidas > 0 
+    const notifBadgeHtml = noLeidas > 0
       ? `<span id="notifBadge" style="background:#dc2626;color:#fff;font-size:0.65rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:10px;min-width:18px;text-align:center;">${noLeidas}</span>`
       : '';
 
     // Configuración de items según rol
     const items = [
-      { id: "explorar",       label: "Inicio",              href: "principal.html",      visible: true },
-      { id: "vacantes",       label: "Vacantes",             href: "vacantes.html",        visible: true },
-      { id: "postulaciones",  label: rol === "empleador" ? "Pipeline" : "Postulaciones", href: "postulaciones.html", visible: true },
-      { id: "candidatos",     label: "Candidatos",           href: "candidatos.html",      visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "entrevistas",    label: "Entrevistas",          href: "entrevistas.html",     visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "empresas",       label: "Empresas",             href: "empresas.html",        visible: true },
-      { id: "tareas",         label: "Tareas",               href: "tareas.html",          visible: (rol === "empleador" || rol === "reclutador") },
-      { id: "capacitacion",   label: "Capacitacion",         href: "capacitacion.html",   visible: true },
-      { id: "notificaciones", label: "Notificaciones",       href: "notificaciones.html", visible: true, badge: notifBadgeHtml },
-      { id: "perfil",         label: "Mi Perfil",            href: "perfil.html",          visible: true }
+      { id: "explorar", label: "Inicio", href: "principal.html", visible: true },
+      { id: "vacantes", label: "Vacantes", href: "vacantes.html", visible: true },
+      { id: "postulaciones", label: rol === "empleador" ? "Pipeline" : "Postulaciones", href: "postulaciones.html", visible: true },
+      { id: "candidatos", label: "Candidatos", href: "candidatos.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "entrevistas", label: "Entrevistas", href: "entrevistas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "empresas", label: "Empresas", href: "empresas.html", visible: true },
+      { id: "tareas", label: "Tareas", href: "tareas.html", visible: (rol === "empleador" || rol === "reclutador") },
+      { id: "capacitacion", label: "Capacitacion", href: "capacitacion.html", visible: true },
+      { id: "notificaciones", label: "Notificaciones", href: "notificaciones.html", visible: false, badge: notifBadgeHtml },
+      { id: "perfil", label: "Mi Perfil", href: "perfil.html", visible: true }
     ];
 
     navSection.innerHTML = items
@@ -89,6 +89,134 @@ export function initUserNav() {
           </a>
         `;
       }).join("");
+  }
+
+  // ── CAMPANITA DE NOTIFICACIONES ──────────────────────────────
+  const sidebarFooter = document.querySelector('.sidebar__footer');
+  if (sidebarFooter && !document.getElementById('notifDropdownBtn')) {
+    const NOTIF_BASE_DATA = [
+      { id:1,  tipo:'vacante',      titulo:'Nueva vacante compatible con tu perfil',         detalle:'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js.',                                        tiempo:'Hace 5 min',   leida:false },
+      { id:2,  tipo:'postulacion',  titulo:'Tu postulación fue revisada por el reclutador',  detalle:'Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.',                                      tiempo:'Hace 23 min',  leida:false },
+      { id:3,  tipo:'capacitacion', titulo:'Nuevo curso disponible: IA para RRHH',           detalle:'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, gratuito.',                                     tiempo:'Hace 1 hora',  leida:false },
+      { id:4,  tipo:'sistema',      titulo:'Actualización de la plataforma TicoTalent',      detalle:'Hemos mejorado los algoritmos de compatibilidad de vacantes.',                                                                           tiempo:'Hace 2 horas', leida:false },
+      { id:5,  tipo:'vacante',      titulo:'5 nuevas vacantes en tu área de interés',        detalle:'Se publicaron 5 nuevas posiciones en Tecnología y Datos en San José y Heredia.',                                                         tiempo:'Hace 3 horas', leida:false },
+      { id:6,  tipo:'postulacion',  titulo:'Entrevista técnica programada',                  detalle:'Tienes una entrevista virtual con HP Costa Rica para el martes a las 10:00 AM.',                                                         tiempo:'Hace 5 horas', leida:true  }
+    ];
+
+    function getNotifs() {
+      try {
+        const raw = localStorage.getItem('tt_notificaciones');
+        if (raw && JSON.parse(raw).length > 0) return JSON.parse(raw);
+        localStorage.setItem('tt_notificaciones', JSON.stringify(NOTIF_BASE_DATA));
+        return JSON.parse(JSON.stringify(NOTIF_BASE_DATA));
+      } catch {
+        return JSON.parse(JSON.stringify(NOTIF_BASE_DATA));
+      }
+    }
+
+    function saveNotifs(list) {
+      try {
+        localStorage.setItem('tt_notificaciones', JSON.stringify(list));
+      } catch {}
+    }
+
+    const notifWrapper = document.createElement('div');
+    notifWrapper.id = 'notifWrapper';
+    notifWrapper.style.cssText = 'position:relative;display:inline-flex;align-items:center;z-index:9999;';
+
+    function renderDropdown() {
+      const list = getNotifs();
+      const noLeidas = list.filter(n => !n.leida).length;
+
+      notifWrapper.innerHTML = `
+        <button id="notifDropdownBtn" type="button" title="Notificaciones" aria-label="Notificaciones" style="position:relative;background:none;border:none;cursor:pointer;padding:0.5rem;color:var(--text-main,#0f1e3c);display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          ${noLeidas > 0 ? `<span id="notifBadge" style="position:absolute;top:2px;right:2px;background:#dc2626;color:#ffffff;font-size:0.65rem;font-weight:700;border-radius:10px;min-width:18px;height:18px;padding:0 4px;display:flex;align-items:center;justify-content:center;border:2px solid #ffffff;box-shadow:0 2px 4px rgba(220,38,38,0.3);">${noLeidas}</span>` : ''}
+        </button>
+
+        <div id="notifDropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;width:340px;max-width:calc(100vw - 2rem);background:#ffffff;border:1px solid var(--border-subtle,#e5e7eb);border-radius:14px;box-shadow:0 14px 38px rgba(0,0,0,0.18);z-index:99999;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1rem;border-bottom:1px solid #f1f5f9;background:#fafafa;">
+            <span style="font-weight:700;font-size:0.92rem;color:#0f1e3c;">Notificaciones ${noLeidas > 0 ? `<span style="font-size:0.75rem;background:#531068;color:#fff;padding:0.1rem 0.4rem;border-radius:10px;margin-left:0.25rem;">${noLeidas}</span>` : ''}</span>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              ${noLeidas > 0 ? `<button type="button" id="btnMarcarDropdownLeidas" style="background:none;border:none;color:#531068;font-size:0.75rem;font-weight:600;cursor:pointer;padding:0.2rem 0.4rem;border-radius:4px;">Marcar leídas</button>` : ''}
+              <a href="notificaciones.html" style="font-size:0.78rem;color:#531068;text-decoration:none;font-weight:600;">Ver todas</a>
+            </div>
+          </div>
+
+          <div id="notifDropdownList" style="max-height:300px;overflow-y:auto;">
+            ${list.length === 0 ? '<p style="text-align:center;padding:1.5rem;color:#6b7280;font-size:0.85rem;margin:0;">Sin notificaciones</p>' :
+              list.slice(0, 6).map(n => `
+                <div class="notif-drop-item" data-id="${n.id}" style="padding:0.75rem 1rem;border-bottom:1px solid #f8fafc;display:flex;gap:0.75rem;align-items:flex-start;cursor:pointer;transition:background 0.15s;${n.leida ? 'opacity:0.65;background:#ffffff;' : 'background:rgba(83,16,104,0.03);border-left:3px solid #531068;'}">
+                  <span style="font-size:1.1rem;line-height:1;margin-top:2px;">${n.tipo === 'vacante' ? '💼' : n.tipo === 'postulacion' ? '📄' : n.tipo === 'capacitacion' ? '🎓' : '🔔'}</span>
+                  <div style="flex:1;min-width:0;">
+                    <p style="font-size:0.82rem;font-weight:${n.leida ? '500' : '700'};color:#111827;margin:0 0 0.15rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(n.titulo)}</p>
+                    <p style="font-size:0.75rem;color:#6b7280;margin:0 0 0.25rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHTML(n.detalle || '')}</p>
+                    <span style="font-size:0.7rem;color:#9ca3af;">${escapeHTML(n.tiempo)}</span>
+                  </div>
+                  ${!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#531068;flex-shrink:0;margin-top:6px;"></span>' : ''}
+                </div>
+              `).join('')
+            }
+          </div>
+          <div style="padding:0.6rem 1rem;background:#f8fafc;border-top:1px solid #e5e7eb;text-align:center;">
+            <a href="notificaciones.html" style="font-size:0.8rem;font-weight:600;color:#531068;text-decoration:none;">Ir al Centro de Notificaciones →</a>
+          </div>
+        </div>
+      `;
+
+      // Eventos
+      const btn = notifWrapper.querySelector('#notifDropdownBtn');
+      const drop = notifWrapper.querySelector('#notifDropdown');
+
+      btn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = drop.style.display === 'block';
+        drop.style.display = isOpen ? 'none' : 'block';
+      });
+
+      notifWrapper.querySelector('#btnMarcarDropdownLeidas')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const updated = getNotifs().map(n => ({ ...n, leida: true }));
+        saveNotifs(updated);
+        renderDropdown();
+        const newDrop = notifWrapper.querySelector('#notifDropdown');
+        if (newDrop) newDrop.style.display = 'block';
+        mostrarToast('Notificaciones marcadas como leídas', 'success');
+      });
+
+      notifWrapper.querySelectorAll('.notif-drop-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = Number(item.dataset.id);
+          const currentList = getNotifs();
+          const target = currentList.find(n => n.id === id);
+          if (target && !target.leida) {
+            target.leida = true;
+            saveNotifs(currentList);
+            renderDropdown();
+            const newDrop = notifWrapper.querySelector('#notifDropdown');
+            if (newDrop) newDrop.style.display = 'block';
+          }
+        });
+      });
+    }
+
+    renderDropdown();
+    sidebarFooter.insertBefore(notifWrapper, sidebarFooter.querySelector('.sidebar__logout'));
+
+    document.addEventListener('click', (e) => {
+      if (!notifWrapper.contains(e.target)) {
+        const drop = notifWrapper.querySelector('#notifDropdown');
+        if (drop) drop.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const drop = notifWrapper.querySelector('#notifDropdown');
+        if (drop) drop.style.display = 'none';
+      }
+    });
   }
 
   // Actualizar foto de perfil en sidebar si existe
@@ -188,7 +316,7 @@ function initEncuesta() {
         <div style="padding:1.25rem;">
           <p style="font-size:0.88rem;color:#374151;margin:0 0 0.75rem 0;font-weight:500;">Como calificarias TicoTalent?</p>
           <div id="encuestaEstrellas" style="display:flex;gap:0.4rem;margin-bottom:1rem;">
-            ${[1,2,3,4,5].map(n => `<button class="encuesta-estrella" data-val="${n}" style="background:none;border:none;font-size:1.75rem;cursor:pointer;color:#d1d5db;transition:color 0.15s;">&#9733;</button>`).join('')}
+            ${[1, 2, 3, 4, 5].map(n => `<button class="encuesta-estrella" data-val="${n}" style="background:none;border:none;font-size:1.75rem;cursor:pointer;color:#d1d5db;transition:color 0.15s;">&#9733;</button>`).join('')}
           </div>
           <textarea id="encuestaComentario" placeholder="Comentario opcional..." style="width:100%;border:1px solid #e5e7eb;border-radius:8px;padding:0.5rem 0.75rem;font-size:0.82rem;resize:none;height:60px;box-sizing:border-box;font-family:inherit;"></textarea>
           <button id="encuestaEnviar" style="width:100%;background:#531068;color:#fff;border:none;border-radius:8px;padding:0.6rem;font-weight:700;font-size:0.85rem;cursor:pointer;margin-top:0.75rem;">Enviar opinion</button>
@@ -258,7 +386,7 @@ export function mostrarToast(mensaje, tipo = "success", duracion = 3200) {
 
   container.appendChild(toast);
   requestAnimationFrame(() => toast.classList.add("toast--visible"));
-  
+
   toast.querySelector(".toast__close").addEventListener("click", () => cerrarToast(toast));
   setTimeout(() => cerrarToast(toast), duracion);
 }
@@ -281,24 +409,24 @@ export function ocultarLoading() {
 // ── MODAL GENÉRICO ────────────────────────────────────────────
 
 export function abrirModal(titulo, htmlBody, onGuardar) {
-  const overlay   = document.getElementById("modalOverlay");
-  const titleEl   = document.getElementById("modalTitle");
-  const bodyEl    = document.getElementById("modalBody");
-  const btnSave   = document.getElementById("btnFormSubmit");
+  const overlay = document.getElementById("modalOverlay");
+  const titleEl = document.getElementById("modalTitle");
+  const bodyEl = document.getElementById("modalBody");
+  const btnSave = document.getElementById("btnFormSubmit");
   const btnCancel = document.getElementById("btnFormCancel");
-  const btnClose  = document.getElementById("modalClose");
+  const btnClose = document.getElementById("modalClose");
 
   if (!overlay) return;
 
   titleEl.textContent = titulo;
-  bodyEl.innerHTML    = htmlBody;
+  bodyEl.innerHTML = htmlBody;
   overlay.classList.remove("d-none");
 
   const cerrar = () => overlay.classList.add("d-none");
 
-  btnClose.onclick  = cerrar;
+  btnClose.onclick = cerrar;
   btnCancel.onclick = cerrar;
-  overlay.onclick   = (e) => { if (e.target === overlay) cerrar(); };
+  overlay.onclick = (e) => { if (e.target === overlay) cerrar(); };
 
   btnSave.onclick = () => {
     if (onGuardar) onGuardar();
@@ -312,10 +440,10 @@ export function cerrarModal() {
 // ── CONFIRM ───────────────────────────────────────────────────
 
 export function confirmar(mensaje, onConfirmar) {
-  const overlay   = document.getElementById("confirmOverlay");
-  const msgEl     = document.getElementById("confirmMessage");
-  const btnSi     = document.getElementById("btnConfirmYes");
-  const btnNo     = document.getElementById("btnConfirmNo");
+  const overlay = document.getElementById("confirmOverlay");
+  const msgEl = document.getElementById("confirmMessage");
+  const btnSi = document.getElementById("btnConfirmYes");
+  const btnNo = document.getElementById("btnConfirmNo");
 
   if (!overlay) {
     if (confirm(mensaje)) onConfirmar();

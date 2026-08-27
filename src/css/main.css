@@ -9,7 +9,8 @@
    ========================================================================== */
 
 /* Layout general con Navbar horizontal arriba y Contenido debajo */
-body.main-page, body.app {
+body.main-page,
+body.app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -120,7 +121,8 @@ body.main-page, body.app {
 }
 
 /* Enlaces del Navbar */
-.nav-link, .sidebar__nav-link {
+.nav-link,
+.sidebar__nav-link {
   display: flex;
   align-items: center;
   gap: 0;
@@ -159,19 +161,22 @@ body.main-page, body.app {
 }
 
 /* Estados Hover y Activo */
-.nav-link:hover, .sidebar__nav-link:hover {
+.nav-link:hover,
+.sidebar__nav-link:hover {
   background-color: var(--bg-main);
   color: var(--primary-purple);
   transform: none;
 }
 
-.nav-link--active, .sidebar__nav-link--active {
+.nav-link--active,
+.sidebar__nav-link--active {
   background: #f3e8f7 !important;
   color: var(--primary-purple) !important;
   font-weight: 800;
 }
 
-.nav-link--active::before, .sidebar__nav-link--active::before {
+.nav-link--active::before,
+.sidebar__nav-link--active::before {
   content: '';
   position: absolute;
   left: 1rem;
@@ -262,7 +267,8 @@ body.main-page, body.app {
    3. ÁREA DE CONTENIDO PRINCIPAL (Debajo del Navbar)
    ========================================================================== */
 
-.main-page__wrapper, .app-wrapper {
+.main-page__wrapper,
+.app-wrapper {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
@@ -271,7 +277,8 @@ body.main-page, body.app {
   overflow-y: auto;
 }
 
-.main-page .main, .app .main {
+.main-page .main,
+.app .main {
   flex: 1 0 auto;
   width: 100%;
   max-width: 1440px;
@@ -433,10 +440,12 @@ body.main-page, body.app {
     display: none;
   }
 
-  .main-page .main, .app .main {
+  .main-page .main,
+  .app .main {
     padding: 1.5rem 1rem;
   }
 }
+
 /* ==========================================================================
    LOGIN PAGE - FORM SHARED STYLES
    ========================================================================== */
@@ -867,8 +876,25 @@ body.main-page, body.app {
 .landing-hero__bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 70% 30%, rgba(216, 0, 110, 0.12) 0%, transparent 50%),
-              radial-gradient(circle at 20% 80%, rgba(83, 16, 104, 0.15) 0%, transparent 50%);
+  background: radial-gradient(circle at 70% 30%, rgba(216, 0, 110, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(83, 16, 104, 0.2) 0%, transparent 50%);
+  /* Overlay extra oscuro sobre el video de fondo */
+  background-color: rgba(10, 8, 30, 0.62);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Video de fondo en movimiento del hero */
+.landing-hero__video-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -1;
+  opacity: 0.45;
+  filter: saturate(0.7) brightness(0.8);
   pointer-events: none;
 }
 

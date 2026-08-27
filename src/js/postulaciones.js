@@ -150,8 +150,8 @@ async function cargarPostulaciones() {
 function formularioHTML(p = {}) {
   return `
     <div class="form-group">
-      <label>Título de la Postulación / Posición</label>
-      <input class="form-control" id="fTitulo" value="${escapeHTML(p.titulo ?? p.title ?? "")}" placeholder="Ej: Postulación a Frontend React Developer" required>
+      <label>Título de la Postulación / Cargo</label>
+      <input class="form-control" id="fTitulo" value="${escapeHTML(p.titulo ?? p.title ?? "")}" placeholder="Ej: Postulación a Desarrollador Frontend React" required>
     </div>
     <div class="form-group">
       <label>Notas / Carta de Presentación</label>

@@ -8,22 +8,22 @@ if (typeof renderAppFooter === 'function') renderAppFooter();
 
 const TIPOS = {
   vacante:     { label:'Nueva Vacante',  color:'#1d4ed8', bg:'#eff6ff' },
-  postulacion: { label:'Postulacion',    color:'#7c3aed', bg:'#fdf4ff' },
+  postulacion: { label:'Postulación',    color:'#7c3aed', bg:'#fdf4ff' },
   sistema:     { label:'Sistema',        color:'#374151', bg:'#f1f5f9' },
-  capacitacion:{ label:'Capacitacion',   color:'#15803d', bg:'#f0fdf4' }
+  capacitacion:{ label:'Capacitación',   color:'#15803d', bg:'#f0fdf4' }
 };
 
 const BASE = [
   { id:1,  tipo:'vacante',      titulo:'Nueva vacante compatible con tu perfil',         detalle:'Intel Costa Rica busca un Desarrollador Full Stack Senior con experiencia en React y Node.js. Nivel de compatibilidad: 94%.',                                           tiempo:'Hace 5 min',   leida:false },
-  { id:2,  tipo:'postulacion',  titulo:'Tu postulacion fue revisada por el reclutador',  detalle:'La empresa Amazon CR actualizo el estado de tu postulacion al puesto de Cloud Architect a Revision Tecnica.',                                                          tiempo:'Hace 23 min',  leida:false },
-  { id:3,  tipo:'capacitacion', titulo:'Nuevo curso disponible: IA para RRHH',           detalle:'El curso Inteligencia Artificial aplicada al Reclutamiento ya esta disponible. 18 horas, totalmente gratuito. Cupos limitados.',                                       tiempo:'Hace 1 hora',  leida:false },
-  { id:4,  tipo:'sistema',      titulo:'Actualizacion de la plataforma TicoTalent',      detalle:'Hemos mejorado los algoritmos de compatibilidad de vacantes. Ahora veras resultados mas precisos segun tus habilidades.',                                               tiempo:'Hace 2 horas', leida:false },
-  { id:5,  tipo:'vacante',      titulo:'5 nuevas vacantes en tu area de interes',        detalle:'Se publicaron 5 nuevas posiciones en Tecnologia y Datos que coinciden con tu perfil profesional.',                                                                      tiempo:'Hace 3 horas', leida:false },
+  { id:2,  tipo:'postulacion',  titulo:'Tu postulación fue revisada por el reclutador',  detalle:'La empresa Amazon CR actualizó el estado de tu postulación al puesto de Cloud Architect a Revisión Técnica.',                                                          tiempo:'Hace 23 min',  leida:false },
+  { id:3,  tipo:'capacitacion', titulo:'Nuevo curso disponible: IA para RRHH',           detalle:'El curso Inteligencia Artificial aplicada al Reclutamiento ya está disponible. 18 horas, totalmente gratuito. Cupos limitados.',                                       tiempo:'Hace 1 hora',  leida:false },
+  { id:4,  tipo:'sistema',      titulo:'Actualización de la plataforma TicoTalent',      detalle:'Hemos mejorado los algoritmos de compatibilidad de vacantes. Ahora verás resultados más precisos según tus habilidades.',                                               tiempo:'Hace 2 horas', leida:false },
+  { id:5,  tipo:'vacante',      titulo:'5 nuevas vacantes en tu área de interés',        detalle:'Se publicaron 5 nuevas posiciones en Tecnología y Datos que coinciden con tu perfil profesional.',                                                                      tiempo:'Hace 3 horas', leida:false },
   { id:6,  tipo:'postulacion',  titulo:'Entrevista programada exitosamente',             detalle:'Tienes una entrevista virtual con HP Costa Rica para el martes 2 de setiembre a las 10:00 AM. Revisa tu calendario.',                                                   tiempo:'Hace 5 horas', leida:true  },
-  { id:7,  tipo:'capacitacion', titulo:'Recordatorio: Curso de Python inicia manana',   detalle:'Tu curso Python para Ciencia de Datos comienza manana. Asegurate de tener Python 3.11 instalado.',                                                                      tiempo:'Hace 6 horas', leida:true  },
-  { id:8,  tipo:'sistema',      titulo:'Tu perfil esta al 72 porciento de completitud', detalle:'Agrega tu foto, descripcion profesional y al menos 5 habilidades tecnicas para aumentar tu visibilidad ante reclutadores.',                                              tiempo:'Ayer',         leida:true  },
-  { id:9,  tipo:'vacante',      titulo:'Empresa Cisco Systems te visito el perfil',     detalle:'Un reclutador de Cisco Systems ha visitado tu perfil en la plataforma. Es un buen momento para actualizar tu informacion.',                                              tiempo:'Ayer',         leida:true  },
-  { id:10, tipo:'postulacion',  titulo:'Postulacion enviada correctamente',              detalle:'Tu postulacion al puesto de DevOps Engineer en Procter and Gamble CR fue recibida. Te avisaremos sobre novedades.',                                                     tiempo:'Hace 2 dias',  leida:true  }
+  { id:7,  tipo:'capacitacion', titulo:'Recordatorio: Curso de Python inicia mañana',   detalle:'Tu curso Python para Ciencia de Datos comienza mañana. Asegúrate de tener Python 3.11 instalado.',                                                                      tiempo:'Hace 6 horas', leida:true  },
+  { id:8,  tipo:'sistema',      titulo:'Tu perfil está al 72% de completitud',          detalle:'Agrega tu foto, descripción profesional y al menos 5 habilidades técnicas para aumentar tu visibilidad ante reclutadores.',                                              tiempo:'Ayer',         leida:true  },
+  { id:9,  tipo:'vacante',      titulo:'Empresa Cisco Systems te visitó el perfil',     detalle:'Un reclutador de Cisco Systems ha visitado tu perfil en la plataforma. Es un buen momento para actualizar tu información.',                                              tiempo:'Ayer',         leida:true  },
+  { id:10, tipo:'postulacion',  titulo:'Postulación enviada correctamente',              detalle:'Tu postulación al puesto de DevOps Engineer en Procter & Gamble CR fue recibida. Te avisaremos sobre novedades.',                                                        tiempo:'Hace 2 días',  leida:true  }
 ];
 
 const LS_KEY = 'tt_notificaciones';
@@ -102,11 +102,11 @@ document.getElementById('notifFiltros')?.addEventListener('click', (e) => {
 document.getElementById('btnMarcarTodas')?.addEventListener('click', () => {
   notificaciones.forEach(n => n.leida = true);
   guardar(notificaciones); render(); actualizarBadge();
-  mostrarToast('Todas las notificaciones marcadas como leidas', 'success');
+  mostrarToast('Todas las notificaciones marcadas como leídas', 'success');
 });
 
 document.getElementById('btnLimpiarTodas')?.addEventListener('click', () => {
-  confirmar('Eliminar todas las notificaciones?', () => {
+  confirmar('¿Eliminar todas las notificaciones?', () => {
     notificaciones = []; guardar(notificaciones); render(); actualizarBadge();
     mostrarToast('Notificaciones eliminadas', 'info');
   });

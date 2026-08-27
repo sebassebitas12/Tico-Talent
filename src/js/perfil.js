@@ -22,7 +22,16 @@ function renderHero() {
   const displayName = perfil.nombre || (user.firstName ? `${user.firstName} ${user.lastName}` : "Usuario");
   const initial = displayName.charAt(0).toUpperCase();
 
-  if (heroAvatar) heroAvatar.textContent = initial;
+  const photoKey = user.id ? 'avatar_' + user.id : null;
+  const savedPhoto = (photoKey ? localStorage.getItem(photoKey) : null) || localStorage.getItem('fotoPerfil') || perfil.foto;
+
+  if (heroAvatar) {
+    if (savedPhoto) {
+      heroAvatar.innerHTML = `<img src="${savedPhoto}" alt="Foto de perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      heroAvatar.textContent = initial;
+    }
+  }
   if (heroName) heroName.textContent = displayName;
   
   if (rolActual === "empleador" || rolActual === "reclutador") {
@@ -115,7 +124,7 @@ function renderFormFields() {
         
         <div class="form-group">
           <label class="login__label">Nombre Completo</label>
-          <input class="login__input" id="fNombre" value="${escapeHTML(perfil.nombre || "")}" placeholder="Ej: Emily Johnson" required>
+          <input class="login__input" id="fNombre" value="${escapeHTML(perfil.nombre || "")}" placeholder="Ej: María González" required>
         </div>
 
         <div class="form-group">
@@ -367,12 +376,54 @@ document.getElementById("btnToggleRol")?.addEventListener("click", () => {
   mostrarToast(`Rol cambiado a: ${nuevoRol === "empleador" ? "Empleador" : "Candidato"}`, "info");
 });
 
-document.getElementById("btnRestablecer")?.addEventListener("click", () => {
-  perfil = getPerfilExtendido();
-  renderFormFields();
-  mostrarToast("Cambios descartados", "info");
-});
+// ── SUBIDA DE FOTO DE PERFIL CON VISTA PREVIA ──
+function setupFotoPerfil() {
+  const input = document.getElementById("fotoPerfilInput");
+  if (!input) return;
+
+  input.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      mostrarToast("Por favor selecciona un archivo de imagen válido.", "error");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      mostrarToast("La imagen no debe superar los 5MB.", "warning");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64 = event.target.result;
+      const user = getUser() || {};
+      if (user.id) {
+        localStorage.setItem("avatar_" + user.id, base64);
+      }
+      localStorage.setItem("fotoPerfil", base64);
+
+      perfil.foto = base64;
+      savePerfilExtendido(perfil);
+
+      const heroAvatar = document.getElementById("heroAvatar");
+      if (heroAvatar) {
+        heroAvatar.innerHTML = `<img src="${base64}" alt="Foto de perfil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      }
+
+      const userAvatar = document.getElementById("userAvatar");
+      if (userAvatar) {
+        userAvatar.innerHTML = `<img src="${base64}" alt="Foto de perfil" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+      }
+
+      mostrarToast("Foto de perfil actualizada correctamente", "success");
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 // Inicialización
 renderHero();
 renderFormFields();
+setupFotoPerfil();

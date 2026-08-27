@@ -151,8 +151,8 @@ async function cargarVacantes() {
 function formularioHTML(v = {}) {
   return `
     <div class="form-group">
-      <label>Título de la Vacante</label>
-      <input class="form-control" id="fTitulo" value="${escapeHTML(v.titulo ?? v.title ?? "")}" placeholder="Ej: Senior React / Node Developer" required>
+      <label>Título del Puesto / Vacante</label>
+      <input class="form-control" id="fTitulo" value="${escapeHTML(v.titulo ?? v.title ?? "")}" placeholder="Ej: Desarrollador React / Node Senior" required>
     </div>
     <div class="form-group">
       <label>Empresa / Marca</label>

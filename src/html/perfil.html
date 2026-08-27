@@ -34,15 +34,9 @@
           <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:0.5rem;">
-        <a href="notificaciones.html" class="sidebar__logout" id="btnNotif" title="Notificaciones" style="position:relative;padding:0.5rem;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span id="notifBadge" style="display:none;position:absolute;top:2px;right:2px;background:var(--action-pink);color:#fff;font-size:0.65rem;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">3</span>
-        </a>
-        <a href="/login.html" class="sidebar__logout" id="btnLogout">
-          <span class="nav-text">Cerrar Sesión</span>
-        </a>
-      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
     </div>
   </header>
 
@@ -111,7 +105,40 @@
         </form>
       </div>
 
-    </main>
+    <!-- ========== FOOTER ========== -->
+    <footer class="landing-footer" style="margin-top: auto; padding: 2.5rem 1.5rem 2rem; background: linear-gradient(135deg, #0f1e3c 0%, #1e1b4b 100%); color: #ffffff;">
+      <div class="landing-footer__container" style="max-width: 1200px; margin: 0 auto;">
+        <div class="landing-footer__grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
+          <div class="landing-footer__brand">
+            <span class="landing-footer__logo" style="font-size: 1.6rem; font-weight: 800; color: #ffffff;">Tico Talent</span>
+            <p class="landing-footer__desc" style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; margin-top: 0.75rem;">La plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Candidatos</h4>
+            <a href="vacantes.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar empleo</a>
+            <a href="perfil.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Mi Perfil</a>
+            <a href="capacitacion.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Capacitación</a>
+            <a href="notificaciones.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Notificaciones</a>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Empresas</h4>
+            <a href="vacantes.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Publicar vacante</a>
+            <a href="candidatos.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar candidatos</a>
+            <a href="empresas.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Empresas aliadas</a>
+            <a href="entrevistas.html" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Entrevistas</a>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title" style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Contacto</h4>
+            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">info@ticotalent.com</a>
+            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">+506 2222-3333</a>
+            <a href="#" class="landing-footer__link" style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">San José, Costa Rica</a>
+          </div>
+        </div>
+        <div class="landing-footer__bottom" style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: center;">
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">&copy; 2026 Tico Talent. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <!-- Contenedor de Toasts y Overlays -->
@@ -146,44 +173,5 @@
   </div>
 
   <script type="module" src="../js/perfil.js"></script>
-  <script>
-    // --- Foto de perfil (Base64 en localStorage) ---
-    document.addEventListener('DOMContentLoaded', () => {
-      const inputFoto = document.getElementById('fotoPerfilInput');
-      const heroAvatar = document.getElementById('heroAvatar');
-      const userAvatar = document.getElementById('userAvatar');
-
-      // Cargar foto guardada
-      const fotoGuardada = localStorage.getItem('fotoPerfil');
-      if (fotoGuardada && heroAvatar) {
-        heroAvatar.innerHTML = `<img src="${fotoGuardada}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="Foto de perfil">`;
-      }
-
-      // Manejar subida de nueva foto
-      if (inputFoto) {
-        inputFoto.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            const base64 = ev.target.result;
-            localStorage.setItem('fotoPerfil', base64);
-            if (heroAvatar) heroAvatar.innerHTML = `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="Foto de perfil">`;
-            if (userAvatar) userAvatar.innerHTML = `<img src="${base64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">`;
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // Badge de notificaciones
-      const badge = document.getElementById('notifBadge');
-      const notifs = JSON.parse(localStorage.getItem('notificaciones') || '[]');
-      const noLeidas = notifs.filter(n => !n.leida).length;
-      if (badge) {
-        badge.style.display = noLeidas > 0 ? 'flex' : 'none';
-        badge.textContent = noLeidas;
-      }
-    });
-  </script>
 </body>
 </html>

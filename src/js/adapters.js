@@ -67,7 +67,7 @@ export function adaptarVacante(p, index = 0) {
   const modalidad = MODALIDADES[(p.id + index) % MODALIDADES.length];
   const nivel = NIVELES[(p.id + index) % NIVELES.length];
   const match = 88 + ((p.id * 7) % 11); // 88% - 98%
-  
+
   // Cálculo de salario en USD con base en el precio del producto DummyJSON
   const baseSalary = (p.price && p.price > 0) ? Math.round(p.price * 32) : 3200;
   const salaryMin = Math.max(1800, baseSalary - 400);
@@ -210,10 +210,36 @@ export function adaptarPostulacion(p, index = 0) {
   const empresaRef = EMPRESAS_CR[(p.id + index) % EMPRESAS_CR.length];
   const match = 91 + ((p.id * 5) % 8);
 
+  const TITULOS_POSTULACION = [
+    "Postulación a Desarrollador Full Stack Senior (React / Node.js)",
+    "Aplicación para Ingeniero Cloud & DevOps en Intel Costa Rica",
+    "Postulación a Líder de QA Automation — Fiserv Global Services",
+    "Candidatura para Científico de Datos & Especialista IA",
+    "Postulación a Diseñador UI/UX — Microsoft Costa Rica",
+    "Aplicación para Ingeniero Backend Go / Microservicios",
+    "Postulación a Arquitecto de Soluciones Cloud — AWS CR",
+    "Candidatura para Desarrollador Móvil Flutter / React Native",
+    "Postulación a Analista de Ciberseguridad — BAC Digital Labs",
+    "Aplicación para Especialista en Automatización de Procesos RPA"
+  ];
+
+  const DETALLES_POSTULACION = [
+    "Candidato con 5 años de experiencia en desarrollo web. Domina React, TypeScript y Node.js. Disponibilidad inmediata.",
+    "Profesional certificado en AWS con experiencia en arquitecturas serverless y pipelines de CI/CD en entornos productivos.",
+    "Especialista en pruebas automatizadas con Cypress y Playwright. Experiencia en metodologías ágiles y equipos distribuidos.",
+    "Científico de datos con dominio de Python, Pandas y modelos de Machine Learning aplicados a reclutamiento inteligente.",
+    "Diseñador UX con portafolio en Figma y experiencia en Design Systems para plataformas de empleabilidad.",
+    "Ingeniero backend con experiencia en Go, microservicios y arquitecturas event-driven con Kafka.",
+    "Arquitecto con 8 años de experiencia diseñando soluciones cloud escalables para empresas de zona franca en Costa Rica.",
+    "Desarrollador móvil con apps publicadas en Play Store y App Store usando Flutter y React Native.",
+    "Analista de seguridad con certificación CISSP y experiencia en gestión de vulnerabilidades en entornos financieros.",
+    "Especialista en automatización de procesos RPA con UiPath y Power Automate en empresas del sector bancario."
+  ];
+
   return {
     id: p.id,
-    titulo: p.title || "Postulación a Posición Técnica",
-    detalle: p.body || "Candidato con perfil calificado postulando para vacante activa.",
+    titulo: TITULOS_POSTULACION[(p.id - 1) % TITULOS_POSTULACION.length] || "Postulación a Posición Técnica",
+    detalle: DETALLES_POSTULACION[(p.id - 1) % DETALLES_POSTULACION.length] || "Candidato con perfil calificado postulando para vacante activa.",
     empresa: empresaRef.nombre,
     empresaLogo: empresaRef.logo,
     ubicacion: empresaRef.sede,
@@ -272,13 +298,31 @@ export function adaptarTarea(t, index = 0) {
     { texto: "Normal", color: "#16a34a", bg: "#dcfce7" }
   ];
   const categorias = ["Entrevistas", "Revisión de CV", "Ofertas Finales", "Retroalimentación"];
-  
+
   const prio = prioridades[(t.id + index) % prioridades.length];
   const cat = categorias[(t.id + index) % categorias.length];
 
+  const TAREAS_RRHH = [
+    "Revisar CVs recibidos para la vacante de Desarrollador Full Stack",
+    "Coordinar entrevistas técnicas con candidatos preseleccionados",
+    "Enviar retroalimentación a candidatos descartados en primera fase",
+    "Actualizar pipeline de postulaciones en el sistema",
+    "Agendar entrevista final con gerencia para candidato seleccionado",
+    "Verificar referencias laborales del candidato #23",
+    "Redactar oferta económica para posición de Cloud Architect",
+    "Publicar nueva vacante de QA Automation en portal",
+    "Revisar prueba técnica enviada por candidato de Backend",
+    "Coordinar inducción para nuevo colaborador que inicia el lunes",
+    "Actualizar descripción de puestos según nueva estructura organizacional",
+    "Contactar candidatos en lista de espera para vacante de UX Designer",
+    "Preparar reporte mensual de indicadores de reclutamiento",
+    "Validar documentación de contratación antes del ingreso",
+    "Programar evaluación psicométrica para candidatos finalistas"
+  ];
+
   return {
     id: t.id,
-    descripcion: t.todo || "Seguimiento de proceso de selección",
+    descripcion: TAREAS_RRHH[(t.id - 1) % TAREAS_RRHH.length] || "Seguimiento de proceso de selección",
     completada: !!t.completed,
     userId: t.userId || 1,
     prioridad: prio.texto,
