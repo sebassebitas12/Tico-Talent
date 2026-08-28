@@ -1,22 +1,84 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
   <title>Tico Talent - Tu plataforma de empleo en Costa Rica</title>
-  <meta name="description" content="Tico Talent conecta el talento costarricense con las mejores empresas. Miles de vacantes de empleo. Crea tu perfil gratis.">
+  <meta name="description"
+    content="Tico Talent conecta el talento costarricense con las mejores empresas. Miles de vacantes de empleo. Crea tu perfil gratis.">
   <meta property="og:title" content="Tico Talent - Tu plataforma de empleo en Costa Rica">
-  <meta property="og:description" content="Conectamos talento costarricense con las mejores empresas. Miles de ofertas de empleo esperandote.">
+  <meta property="og:description"
+    content="Conectamos talento costarricense con las mejores empresas. Miles de ofertas de empleo esperandote.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ticotalent.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="src/css/variables.css">
   <link rel="stylesheet" href="src/css/reset.css">
   <link rel="stylesheet" href="src/css/main.css">
   <link rel="stylesheet" href="src/css/components.css">
+  <style>
+    /* ── Ilustración SVG de beneficios – animaciones ── */
+    .benefits-illustration { width: 100%; height: auto; display: block; }
+
+    .bi-card-profile {
+      animation: bi-float 4s ease-in-out infinite;
+    }
+    .bi-card-vacante {
+      animation: bi-float 4s ease-in-out infinite 1s;
+    }
+    .bi-card-match {
+      animation: bi-float 4s ease-in-out infinite 0.5s;
+    }
+    .bi-badge-notif {
+      animation: bi-float 3s ease-in-out infinite 0.8s;
+    }
+    .bi-badge-online {
+      animation: bi-float 3s ease-in-out infinite 1.5s;
+    }
+    .bi-match-bar {
+      animation: bi-grow 1.6s cubic-bezier(.25,.46,.45,.94) forwards;
+      transform-origin: left center;
+    }
+    .bi-check-1 { animation: bi-check 0.4s ease forwards 1.8s; opacity: 0; }
+    .bi-check-2 { animation: bi-check 0.4s ease forwards 2.1s; opacity: 0; }
+    .bi-check-3 { animation: bi-check 0.4s ease forwards 2.4s; opacity: 0; }
+
+    @keyframes bi-float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    @keyframes bi-grow {
+      from { width: 0; }
+      to   { width: 170px; }
+    }
+    @keyframes bi-check {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .bi-card-profile, .bi-card-vacante, .bi-card-match,
+      .bi-badge-notif, .bi-badge-online { animation: none; }
+    }
+
+    /* Ajuste del wrapper para el SVG (no necesita overflow:hidden) */
+    .landing-benefits__image-wrapper--svg {
+      overflow: visible;
+      padding: 1rem;
+      box-shadow: 0 20px 60px rgba(83, 16, 104, 0.10);
+    }
+  </style>
 </head>
+
 <body id="landingPage">
 
   <!-- ========== NAVBAR ========== -->
@@ -29,6 +91,7 @@
         <a href="#como-funciona" class="landing-nav__link">Como Funciona</a>
         <a href="#empresas" class="landing-nav__link">Empresas</a>
         <a href="#beneficios" class="landing-nav__link">Beneficios</a>
+        <a href="#guias" class="landing-nav__link">Guias</a>
       </div>
       <div class="landing-nav__actions">
         <a href="login.html" class="landing-nav__btn landing-nav__btn--outline">Iniciar Sesion</a>
@@ -37,57 +100,65 @@
     </div>
   </nav>
 
-  <!-- ========== HERO ========== -->
+  <!-- ========== HERO ESTILO COMPUTRABAJO ========== -->
   <section class="landing-hero">
-    <div class="landing-hero__bg"></div>
-    <div class="landing-hero__container">
-      <div class="landing-hero__content">
-        <span class="landing-hero__badge">La plataforma #1 en empleo</span>
-        <h1 class="landing-hero__title">Encuentra tu proximo empleo ideal</h1>
-        <p class="landing-hero__subtitle">Conectamos talento costarricense con las mejores empresas. Miles de ofertas de empleo esperandote en todo el pais.</p>
+    <!-- Video de fondo difuminado -->
+    <video class="landing-hero__video-bg" autoplay muted loop playsinline preload="metadata">
+      <source src="https://videos.pexels.com/video-files/3252000/3252000-hd_1280_720_30fps.mp4" type="video/mp4">
+    </video>
+    <!-- Overlay oscuro sobre el video -->
+    <div class="landing-hero__overlay"></div>
 
-        <div class="landing-hero__search">
-          <div class="landing-hero__search-group">
-            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" class="landing-hero__search-input" placeholder="Puesto, empresa o palabra clave" id="heroSearchJob">
-          </div>
-          <div class="landing-hero__search-divider"></div>
-          <div class="landing-hero__search-group">
-            <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <input type="text" class="landing-hero__search-input" placeholder="San Jose, Heredia, Alajuela..." id="heroSearchLocation">
-          </div>
-          <button class="landing-hero__search-btn" id="heroSearchBtn">Buscar</button>
-        </div>
+    <!-- Contenido centrado -->
+    <div class="landing-hero__center">
+      <h1 class="landing-hero__title">¡Ahora es el momento de cambiar!</h1>
+      <p class="landing-hero__subtitle">Encuentra el empleo que encaja contigo, más de <strong>1,665 ofertas</strong>
+      </p>
 
-        <div class="landing-hero__tags">
-          <span class="landing-hero__tag">Desarrollador</span>
-          <span class="landing-hero__tag">Marketing</span>
-          <span class="landing-hero__tag">Contabilidad</span>
-          <span class="landing-hero__tag">Diseño</span>
-          <span class="landing-hero__tag">Recursos Humanos</span>
+      <!-- BUSCADOR ESTILO COMPUTRABAJO -->
+      <div class="landing-hero__search">
+        <div class="landing-hero__search-group">
+          <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+          <input type="text" class="landing-hero__search-input" placeholder="Cargo o categoría" id="heroSearchJob"
+            autocomplete="off">
         </div>
-
-        <div class="landing-hero__ctas">
-          <a href="login.html?rol=solicitante" class="landing-hero__cta landing-hero__cta--primary">Soy Candidato</a>
-          <a href="login.html?rol=empleador" class="landing-hero__cta landing-hero__cta--secondary">Soy Empleador</a>
+        <div class="landing-hero__search-divider"></div>
+        <div class="landing-hero__search-group">
+          <svg class="landing-hero__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <input type="text" class="landing-hero__search-input" placeholder="Lugar" id="heroSearchLocation"
+            autocomplete="off">
         </div>
+        <button class="landing-hero__search-btn" id="heroSearchBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          Buscar empleos
+        </button>
       </div>
 
-      <div class="landing-hero__visual">
-        <div class="landing-hero__image-wrapper">
-          <img src="https://media.istockphoto.com/id/1822009439/es/foto/hombre-negro-de-negocios-feliz-y-caminando-en-el-viaje-de-la-ciudad-viaje-diario-y-sonrisa-del.jpg?s=612x612&w=0&k=20&c=Jri03cjkGdTzxsL4KLMZGlPS0DvmXKRhaaReRKrFUBs=" alt="Profesional feliz en la ciudad" class="landing-hero__img">
-          <div class="landing-hero__img-accent"></div>
-        </div>
-        <div class="landing-hero__stats">
-          <div class="landing-hero__stat">
-            <span class="landing-hero__stat-number">5,000+</span>
-            <span class="landing-hero__stat-label">Vacantes activas</span>
-          </div>
-          <div class="landing-hero__stat">
-            <span class="landing-hero__stat-number">200+</span>
-            <span class="landing-hero__stat-label">Empresas aliadas</span>
-          </div>
-        </div>
+      <!-- Tags populares -->
+      <div class="landing-hero__tags">
+        <span class="landing-hero__tag" data-tag="Desarrollador">Desarrollador</span>
+        <span class="landing-hero__tag" data-tag="Marketing">Marketing</span>
+        <span class="landing-hero__tag" data-tag="Contabilidad">Contabilidad</span>
+        <span class="landing-hero__tag" data-tag="Diseño">Diseño</span>
+        <span class="landing-hero__tag" data-tag="Recursos Humanos">Recursos Humanos</span>
+      </div>
+
+      <!-- CTAs secundarios -->
+      <div class="landing-hero__ctas">
+        <a href="login.html?rol=solicitante" class="landing-hero__cta landing-hero__cta--primary">Soy Candidato</a>
+        <a href="login.html?rol=empleador" class="landing-hero__cta landing-hero__cta--secondary">Soy Empleador</a>
       </div>
     </div>
   </section>
@@ -103,28 +174,42 @@
         <div class="landing-step-card">
           <div class="landing-step-card__number">1</div>
           <div class="landing-step-card__icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
           </div>
           <h3 class="landing-step-card__title">Crea tu perfil</h3>
-          <p class="landing-step-card__desc">Registrate gratis y crea tu perfil profesional con experiencia, habilidades y educacion.</p>
+          <p class="landing-step-card__desc">Registrate gratis y crea tu perfil profesional con experiencia, habilidades
+            y educacion.</p>
         </div>
 
         <div class="landing-step-card">
           <div class="landing-step-card__number">2</div>
           <div class="landing-step-card__icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
           </div>
           <h3 class="landing-step-card__title">Postulate facil</h3>
-          <p class="landing-step-card__desc">Explora miles de vacantes y postulate con un solo clic. Recibe alertas de nuevas oportunidades.</p>
+          <p class="landing-step-card__desc">Explora miles de vacantes y postulate con un solo clic. Recibe alertas de
+            nuevas oportunidades.</p>
         </div>
 
         <div class="landing-step-card">
           <div class="landing-step-card__number">3</div>
           <div class="landing-step-card__icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
           </div>
           <h3 class="landing-step-card__title">Consigue el trabajo</h3>
-          <p class="landing-step-card__desc">Conecta directamente con reclutadores y consigue tu empleo soñado en Costa Rica.</p>
+          <p class="landing-step-card__desc">Conecta directamente con reclutadores y consigue tu empleo soñado en Costa
+            Rica.</p>
         </div>
       </div>
     </div>
@@ -140,7 +225,9 @@
           <div class="landing-benefits__list">
             <div class="landing-benefit-item">
               <div class="landing-benefit-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
               </div>
               <div>
                 <h4 class="landing-benefit-item__title">100% Seguro</h4>
@@ -149,7 +236,10 @@
             </div>
             <div class="landing-benefit-item">
               <div class="landing-benefit-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
               </div>
               <div>
                 <h4 class="landing-benefit-item__title">Rapido y Directo</h4>
@@ -158,7 +248,12 @@
             </div>
             <div class="landing-benefit-item">
               <div class="landing-benefit-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
               </div>
               <div>
                 <h4 class="landing-benefit-item__title">Red de Empresas</h4>
@@ -167,7 +262,10 @@
             </div>
             <div class="landing-benefit-item">
               <div class="landing-benefit-item__icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
               </div>
               <div>
                 <h4 class="landing-benefit-item__title">Gratuito</h4>
@@ -177,8 +275,122 @@
           </div>
         </div>
         <div class="landing-benefits__visual">
-          <div class="landing-benefits__image-wrapper">
-            <img src="https://img.magnific.com/foto-gratis/sonriendo-feliz-indio-trabajar-oficina-detras-el-edificio-moderno_496169-2880.jpg?semt=ais_hybrid&w=740&q=80" alt="Profesional sonriendo en oficina" class="landing-benefits__img">
+          <div class="landing-benefits__image-wrapper landing-benefits__image-wrapper--svg">
+            <svg class="benefits-illustration" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- Fondo con gradiente suave -->
+              <defs>
+                <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#faf7fc;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#f0f4ff;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#f8f5fb;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#531068;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0c2340;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#1e3a5f;stop-opacity:1" />
+                </linearGradient>
+                <filter id="cardShadow">
+                  <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#531068" flood-opacity="0.12"/>
+                </filter>
+                <filter id="badgeShadow">
+                  <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.1"/>
+                </filter>
+              </defs>
+
+              <rect width="420" height="380" rx="24" fill="url(#bgGrad)"/>
+
+              <!-- Círculos decorativos de fondo -->
+              <circle cx="380" cy="40" r="60" fill="#531068" fill-opacity="0.06"/>
+              <circle cx="40" cy="340" r="50" fill="#0c2340" fill-opacity="0.05"/>
+              <circle cx="210" cy="190" r="140" fill="white" fill-opacity="0.3"/>
+
+              <!-- ──── TARJETA DE PERFIL CANDIDATO (principal, flotando) ──── -->
+              <g class="bi-card-profile" filter="url(#cardShadow)">
+                <rect x="50" y="55" width="200" height="120" rx="16" fill="url(#cardGrad)" stroke="#e5e7eb" stroke-width="1"/>
+                <!-- Avatar -->
+                <circle cx="90" cy="95" r="22" fill="url(#purpleGrad)"/>
+                <circle cx="90" cy="88" r="9" fill="white" fill-opacity="0.85"/>
+                <path d="M72 115 Q90 105 108 115" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <!-- Texto nombre -->
+                <rect x="122" y="84" width="88" height="8" rx="4" fill="#0c2340" fill-opacity="0.75"/>
+                <rect x="122" y="98" width="60" height="6" rx="3" fill="#531068" fill-opacity="0.4"/>
+                <!-- Chips de habilidades -->
+                <rect x="66" y="130" width="48" height="18" rx="9" fill="#faf7fc" stroke="#d8c5de" stroke-width="1"/>
+                <text x="90" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="8" fill="#531068" font-weight="600">React</text>
+                <rect x="120" y="130" width="52" height="18" rx="9" fill="#faf7fc" stroke="#d8c5de" stroke-width="1"/>
+                <text x="146" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="8" fill="#531068" font-weight="600">Node.js</text>
+                <rect x="178" y="130" width="52" height="18" rx="9" fill="#faf7fc" stroke="#d8c5de" stroke-width="1"/>
+                <text x="204" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="8" fill="#531068" font-weight="600">Python</text>
+              </g>
+
+              <!-- ──── TARJETA VACANTE (derecha) ──── -->
+              <g class="bi-card-vacante" filter="url(#cardShadow)">
+                <rect x="185" y="105" width="190" height="110" rx="16" fill="url(#cardGrad)" stroke="#e5e7eb" stroke-width="1"/>
+                <!-- Ícono empresa -->
+                <rect x="202" y="122" width="28" height="28" rx="8" fill="url(#navyGrad)"/>
+                <rect x="209" y="128" width="6" height="14" rx="2" fill="white" fill-opacity="0.9"/>
+                <rect x="219" y="128" width="6" height="14" rx="2" fill="white" fill-opacity="0.9"/>
+                <rect x="209" y="125" width="16" height="5" rx="2" fill="white" fill-opacity="0.6"/>
+                <!-- Info -->
+                <rect x="240" y="124" width="100" height="8" rx="4" fill="#0c2340" fill-opacity="0.7"/>
+                <rect x="240" y="138" width="70" height="6" rx="3" fill="#64748b" fill-opacity="0.5"/>
+                <!-- Divider -->
+                <line x1="202" y1="162" x2="360" y2="162" stroke="#e5e7eb" stroke-width="1"/>
+                <!-- Salario y botón -->
+                <text x="205" y="180" font-family="Outfit, sans-serif" font-size="11" fill="#15803d" font-weight="700">₡ 800K–1.2M</text>
+                <rect x="308" y="169" width="58" height="20" rx="10" fill="url(#purpleGrad)"/>
+                <text x="337" y="182" text-anchor="middle" font-family="Outfit, sans-serif" font-size="9" fill="white" font-weight="700">Aplicar →</text>
+              </g>
+
+              <!-- ──── TARJETA MATCH (abajo centro) ──── -->
+              <g class="bi-card-match" filter="url(#cardShadow)">
+                <rect x="80" y="225" width="260" height="100" rx="16" fill="url(#cardGrad)" stroke="#e5e7eb" stroke-width="1"/>
+                <!-- Barra de match -->
+                <text x="100" y="250" font-family="Outfit, sans-serif" font-size="10" fill="#64748b" font-weight="500">Compatibilidad con la vacante</text>
+                <rect x="100" y="258" width="200" height="8" rx="4" fill="#e5e7eb"/>
+                <rect x="100" y="258" width="170" height="8" rx="4" fill="url(#purpleGrad)" class="bi-match-bar"/>
+                <text x="308" y="267" font-family="Outfit, sans-serif" font-size="10" fill="#531068" font-weight="800">85%</text>
+                <!-- Checkmarks -->
+                <g fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="100,290 104,294 112,284" class="bi-check-1"/>
+                  <polyline points="150,290 154,294 162,284" class="bi-check-2"/>
+                  <polyline points="200,290 204,294 212,284" class="bi-check-3"/>
+                </g>
+                <text x="116" y="293" font-family="Outfit, sans-serif" font-size="8.5" fill="#374151">Experiencia</text>
+                <text x="166" y="293" font-family="Outfit, sans-serif" font-size="8.5" fill="#374151">Habilidades</text>
+                <text x="216" y="293" font-family="Outfit, sans-serif" font-size="8.5" fill="#374151">Disponibilidad</text>
+                <!-- Íconos avatar mini -->
+                <circle cx="100" cy="311" r="8" fill="url(#purpleGrad)"/>
+                <circle cx="115" cy="311" r="8" fill="url(#navyGrad)"/>
+                <circle cx="130" cy="311" r="8" fill="#7c3aed"/>
+                <text x="146" y="315" font-family="Outfit, sans-serif" font-size="8" fill="#64748b">+43 candidatos similares</text>
+              </g>
+
+              <!-- ──── BADGE NOTIFICACIÓN (flotante top-right) ──── -->
+              <g class="bi-badge-notif" filter="url(#badgeShadow)">
+                <rect x="300" y="38" width="100" height="36" rx="18" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+                <circle cx="322" cy="56" r="8" fill="#15803d"/>
+                <!-- check icon pequeño -->
+                <polyline points="318,56 321,59 327,53" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <text x="336" y="53" font-family="Outfit, sans-serif" font-size="8" fill="#374151" font-weight="600">¡Match!</text>
+                <text x="336" y="64" font-family="Outfit, sans-serif" font-size="7" fill="#64748b">Vacante ideal</text>
+              </g>
+
+              <!-- ──── BADGE ONLINE (flotante izquierda) ──── -->
+              <g class="bi-badge-online" filter="url(#badgeShadow)">
+                <rect x="20" y="165" width="90" height="32" rx="16" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+                <circle cx="38" cy="181" r="6" fill="#15803d"/>
+                <circle cx="38" cy="181" r="3" fill="white"/>
+                <text x="50" y="178" font-family="Outfit, sans-serif" font-size="8" fill="#374151" font-weight="600">En línea</text>
+                <text x="50" y="189" font-family="Outfit, sans-serif" font-size="7" fill="#64748b">1,665 empleos</text>
+              </g>
+            </svg>
           </div>
         </div>
       </div>
@@ -218,40 +430,386 @@
     </div>
   </section>
 
+  <!-- ========== ARTICULOS / GUIAS ========== -->
+  <section class="landing-articles" id="guias">
+    <div class="landing-articles__container">
+      <span class="landing-articles__badge">Guias y Consejos</span>
+      <h2 class="landing-articles__title">Preparate para tu proximo empleo</h2>
+      <p class="landing-articles__subtitle">Articulos escritos por expertos en recursos humanos para ayudarte a destacar
+      </p>
+
+      <div class="landing-articles__grid">
+
+        <!-- ARTICULO 1: CURRICULUM -->
+        <article class="article-card">
+          <div class="article-card__image-wrapper">
+            <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&h=400&fit=crop"
+              alt="Persona creando su curriculum" class="article-card__img">
+            <span class="article-card__category">Curriculum</span>
+          </div>
+          <div class="article-card__content">
+            <h3 class="article-card__title">Como crear un curriculum que destaque</h3>
+            <div class="article-card__meta">
+              <span class="article-card__read-time">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                5 min de lectura
+              </span>
+            </div>
+            <div class="article-card__body">
+              <div class="article-card__tip">
+                <h4>1. Estructura clara y profesional</h4>
+                <p>Organiza tu CV en secciones bien definidas: datos personales, perfil profesional, experiencia
+                  laboral, educacion y habilidades. Usa un formato limpio con fuentes legibles como Arial, Calibri u
+                  Outfit.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>2. Destaca tus logros, no solo funciones</h4>
+                <p>En lugar de listar tareas, describe resultados. Ejemplo: "Aumente las ventas en un 25% en 6 meses" es
+                  mucho mas efectivo que "Me encargue de las ventas". Usa numeros y metricas siempre que puedas.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>3. Personaliza para cada vacante</h4>
+                <p>Adapta tu CV al puesto al que aplicas. Revisa la oferta laboral y usa palabras clave de la
+                  descripcion. Esto no solo impresiona al reclutador, sino que tambien ayuda a pasar los filtros
+                  automaticos (ATS).</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>4. Incluye habilidades relevantes</h4>
+                <p>Enumera tanto habilidades tecnicas (programacion, herramientas ofimaticas, idiomas) como blandas
+                  (liderazgo, trabajo en equipo, comunicacion). Prioriza las que sean relevantes para el puesto.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>5. Revisa y actualiza constantemente</h4>
+                <p>Un CV sin errores de ortografia es fundamental. Pide a alguien de confianza que lo revise. Mantenlo
+                  actualizado con tu experiencia mas reciente y elimina informacion que no aporte valor.</p>
+              </div>
+            </div>
+            <a href="login.html?rol=solicitante" class="article-card__cta">Crea tu CV gratis ahora</a>
+          </div>
+        </article>
+
+        <!-- ARTICULO 2: ENTREVISTA -->
+        <article class="article-card">
+          <div class="article-card__image-wrapper">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=400&fit=crop"
+              alt="Persona preparandose para una entrevista" class="article-card__img">
+            <span class="article-card__category">Entrevista</span>
+          </div>
+          <div class="article-card__content">
+            <h3 class="article-card__title">Como prepararse para una entrevista de trabajo</h3>
+            <div class="article-card__meta">
+              <span class="article-card__read-time">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                6 min de lectura
+              </span>
+            </div>
+            <div class="article-card__body">
+              <div class="article-card__tip">
+                <h4>1. Investiga la empresa</h4>
+                <p>Antes de la entrevista, investiga la mision, valores, productos y ultimas noticias de la empresa.
+                  Esto te permitira responder con preguntas inteligentes y demostrar genuino interes en formar parte del
+                  equipo.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>2. Practica las preguntas frecuentes</h4>
+                <p>Prepara respuestas para preguntas como: "Hablame de ti", "Cuales son tus fortalezas y debilidades?",
+                  "Por que quieres trabajar aqui?" y "Donde te ves en 5 anos?". Practica en voz alta o con un amigo.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>3. Usa el metodo STAR</h4>
+                <p>Para preguntas situacionales, responde con el metodo STAR: Situacion, Tarea, Accion y Resultado. Esto
+                  estructura tus respuestas de forma clara y demuestra como resolviste problemas reales en el pasado.
+                </p>
+              </div>
+              <div class="article-card__tip">
+                <h4>4. Cuida tu imagen y puntualidad</h4>
+                <p>Viste de forma profesional segun la cultura de la empresa. Llega 10-15 minutos antes. Si es virtual,
+                  verifica tu conexion, camara y audio antes de tiempo. Primera impresion lo es todo.</p>
+              </div>
+              <div class="article-card__tip">
+                <h4>5. Prepara preguntas para el entrevistador</h4>
+                <p>Al final de la entrevista, haz preguntas como: "Como es un dia tipico en este puesto?", "Cuales son
+                  los proximos pasos?" o "Que qualities busca el equipo ideal?". Esto muestra proactividad e interes.
+                </p>
+              </div>
+              <div class="article-card__tip">
+                <h4>6. Envia un agradecimiento despues</h4>
+                <p>Envia un correo de agradecimiento dentro de las 24 horas posteriores. Agradece el tiempo del
+                  entrevistador, reitera tu interes y menciona algo especifico que te haya gustado de la conversacion.
+                </p>
+              </div>
+            </div>
+            <a href="login.html?rol=solicitante" class="article-card__cta">Busca tu proxima oportunidad</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
   <!-- ========== FOOTER ========== -->
-  <footer class="landing-footer">
-    <div class="landing-footer__container">
-      <div class="landing-footer__grid">
+  <footer class="landing-footer"
+    style="margin-top: auto; padding: 3rem 1.5rem 2rem; background: linear-gradient(135deg, #0f1e3c 0%, #1e1b4b 100%); color: #ffffff;">
+    <div class="landing-footer__container" style="max-width: 1200px; margin: 0 auto;">
+      <div class="landing-footer__grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
         <div class="landing-footer__brand">
-          <span class="landing-footer__logo">Tico Talent</span>
-          <p class="landing-footer__desc">La plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
+          <span class="landing-footer__logo" style="font-size: 1.6rem; font-weight: 800; color: #ffffff;">Tico
+            Talent</span>
+          <p class="landing-footer__desc"
+            style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; margin-top: 0.75rem;">La
+            plataforma de empleo #1 en Costa Rica. Conectamos talento costarricense con las mejores oportunidades del
+            país.</p>
         </div>
         <div class="landing-footer__col">
-          <h4 class="landing-footer__col-title">Candidatos</h4>
-          <a href="login.html?rol=solicitante" class="landing-footer__link">Buscar empleo</a>
-          <a href="login.html?rol=solicitante" class="landing-footer__link">Crear perfil</a>
-          <a href="#como-funciona" class="landing-footer__link">Como funciona</a>
+          <h4 class="landing-footer__col-title"
+            style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Candidatos</h4>
+          <a href="login.html?rol=solicitante" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar
+            empleo</a>
+          <a href="login.html?rol=solicitante" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Crear
+            perfil</a>
+          <a href="#como-funciona" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Cómo
+            funciona</a>
+          <a href="#guias" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Guías y Consejos</a>
         </div>
         <div class="landing-footer__col">
-          <h4 class="landing-footer__col-title">Empresas</h4>
-          <a href="login.html?rol=empleador" class="landing-footer__link">Publicar vacante</a>
-          <a href="#empresas" class="landing-footer__link">Empresas aliadas</a>
-          <a href="#beneficios" class="landing-footer__link">Beneficios</a>
+          <h4 class="landing-footer__col-title"
+            style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Empresas</h4>
+          <a href="login.html?rol=empleador" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Publicar
+            vacante</a>
+          <a href="#empresas" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Empresas
+            aliadas</a>
+          <a href="#beneficios" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Beneficios</a>
         </div>
         <div class="landing-footer__col">
-          <h4 class="landing-footer__col-title">Contacto</h4>
-          <a href="#" class="landing-footer__link">info@ticotalent.com</a>
-          <a href="#" class="landing-footer__link">+506 2222-3333</a>
-          <a href="#" class="landing-footer__link">San Jose, Costa Rica</a>
+          <h4 class="landing-footer__col-title"
+            style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Contacto</h4>
+          <a href="#" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">info@ticotalent.com</a>
+          <a href="#" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">+506
+            2222-3333</a>
+          <a href="#" class="landing-footer__link"
+            style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">San José, Costa Rica</a>
         </div>
       </div>
-      <div class="landing-footer__bottom">
-        <p>&copy; 2026 Tico Talent. Todos los derechos reservados.</p>
+      <div class="landing-footer__bottom"
+        style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: center;">
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">&copy; 2026 Tico Talent. Todos los
+          derechos reservados.</p>
       </div>
     </div>
   </footer>
 
+  <!-- ========== MODAL CV TEMPLATES ========== -->
+  <div id="cvModalOverlay"
+    style="display:none;position:fixed;inset:0;background:rgba(12,35,64,0.6);backdrop-filter:blur(4px);z-index:9999;overflow-y:auto;padding:2rem 1rem;">
+    <div
+      style="max-width:900px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.25);">
+
+      <!-- Header -->
+      <div
+        style="background:linear-gradient(135deg,#531068 0%,#0C2340 100%);padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0;">Elige tu plantilla de CV</h2>
+          <p style="color:rgba(255,255,255,0.8);font-size:0.9rem;margin:0.4rem 0 0;">Selecciona un diseño y se llenará
+            con tus datos de perfil automáticamente</p>
+        </div>
+        <button id="cvModalClose"
+          style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- Aviso login -->
+      <div id="cvLoginNotice"
+        style="display:none;padding:1.5rem 2.5rem;background:#fef3c7;border-bottom:1px solid #fde68a;">
+        <p style="margin:0;font-size:0.9rem;color:#92400e;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-4px;margin-right:5px;"><path d="M12 4 21 19H3L12 4Z"></path><path d="M12 9v5M12 17h.01"></path></svg> <strong>Inicia sesión</strong> para que la plantilla se
+          llene con tus datos automáticamente. <a href="login.html" style="color:#531068;font-weight:700;">Iniciar
+            sesión →</a></p>
+      </div>
+
+      <!-- Grid de templates -->
+      <div
+        style="padding:2rem 2.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;">
+
+        <!-- Template 1: Moderno -->
+        <div class="cv-template-card" data-template="moderno"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:linear-gradient(135deg,#531068,#7c3aed);display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;">
+            <div
+              style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.6rem;font-size:0.7rem;color:#fff;font-weight:700;">
+              POPULAR</div>
+            <div
+              style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.25);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.4);border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:rgba(255,255,255,0.25);border-radius:4px;width:70%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Moderno</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Diseño con barra lateral colorida. Ideal para tech y
+              startups.</p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="moderno"
+              style="width:100%;background:#531068;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+        <!-- Template 2: Ejecutivo -->
+        <div class="cv-template-card" data-template="ejecutivo"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:#0C2340;display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#D8006E;"></div>
+            <div
+              style="width:48px;height:48px;border-radius:4px;background:rgba(255,255,255,0.1);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.35);border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:rgba(255,255,255,0.2);border-radius:4px;width:60%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Ejecutivo</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Clásico y formal. Perfecto para finanzas, legal y
+              gerencia.</p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="ejecutivo"
+              style="width:100%;background:#0C2340;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+        <!-- Template 3: Minimalista -->
+        <div class="cv-template-card" data-template="minimalista"
+          style="border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;">
+          <div
+            style="height:200px;background:#f8fafc;display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;position:relative;border-bottom:1px solid #e5e7eb;">
+            <div style="position:absolute;top:1rem;left:1.25rem;width:40px;height:2px;background:#531068;"></div>
+            <div
+              style="width:48px;height:48px;border-radius:50%;border:2px solid #531068;margin-bottom:0.75rem;display:flex;align-items:center;justify-content:center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#531068" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div style="height:8px;background:#e2e8f0;border-radius:4px;margin-bottom:0.4rem;"></div>
+            <div style="height:6px;background:#e2e8f0;border-radius:4px;width:55%;"></div>
+          </div>
+          <div style="padding:1rem 1.25rem;">
+            <h3 style="font-size:0.95rem;font-weight:700;color:#0C2340;margin:0 0 0.25rem;">Minimalista</h3>
+            <p style="font-size:0.8rem;color:#6b7280;margin:0;">Limpio y elegante. Deja que tu experiencia hable por ti.
+            </p>
+          </div>
+          <div style="padding:0 1.25rem 1rem;">
+            <button class="cv-usar-btn" data-template="minimalista"
+              style="width:100%;background:#374151;color:#fff;border:none;padding:0.6rem;border-radius:8px;font-weight:700;font-size:0.85rem;cursor:pointer;">Usar
+              esta plantilla →</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer del modal -->
+      <div style="padding:1rem 2.5rem 1.5rem;text-align:center;border-top:1px solid #f1f5f9;">
+        <p style="font-size:0.8rem;color:#9ca3af;margin:0;">Todos los templates son gratuitos para usuarios registrados
+          · Los datos se toman de tu perfil</p>
+      </div>
+    </div>
+  </div>
+
   <script type="module" src="src/js/landing.js"></script>
+  <script>
+    // Modal CV — lógica inline para no depender de módulos
+    (function () {
+      const overlay = document.getElementById('cvModalOverlay');
+      const closeBtn = document.getElementById('cvModalClose');
+      const loginNotice = document.getElementById('cvLoginNotice');
+
+      function openCvModal() {
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        // Verificar si está logueado
+        const token = localStorage.getItem('token');
+        if (!token) loginNotice.style.display = 'block';
+        else loginNotice.style.display = 'none';
+      }
+
+      function closeCvModal() {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      // Abrir con el botón "Crear CV Gratis"
+      document.querySelectorAll('a[href="login.html"]').forEach(btn => {
+        if (btn.textContent.trim().includes('CV')) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            openCvModal();
+          });
+        }
+      });
+
+      closeBtn?.addEventListener('click', closeCvModal);
+      overlay?.addEventListener('click', function (e) {
+        if (e.target === overlay) closeCvModal();
+      });
+
+      // Hover en cards
+      document.querySelectorAll('.cv-template-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.borderColor = '#531068';
+          card.style.transform = 'translateY(-4px)';
+          card.style.boxShadow = '0 12px 28px rgba(83,16,104,0.15)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.borderColor = '#e5e7eb';
+          card.style.transform = '';
+          card.style.boxShadow = '';
+        });
+      });
+
+      // Click en "Usar esta plantilla"
+      document.querySelectorAll('.cv-usar-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const token = localStorage.getItem('token');
+          const template = this.dataset.template;
+          if (!token) {
+            window.location.href = `login.html?action=crearcv&template=${template}`;
+          } else {
+            window.location.href = `src/html/perfil.html?template=${template}`;
+          }
+        });
+      });
+    })();
+  </script>
 
 </body>
+
 </html>

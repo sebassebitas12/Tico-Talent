@@ -1,118 +1,243 @@
 // src/js/candidatos.js
-// Vista de Candidatos Postulados (solo Empresa)
-// PATCH /comments/{id} para cambiar estado del candidato
+// CRUD Candidatos → /users de DummyJSON (GET, POST, PUT, PATCH, DELETE)
+// Integra adaptadores de Costa Rica y Talent Pool para Empleadores.
 
-import { requireAuth } from "./auth.js";
-import { getAll, patch } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, escapeHTML, renderNavbar } from "./ui.js";
+import { requireAuth, getRole } from "./auth.js";
+import { getAll, create, update, remove } from "./dummyapi.js";
+import { adaptarCandidato } from "./adapters.js";
+import { saveDeletedRecord, getDeletedIds } from "./localTrashStore.js";
+import { addNotification } from "./notificationStore.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
 
 requireAuth();
-renderNavbar("candidatos");
+initUserNav();
 
-let candidatos = [];
-
-const estadosCandidato = [
-  { value: "pendiente",       label: "Pendiente",          bg: "#fff3e0", color: "#e65100" },
-  { value: "revision",        label: "En Revision",        bg: "#f0ebf5", color: "var(--primary-purple)" },
-  { value: "entrevista",      label: "Entrevista Agendada", bg: "#E6F6EE", color: "var(--color-success)" },
-  { value: "rechazado",       label: "Rechazado",          bg: "#fef2f2", color: "#b91c1c" },
-  { value: "contratado",      label: "Contratado",         bg: "#E6F6EE", color: "var(--color-success)" }
-];
-
-function getEstado(idx) {
-  return estadosCandidato[idx % estadosCandidato.length];
-}
+let candidatosRaw = [];
+let candidatosAdaptados = [];
 
 function renderCards(lista) {
   const contenedor = document.getElementById("candidatesList");
   if (!contenedor) return;
 
+  const rol = getRole();
+  const esEmpleador = (rol === "empleador" || rol === "reclutador");
+
   if (lista.length === 0) {
     contenedor.innerHTML = `
-      <div style="text-align: center; padding: 2rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
-        <p style="color: var(--text-muted);">No hay candidatos postulados aun.</p>
+      <div style="grid-column: 1/-1; text-align: center; padding: 2rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">No se encontraron candidatos en la base de datos.</p>
+        ${esEmpleador ? '<button class="btn btn-cta" id="btnNuevoEmpty">+ Crear primer candidato</button>' : ''}
       </div>
     `;
+    document.getElementById("btnNuevoEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
-  contenedor.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%;">
-      <span style="font-size: 0.95rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> candidatos postulados</span>
+  const headerNotice = esEmpleador ? `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; width: 100%; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0;">Talent Pool de Costa Rica</h2>
+        <span style="font-size: 0.9rem; color: var(--text-muted);">Total: <strong>${lista.length}</strong> profesionales calificados</span>
+      </div>
+      <button class="btn btn-cta" id="btnNuevo">+ Registrar Nuevo Perfil</button>
     </div>
-    <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
-      ${lista.map((c, idx) => {
-        const est = getEstado(c._estadoIdx ?? idx);
-        const match = 88 + ((c.id * 3) % 11);
-        const nombre = c.user?.username || "candidato_" + (c.postId || (idx + 1));
-        const titulo = c.body ? (c.body.length > 55 ? c.body.substring(0, 55) + "..." : c.body) : "Postulacion #" + c.id;
+  ` : `
+    <div style="margin-bottom: 1.5rem; background: rgba(83, 16, 104, 0.04); border: 1px solid rgba(83, 16, 104, 0.15); padding: 1rem 1.25rem; border-radius: var(--radius-md);">
+      <p style="font-size: 0.9rem; color: var(--primary-purple); margin: 0; font-weight: 500;">
+        <svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 5 5"></path></svg> <strong>Directorio de Perfiles Profesionales:</strong> Explora cómo los reclutadores visualizan el talento técnico en Costa Rica. Puedes actualizar tu propio perfil en la pestaña <strong>"Mi Perfil"</strong>.
+      </p>
+    </div>
+  `;
 
-        return `
-          <article class="job-card">
+  contenedor.innerHTML = `
+    ${headerNotice}
+    <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
+      ${lista.map((c) => {
+    return `
+          <article class="job-card" data-id="${c.id}">
             <div class="job-card__header">
-              <div class="job-card__company-logo">${(nombre || "U").charAt(0).toUpperCase()}</div>
+              <div class="job-card__company-logo" style="overflow: hidden; padding: 0;">
+                <img src="${c.foto}" alt="${escapeHTML(c.nombreCompleto)}" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
               <div class="job-card__title-area">
-                <h3 class="job-card__title">@${escapeHTML(nombre)}</h3>
+                <h3 class="job-card__title">${escapeHTML(c.nombreCompleto)}</h3>
                 <div class="job-card__company-name">
-                  <span>${escapeHTML(titulo)}</span>
+                  <span>${escapeHTML(c.titulo)}</span> • <span>${escapeHTML(c.ubicacion)}</span>
                 </div>
               </div>
-              <span class="badge-match" style="background-color: ${est.bg}; color: ${est.color};">${est.label}</span>
+              <span class="badge-match">${c.match}% Match</span>
             </div>
 
             <div class="job-card__details">
-              <span class="job-tag">Postulacion #${c.id}</span>
-              <span class="job-tag">Post ID: ${c.postId ?? "N/A"}</span>
-              <span class="job-tag">${match}% Compatibilidad</span>
+              <span class="job-tag"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"></circle><path d="M5 21a7 7 0 0 1 14 0"></path></svg>@${escapeHTML(c.username)}</span>
+              <span class="job-tag"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>${escapeHTML(c.email)}</span>
+              <span class="job-tag"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h3l1.5 4-2 1.5a14 14 0 0 0 5 5L16 12l4 1.5v3A2.5 2.5 0 0 1 17.5 19C9.5 18.5 5.5 14.5 5 6.5A2.5 2.5 0 0 1 7 3Z"></path></svg>${escapeHTML(c.telefono)}</span>
+              <span class="job-tag"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>${escapeHTML(c.experiencia)}</span>
+              <span class="job-tag"><svg class="inline-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15 8.5c-.6-.7-1.5-1-3-1-1.7 0-3 .8-3 2s1.3 2 3 2 3 .8 3 2-1.2 2-3 2-2.5-.3-3.2-1"></path><path d="M12 6.5v11"></path></svg>${escapeHTML(c.pretensionSalarial)}</span>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0;">
+              ${c.skills.map(s => `<span class="job-tag" style="background: var(--surface-subtle); border-color: rgba(83,16,104,0.15);">#${escapeHTML(s)}</span>`).join("")}
             </div>
 
             <div class="job-card__footer">
               <div>
-                <span class="job-card__date">Estado actual: ${est.label}</span>
+                <span class="job-card__salary" style="font-size: 0.85rem; color: var(--color-success);"><span class="status-dot" aria-hidden="true"></span>Disponibilidad: ${escapeHTML(c.disponibilidad)}</span>
+                <span class="job-card__date" style="display: block; font-size: 0.8rem;">Candidato Verificado</span>
               </div>
-              <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
-                <select class="form-control" style="width: auto; padding: 0.4rem 0.6rem; font-size: 0.85rem;" data-id="${c.id}" data-idx="${idx}">
-                  ${estadosCandidato.map((e, i) => `<option value="${i}" ${i === (c._estadoIdx ?? idx) ? "selected" : ""}>${e.label}</option>`).join("")}
-                </select>
+              <div class="job-card__actions" style="display: flex; gap: 0.5rem;">
+                ${esEmpleador ? `
+                  <button type="button" class="btn btn-secondary btn-contactar" data-email="${escapeHTML(c.email)}" data-nombre="${escapeHTML(c.nombreCompleto)}"><span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"></path><path d="m5 7 7 6 7-6"></path></svg></span>Contactar</button>
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${c.id}"><span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg></span>Editar</button>
+                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${c.id}"><span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="M10 11v6M14 11v6"></path><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path></svg></span></button>
+                ` : `
+                  <a href="${c.linkedin}" target="_blank" rel="noreferrer" class="btn btn-secondary" style="text-decoration: none;"><span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8v8"></path><path d="M7 6v.01"></path><path d="M11 16v-5a3 3 0 0 1 6 0v5"></path><path d="M11 11V8"></path></svg></span>LinkedIn</a>
+                  <a href="${c.github}" target="_blank" rel="noreferrer" class="btn btn-secondary" style="text-decoration: none;"><span class="btn-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1.5-4-2-5-2m10 4v-3.5c0-1 .4-1.9 1-2.5-3.3-.4-6.7-1.6-6.7-7A5.4 5.4 0 0 1 9.8 5c-.1-.4-.5-1.7.1-3 0 0 1.2-.4 3.1 1.2a10.7 10.7 0 0 1 5.6 0C20.5 1.6 21.7 2 21.7 2c.6 1.3.2 2.6.1 3a5.4 5.4 0 0 1 1.5 3.7c0 5.4-3.4 6.6-6.7 7 .6.6 1 1.5 1 2.5V21"></path></svg></span>GitHub</a>
+                `}
               </div>
             </div>
           </article>
         `;
-      }).join("")}
+  }).join("")}
     </div>
   `;
 
-  contenedor.querySelectorAll("select[data-id]").forEach(sel => {
-    sel.addEventListener("change", async () => {
-      const id = Number(sel.dataset.id);
-      const nuevoIdx = Number(sel.value);
-      mostrarLoading();
-      try {
-        await patch("comments", id, { postId: id });
-        const c = candidatos.find(item => item.id === id);
-        if (c) c._estadoIdx = nuevoIdx;
-        mostrarToast("Estado del candidato actualizado.", "success");
-        renderCards(candidatos);
-      } catch {
-        mostrarToast("Error al actualizar estado.", "error");
-      } finally {
-        ocultarLoading();
-      }
+  if (esEmpleador) {
+    document.getElementById("btnNuevo")?.addEventListener("click", () => abrirFormulario());
+
+    contenedor.querySelectorAll(".btn-contactar").forEach(btn => {
+      btn.addEventListener("click", () => {
+        mostrarToast(`Iniciando contacto con ${btn.dataset.nombre} (${btn.dataset.email})`, "info");
+      });
     });
-  });
+
+    contenedor.querySelectorAll(".btn-editar").forEach(btn => {
+      btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+    });
+
+    contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
+      btn.addEventListener("click", () => confirmar("¿Eliminar este candidato de la base?", () => eliminarCandidatoConfirmado(Number(btn.dataset.id))));
+    });
+  }
 }
 
 async function cargarCandidatos() {
   mostrarLoading();
   try {
-    const data = await getAll("comments");
-    candidatos = data.comments ?? (Array.isArray(data) ? data : []);
-    renderCards(candidatos);
+    const data = await getAll("users");
+    const allUsers = (data.users ?? (Array.isArray(data) ? data : [])).filter((item) => !getDeletedIds("users").includes(String(item.id)));
+    candidatosRaw = allUsers.filter(u => u.id !== 1 && u.username !== "emilys").slice(0, 20);
+    candidatosAdaptados = candidatosRaw.map((u, idx) => adaptarCandidato(u, idx));
+    renderCards(candidatosAdaptados);
   } catch {
-    mostrarToast("Error al cargar candidatos.", "error");
+    mostrarToast("Error al cargar candidatos desde DummyJSON.", "error");
   } finally {
     ocultarLoading();
   }
+}
+
+function formularioHTML(c = {}) {
+  return `
+    <div class="form-group">
+      <label>Nombre</label>
+      <input class="form-control" id="fNombre" value="${escapeHTML(c.firstName ?? "")}" placeholder="Nombre" required>
+    </div>
+    <div class="form-group">
+      <label>Apellidos</label>
+      <input class="form-control" id="fApellido" value="${escapeHTML(c.lastName ?? "")}" placeholder="Apellidos" required>
+    </div>
+    <div class="form-group">
+      <label>Usuario (username)</label>
+      <input class="form-control" id="fUsername" value="${escapeHTML(c.username ?? "")}" placeholder="usuario.cr">
+    </div>
+    <div class="form-group">
+      <label>Correo Electrónico</label>
+      <input class="form-control" type="email" id="fEmail" value="${escapeHTML(c.email ?? "")}" placeholder="correo@ejemplo.com" required>
+    </div>
+    <div class="form-group">
+      <label>Teléfono</label>
+      <input class="form-control" id="fTelefono" value="${escapeHTML(c.telefono ?? c.phone ?? "+506 8888-0000")}" placeholder="+506 8888-0000">
+    </div>
+  `;
+}
+
+function abrirFormulario(id = null) {
+  const c = id ? candidatosAdaptados.find((x) => x.id === id) : {};
+  const tituloModal = id ? "Editar Candidato" : "Nuevo Candidato";
+
+  abrirModal(tituloModal, formularioHTML(c), async () => {
+    const datos = {
+      firstName: document.getElementById("fNombre").value.trim(),
+      lastName: document.getElementById("fApellido").value.trim(),
+      username: document.getElementById("fUsername").value.trim() || "usuario",
+      email: document.getElementById("fEmail").value.trim(),
+      phone: document.getElementById("fTelefono").value.trim(),
+    };
+
+    if (!datos.firstName || !datos.email) {
+      mostrarToast("Nombre y correo son obligatorios.", "warning");
+      return;
+    }
+
+    mostrarLoading();
+    try {
+      if (id) {
+        await update("users", id, datos);
+        const idx = candidatosAdaptados.findIndex((x) => x.id === id);
+        if (idx !== -1) {
+          candidatosAdaptados[idx] = { ...candidatosAdaptados[idx], ...datos, nombreCompleto: `${datos.firstName} ${datos.lastName}` };
+        }
+        mostrarToast("Candidato actualizado con éxito.", "success");
+      } else {
+        const nuevo = await create("users", datos);
+        const adaptado = adaptarCandidato({ ...nuevo, ...datos, id: nuevo.id });
+        candidatosAdaptados.unshift(adaptado);
+        mostrarToast("Candidato registrado con éxito.", "success");
+      }
+      cerrarModal();
+      renderCards(candidatosAdaptados);
+    } catch {
+      mostrarToast("Error al guardar candidato.", "error");
+    } finally {
+      ocultarLoading();
+    }
+  });
+}
+
+async function eliminarCandidatoConfirmado(id) {
+  mostrarLoading();
+  try {
+    await remove("users", id);
+    saveDeletedRecord("users", { id });
+    candidatosAdaptados = candidatosAdaptados.filter((c) => c.id !== id);
+    addNotification({ tipo: "sistema", titulo: "Candidato eliminado", detalle: "El perfil fue retirado del directorio. Podés deshacer la eliminación desde Centro de Notificaciones.", tiempo: "Ahora", href: "candidatos.html", accion: { tipo: "restaurar-entidad", entity: "users", entityId: id, estado: "pendiente", referencia: "Candidato" } });
+    mostrarToast("Candidato eliminado.", "success");
+    renderCards(candidatosAdaptados);
+  } catch {
+    mostrarToast("Error al eliminar.", "error");
+  } finally {
+    ocultarLoading();
+  }
+}
+
+// ── FILTRO REACTIVO DE CANDIDATOS ──
+const searchCandidateInput = document.getElementById("searchCandidate");
+if (searchCandidateInput) {
+  searchCandidateInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    if (!term) {
+      renderCards(candidatosAdaptados);
+      return;
+    }
+    const filtrados = candidatosAdaptados.filter(c =>
+      c.nombreCompleto.toLowerCase().includes(term) ||
+      c.titulo.toLowerCase().includes(term) ||
+      c.ubicacion.toLowerCase().includes(term) ||
+      c.skills.some(s => s.toLowerCase().includes(term)) ||
+      c.email.toLowerCase().includes(term)
+    );
+    renderCards(filtrados);
+  });
 }
 
 cargarCandidatos();

@@ -1,46 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tico Talent - Vacantes</title>
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
+  <title>Tico Talent - Vacantes y Empleos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/chatbot.css">
+  <link rel="stylesheet" href="../css/search-ui.css">
 </head>
+
 <body class="main-page">
 
-  <header id="appNavbar"></header>
+  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
+  <header class="sidebar" id="sidebar">
+    <div class="sidebar__header">
+      <a href="principal.html" class="sidebar__brand">Tico Talent</a>
+    </div>
 
+    <nav class="sidebar__nav">
+      <div class="sidebar__nav-section">
+        <!-- Renderizado dinámicamente por ui.js según rol -->
+      </div>
+    </nav>
+
+    <div class="sidebar__footer">
+      <div class="sidebar__user-card">
+        <div class="sidebar__user-avatar" id="userAvatar">U</div>
+        <div class="sidebar__user-info">
+          <span class="sidebar__user-name" id="userName">Usuario</span>
+          <span class="sidebar__user-role" id="userRole">Rol</span>
+        </div>
+      </div>
+      <a href="/login.html" class="sidebar__logout" id="btnLogout">
+        <span class="nav-text">Cerrar Sesión</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
     <main class="main" id="main">
 
+      <!-- HERO & BUSCADOR REDONDEADO -->
       <section class="hero" aria-labelledby="heroTitle">
         <h1 class="hero__title" id="heroTitle">Encuentra el empleo ideal en Costa Rica</h1>
-        <p class="hero__subtitle">Conectamos a los mejores profesionales con empresas lideres del pais con inteligencia de compatibilidad.</p>
-        
+        <p class="hero__subtitle">Conectamos a los mejores profesionales con empresas líderes del país con inteligencia
+          de compatibilidad.</p>
+
         <form class="hero-search" id="heroSearchForm" role="search">
           <div class="hero-search__group">
-            <input 
-              type="text" 
-              class="hero-search__input" 
-              id="searchRole" 
-              placeholder="Cargo, habilidad o empresa..." 
-              aria-label="Buscar cargo"
-            >
+            <span class="hero-search__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg></span>
+            <input type="text" class="hero-search__input" id="searchRole" placeholder="Cargo, habilidad o empresa..."
+              aria-label="Buscar cargo">
           </div>
           <div class="hero-search__group">
-            <input 
-              type="text" 
-              class="hero-search__input" 
-              id="searchLocation" 
-              placeholder="San Jose, Heredia, Remoto..." 
-              aria-label="Ubicacion"
-            >
+            <span class="hero-search__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span>
+            <input type="text" class="hero-search__input" id="searchLocation" placeholder="San José, Heredia, Remoto..."
+              aria-label="Ubicación">
           </div>
           <button type="submit" class="hero-search__btn" id="btnHeroSearch">
             Buscar Empleos
@@ -48,22 +78,176 @@
         </form>
       </section>
 
-      <section class="job-list-container" aria-labelledby="vacanciesListTitle">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-          <h2 id="vacanciesListTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">Vacantes Disponibles <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);" id="vacanteCount"></span></h2>
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Ordenado por: <strong>Mayor Compatibilidad</strong></span>
-        </div>
+      <!-- LAYOUT DE DOS COLUMNAS (SIDEBAR FILTROS + FEED DE EMPLEOS) -->
+      <div class="job-layout">
 
-        <div class="job-list" id="vacantesList"></div>
-      </section>
+        <!-- SIDEBAR DE FILTROS -->
+        <aside class="filter-sidebar" aria-label="Filtros de búsqueda">
+          <div class="filter-card">
+            <div class="filter-card__header">
+              <h2 class="filter-card__title">Filtros</h2>
+              <button type="button" class="filter-card__reset" id="btnResetFilters">Limpiar</button>
+            </div>
+
+
+
+
+            <!-- Filtro Modalidad -->
+            <div class="filter-group">
+              <span class="filter-group__label">Modalidad</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="remoto">
+                  <span>Remoto</span>
+                  <span class="filter-count" id="countModRemoto">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="hibrido">
+                  <span>Híbrido</span>
+                  <span class="filter-count" id="countModHibrido">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="modality" value="presencial">
+                  <span>Presencial</span>
+                  <span class="filter-count" id="countModPresencial">...</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro Nivel de Experiencia -->
+            <div class="filter-group">
+              <span class="filter-group__label">Nivel de Experiencia</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="junior">
+                  <span>Junior</span>
+                  <span class="filter-count" id="countNivelJunior">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="semi-senior">
+                  <span>Semi-Senior</span>
+                  <span class="filter-count" id="countNivelMid">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="senior">
+                  <span>Senior</span>
+                  <span class="filter-count" id="countNivelSenior">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="level" value="lider">
+                  <span>Líder / Arquitecto</span>
+                  <span class="filter-count" id="countNivelLead">...</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Filtro Tipo de Jornada -->
+            <div class="filter-group">
+              <span class="filter-group__label">Tipo de Jornada</span>
+              <div class="filter-options">
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="completo">
+                  <span>Tiempo Completo</span>
+                  <span class="filter-count" id="countJornadaCompleta">...</span>
+                </label>
+                <label class="filter-checkbox">
+                  <input type="checkbox" name="type" value="medio">
+                  <span>Medio Tiempo</span>
+                  <span class="filter-count" id="countJornadaMedia">...</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- LISTA DE VACANTES / JOB CARDS (renderizada por vacantes.js) -->
+        <section class="job-list-container" aria-labelledby="vacanciesListTitle">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+            <h2 id="vacanciesListTitle" style="font-size: 1.35rem; font-weight: 700; color: var(--secondary-navy);">
+              Vacantes Disponibles <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);"
+                id="vacanteCount"></span></h2>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Ordenado por: <strong>Mayor
+                Compatibilidad</strong></span>
+          </div>
+
+          <div class="job-list" id="vacantesList">
+            <!-- Las vacantes son renderizadas dinámicamente por vacantes.js -->
+          </div>
+        </section>
+
+      </div>
 
     </main>
 
-    <footer class="main__footer" id="mainFooter">
-      <p class="main__footer-text">&copy; 2026 Tico Talent. Plataforma profesional de reclutamiento y talento en Costa Rica.</p>
+    <!-- ========== FOOTER ========== -->
+    <footer class="landing-footer"
+      style="margin-top: auto; padding: 2.5rem 1.5rem 2rem; background: linear-gradient(135deg, var(--secondary-navy) 0%, #1e1b4b 100%); color: #ffffff;">
+      <div class="landing-footer__container" style="max-width: 1200px; margin: 0 auto;">
+        <div class="landing-footer__grid"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem;">
+          <div class="landing-footer__brand">
+            <span class="landing-footer__logo"
+              style="font-size: 1.6rem; font-weight: 800; color: #ffffff; font-family: var(--font-display); font-style: italic;">Tico
+              Talent</span>
+            <p class="landing-footer__desc"
+              style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; margin-top: 0.75rem;">La
+              plataforma de empleo #1 en Costa Rica. Conectamos talento con oportunidades.</p>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Candidatos</h4>
+            <a href="vacantes.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar
+              empleo</a>
+            <a href="perfil.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Mi
+              Perfil</a>
+            <a href="desarrollo-profesional.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Desarrollo Profesional</a>
+            <a href="notificaciones.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Notificaciones</a>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Empresas</h4>
+            <a href="vacantes.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Publicar
+              vacante</a>
+            <a href="candidatos.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Buscar
+              candidatos</a>
+            <a href="empresas.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">Empresas
+              aliadas</a>
+            <a href="entrevistas.html" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">Entrevistas</a>
+          </div>
+          <div class="landing-footer__col">
+            <h4 class="landing-footer__col-title"
+              style="color: #ffffff; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              Contacto</h4>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">info@ticotalent.com</a>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; margin-bottom: 0.5rem; text-decoration: none;">+506
+              2222-3333</a>
+            <a href="#" class="landing-footer__link"
+              style="color: rgba(255,255,255,0.75); display: block; text-decoration: none;">San José, Costa Rica</a>
+          </div>
+        </div>
+        <div class="landing-footer__bottom"
+          style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.15); text-align: center;">
+          <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin: 0;">&copy; 2026 Tico Talent. Todos los
+            derechos reservados.</p>
+        </div>
+      </div>
     </footer>
   </div>
 
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
@@ -72,8 +256,8 @@
   <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
       <div class="modal__header">
-        <h2 class="modal__title" id="modalTitle">Titulo</h2>
-        <button class="modal__close" id="modalClose">X</button>
+        <h2 class="modal__title" id="modalTitle">Título</h2>
+        <button class="modal__close" id="modalClose">✕</button>
       </div>
       <div class="modal__body" id="modalBody"></div>
       <div class="modal__footer">
@@ -84,9 +268,14 @@
   </div>
   <div class="confirm-overlay d-none" id="confirmOverlay">
     <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger">!</div>
-      <h3 class="confirm__title" id="confirmTitle">Estas seguro?</h3>
-      <p class="confirm__message" id="confirmMessage">Esta accion no se puede deshacer.</p>
+      <div class="confirm__icon confirm__icon--danger" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4 21 19H3L12 4Z"></path>
+          <path d="M12 9v5M12 17h.01"></path>
+        </svg>
+      </div>
+      <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
+      <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
       <div class="confirm__actions">
         <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
         <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
@@ -95,5 +284,7 @@
   </div>
 
   <script type="module" src="../js/vacantes.js"></script>
+  <script type="module" src="../js/search-ui.js"></script>
 </body>
+
 </html>

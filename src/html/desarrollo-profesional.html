@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
-  <title>Tico Talent - Candidatos</title>
+  <title>Tico Talent - Desarrollo Profesional</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -37,10 +37,10 @@
     </nav>
 
     <div class="sidebar__footer">
-      <div class="sidebar__user-card" style="cursor: pointer;" title="Ver mi perfil">
+      <div class="sidebar__user-card">
         <div class="sidebar__user-avatar" id="userAvatar">U</div>
         <div class="sidebar__user-info">
-          <span class="sidebar__user-name" id="userName">Cargando...</span>
+          <span class="sidebar__user-name" id="userName">Usuario</span>
           <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
@@ -54,22 +54,31 @@
   <div class="main-page__wrapper">
     <main class="main" id="main">
       <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-        <header class="main__content-header"
-          style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-          <div>
-            <h1 class="main__title" id="viewTitle">Directorio de Candidatos</h1>
-            <p class="main__description">Búsqueda, filtrado y gestión de perfiles profesionales en Costa Rica.</p>
-          </div>
-          <div style="display: flex; gap: 0.5rem; flex: 1; max-width: 420px;">
-            <input type="text" class="login__input" id="searchCandidate"
-              placeholder="Buscar por nombre, rol o tecnología..." style="background: var(--surface-card);">
-          </div>
+        <header class="main__content-header">
+          <h1 class="main__title" id="viewTitle">Desarrollo Profesional</h1>
+          <p class="main__description">Cursos y recursos para fortalecer tus habilidades, mejorar tu CV y prepararte para nuevas oportunidades.</p>
         </header>
 
         <div class="main__content-body" id="contentArea">
-          <section class="candidates" aria-labelledby="candidatesListTitle">
-            <div id="candidatesList"></div>
-          </section>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+            <div>
+              <h2 style="margin:0;color:var(--secondary-navy);font-size:1.25rem;">Aprende a tu ritmo</h2>
+              <p style="margin:.3rem 0 0;color:var(--text-muted);font-size:.88rem;">Contenido seleccionado para profesionales y personas en búsqueda de empleo.</p>
+            </div>
+            <input id="cursosBusqueda" class="form-control" style="max-width:320px;" placeholder="Buscar curso o instructor..." aria-label="Buscar cursos">
+          </div>
+
+          <div id="cursosFiltros" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+            <button type="button" class="curso-filtro curso-filtro--activo btn btn-secondary" data-categoria="todos">Todos</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="tecnologia">Tecnología</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="rrhh">RRHH</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="liderazgo">Liderazgo</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="idiomas">Idiomas</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="finanzas">Finanzas</button>
+            <button type="button" class="curso-filtro btn btn-secondary" data-categoria="marketing">Marca personal</button>
+          </div>
+
+          <div id="cursosContainer" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;"></div>
         </div>
       </section>
     </main>
@@ -141,16 +150,12 @@
     </footer>
   </div>
 
-  <!-- Toast -->
+  <!-- ========== UI FEEDBACK GLOBALES (CRUD) ========== -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
-
-  <!-- Loading -->
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
     <p class="loading__text">Cargando...</p>
   </div>
-
-  <!-- Modal genérico -->
   <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
       <div class="modal__header">
@@ -164,16 +169,9 @@
       </div>
     </div>
   </div>
-
-  <!-- Confirm -->
   <div class="confirm-overlay d-none" id="confirmOverlay">
     <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 4 21 19H3L12 4Z"></path>
-          <path d="M12 9v5M12 17h.01"></path>
-        </svg>
-      </div>
+      <div class="confirm__icon confirm__icon--danger" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4 21 20H3L12 4Z"></path><path d="M12 9v5M12 17h.01"></path></svg></div>
       <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
       <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
       <div class="confirm__actions">
@@ -183,7 +181,7 @@
     </div>
   </div>
 
-  <script type="module" src="../js/candidatos.js"></script>
+  <script type="module" src="../js/desarrolloProfesional.js"></script>
 </body>
 
 </html>

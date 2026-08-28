@@ -1,4 +1,4 @@
-﻿import { login, isAuthenticated, register, forgotPassword } from "./auth.js";
+import { login, isAuthenticated, register, forgotPassword } from "./auth.js";
 import { mostrarToast } from "./ui.js";
 
 if (isAuthenticated()) {
@@ -11,18 +11,47 @@ const inputPass = document.getElementById("loginPassword");
 const errorBox = document.getElementById("loginError");
 const btnLogin = document.getElementById("btnLogin");
 const loader = document.getElementById("loginLoader");
+const toggleBtn = document.getElementById("togglePassword");
+const eyeOpen = toggleBtn.querySelector(".eye-icon--open");
+const eyeClosed = toggleBtn.querySelector(".eye-icon--closed");
 
 const DEMO_CREDS = {
-  empresa:     { username: "carlos",  password: "carlos123" },
-  solicitante: { username: "maria",   password: "maria123" }
+  empleador: { username: "carlos", password: "carlos123", role: "empleador" },
+  solicitante: { username: "maria", password: "maria123", role: "solicitante" }
 };
+
+let currentSelectedRole = "solicitante";
+
+// Leer query param ?rol= desde la URL (ej: login.html?rol=empleador)
+const urlParams = new URLSearchParams(window.location.search);
+const rolParam = urlParams.get("rol");
+if (rolParam === "empleador") {
+  inputUser.value = DEMO_CREDS.empleador.username;
+  inputPass.value = DEMO_CREDS.empleador.password;
+  currentSelectedRole = "empleador";
+} else if (rolParam === "solicitante") {
+  inputUser.value = DEMO_CREDS.solicitante.username;
+  inputPass.value = DEMO_CREDS.solicitante.password;
+  currentSelectedRole = "solicitante";
+}
+
+toggleBtn.addEventListener("click", () => {
+  const isPassword = inputPass.type === "password";
+  inputPass.type = isPassword ? "text" : "password";
+  eyeOpen.classList.toggle("d-none", !isPassword);
+  eyeClosed.classList.toggle("d-none", isPassword);
+});
 
 document.querySelectorAll(".login__demo-user").forEach(demo => {
   demo.addEventListener("click", () => {
-    const role = demo.dataset.role;
-    const creds = DEMO_CREDS[role];
+    const id = demo.id;
+    let creds;
+    if (id === "demoEmpleador") creds = DEMO_CREDS.empleador;
+    else creds = DEMO_CREDS.solicitante;
+
     inputUser.value = creds.username;
     inputPass.value = creds.password;
+    currentSelectedRole = creds.role;
     hideError();
   });
 });
@@ -38,10 +67,15 @@ form.addEventListener("submit", async (e) => {
   }
   setLoading(true);
   try {
-    await login(username, password);
-    window.location.href = "/src/html/principal.html";
+    await login(username, password, currentSelectedRole);
+    const action = urlParams.get("action");
+    if (action === "crearcv") {
+      window.location.href = "/src/html/perfil.html";
+    } else {
+      window.location.href = "/src/html/principal.html";
+    }
   } catch (error) {
-    showError(error.message || "Usuario o contrasena incorrectos.");
+    showError(error.message || "Usuario o contraseña incorrectos.");
   } finally {
     setLoading(false);
   }
@@ -128,15 +162,7 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
     return;
   }
   if (password.length < 6) {
-    mostrarToast("La contrasena debe tener al menos 6 caracteres", "error");
-    return;
-  }
-  if (rol === "empresa" && !email.endsWith("@ticotalent.com")) {
-    mostrarToast("El correo de la empresa debe ser @ticotalent.com", "error");
-    return;
-  }
-  if (rol === "solicitante" && email.endsWith("@ticotalent.com")) {
-    mostrarToast("El correo del solicitante debe ser un correo personal", "error");
+    mostrarToast("La contraseña debe tener al menos 6 caracteres", "error");
     return;
   }
   try {

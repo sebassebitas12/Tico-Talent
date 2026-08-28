@@ -1,106 +1,150 @@
 // src/js/vacantes.js
-// CRUD Vacantes -> /products de DummyJSON
-// Solicitante: buscar + postularse | Empresa: CRUD completo
+// Módulo de Vacantes con consumo a /products de DummyJSON
+// Integra adaptadores de Costa Rica y permisos diferenciados por rol (Candidato vs Empleador).
 
-import { requireAuth, getRole } from "./auth.js";
-import { getAll, create, update, remove, patch } from "./dummyapi.js";
-import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, renderNavbar } from "./ui.js";
+import { requireAuth, getRole, getUser } from "./auth.js";
+import { getAll, create, update, remove } from "./dummyapi.js";
+import { adaptarVacante } from "./adapters.js";
+import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { getLocalApplications, saveLocalApplication } from "./applicationStore.js";
 
 requireAuth();
-renderNavbar("vacantes");
+initUserNav();
 
-const rol = getRole();
-let vacantes = [];
+let vacantesRaw = [];
+let vacantesAdaptadas = [];
 
 function renderCards(lista) {
   const contenedor = document.getElementById("vacantesList");
   if (!contenedor) return;
 
+  const rol = getRole();
+  const esEmpleador = (rol === "empleador" || rol === "reclutador");
+
   const countEl = document.getElementById("vacanteCount");
-  if (countEl) countEl.textContent = `(${lista.length} resultados)`;
+  if (countEl) countEl.textContent = `(${lista.length} plazas disponibles)`;
 
   if (lista.length === 0) {
     contenedor.innerHTML = `
       <div style="text-align: center; padding: 2.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-subtle);">
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">No se encontraron vacantes.</p>
-        ${rol === "empresa" ? '<button class="btn btn-cta" id="btnNuevaEmpty">+ Publicar primera vacante</button>' : ""}
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">No se encontraron vacantes con los filtros seleccionados.</p>
+        ${esEmpleador ? '<button class="btn btn-cta" id="btnNuevaEmpty">+ Publicar primera vacante</button>' : ''}
       </div>
     `;
     document.getElementById("btnNuevaEmpty")?.addEventListener("click", () => abrirFormulario());
     return;
   }
 
-  const btnNueva = rol === "empresa"
-    ? '<button class="btn btn-cta" id="btnNuevaVacante">+ Publicar Vacante</button>'
-    : "";
-
-  contenedor.innerHTML = `
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-      ${btnNueva}
+  const headerActionHTML = esEmpleador ? `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+      <span style="font-size: 0.95rem; color: var(--text-muted);">Panel de Gestión de Vacantes de Empleador</span>
+      <button class="btn btn-cta" id="btnNuevaVacante">+ Publicar Nueva Vacante</button>
     </div>
-    ${lista.map((v) => {
-      const match = 90 + ((v.id * 7) % 10);
-      const salary = v.price ? "$" + (v.price * 30).toLocaleString() + " - $" + (v.price * 45).toLocaleString() + " USD / mes" : "Salario a convenir";
-      const acciones = rol === "empresa"
-        ? `<button type="button" class="btn btn--secondary btn-editar" data-id="${v.id}">Editar</button>
-           <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}">Eliminar</button>`
-        : `<button type="button" class="btn btn-cta btn-postularme" data-id="${v.id}" data-title="${escapeHTML(v.title)}">Postularse</button>`;
-
-      return `
-        <article class="job-card">
-          <div class="job-card__header">
-            <div class="job-card__company-logo">${escapeHTML((v.category || "tech").substring(0, 2).toUpperCase())}</div>
-            <div class="job-card__title-area">
-              <h3 class="job-card__title">${escapeHTML(v.title)}</h3>
-              <div class="job-card__company-name">
-                <span>${escapeHTML(v.brand || v.category || "Tech Solutions CR")}</span> - <span>San Jose, Costa Rica (Hibrido/Remoto)</span>
-              </div>
-            </div>
-            <span class="badge-match">${match}% Match</span>
-          </div>
-
-          <div class="job-card__details">
-            <span class="job-tag">${escapeHTML(v.category || "Tecnologia")}</span>
-            <span class="job-tag">${escapeHTML(String(v.rating || "4.8"))} / 5.0</span>
-            <span class="job-tag">Tiempo Completo</span>
-            <span class="job-tag">Plazas: ${v.stock ?? 1}</span>
-          </div>
-
-          <div class="job-card__footer">
-            <div>
-              <span class="job-card__salary">${escapeHTML(salary)}</span>
-              <span class="job-card__date" style="display: block;">Publicado recientemente</span>
-            </div>
-            <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
-              ${acciones}
-            </div>
-          </div>
-        </article>
-      `;
-    }).join("")}
+  ` : `
+    <div style="margin-bottom: 1.25rem; background: rgba(83, 16, 104, 0.04); border: 1px solid rgba(83, 16, 104, 0.15); padding: 0.85rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
+      <span style="font-size: 0.9rem; color: var(--primary-purple); font-weight: 500;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v6M12 7h.01"></path></svg>
+        Estás en modo <strong>Candidato</strong>: explorá oportunidades en Costa Rica y postuláte en un solo clic.
+      </span>
+      <span class="badge-match" style="background: #e6f6ee; color: #00875a;">Match Inteligente Activo</span>
+    </div>
   `;
 
-  document.getElementById("btnNuevaVacante")?.addEventListener("click", () => abrirFormulario());
+  contenedor.innerHTML = `
+    ${headerActionHTML}
+    <div class="job-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      ${lista.map((v) => {
+        return `
+          <article class="job-card" data-id="${v.id}">
+            <div class="job-card__header">
+              <div class="job-card__company-logo">${v.empresaLogo || '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5h8v2M8 12h8M8 16h5"></path></svg>'}</div>
+              <div class="job-card__title-area">
+                <h3 class="job-card__title">${escapeHTML(v.titulo)}</h3>
+                <div class="job-card__company-name">
+                  <span>${escapeHTML(v.empresa)}</span> • <span>${escapeHTML(v.ubicacion)}</span>
+                </div>
+              </div>
+              <span class="badge-match">${v.match}% Match</span>
+            </div>
 
-  contenedor.querySelectorAll(".btn-postularme").forEach(btn => {
-    btn.addEventListener("click", () => postularseVacante(btn.dataset.id, btn.dataset.title));
-  });
-  contenedor.querySelectorAll(".btn-editar").forEach(btn => {
-    btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
-  });
-  contenedor.querySelectorAll(".btn-eliminar").forEach(btn => {
-    btn.addEventListener("click", () => confirmar("Eliminar esta vacante?", () => eliminarVacanteConfirmada(Number(btn.dataset.id))));
-  });
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0.75rem 0; line-height: 1.5;">
+              ${escapeHTML(v.descripcion)}
+            </p>
+
+            <div class="job-card__details">
+              <span class="job-tag">${escapeHTML(v.categoria)}</span>
+              <span class="job-tag">${escapeHTML(v.modalidad)}</span>
+              <span class="job-tag">${escapeHTML(v.nivel)}</span>
+              <span class="job-tag">Jornada: ${escapeHTML(v.jornada || "Tiempo Completo")}</span>
+              <span class="job-tag">Plazas: ${v.plazas}</span>
+              ${v.tags.map(t => `<span class="job-tag" style="background: var(--surface-subtle);">#${escapeHTML(t)}</span>`).join("")}
+            </div>
+
+            <div class="job-card__footer">
+              <div>
+                <span class="job-card__salary">${escapeHTML(v.salario)}</span>
+                <span class="job-card__date" style="display: block; font-size: 0.8rem; margin-top: 0.2rem;">${v.fechaPublicacion}</span>
+              </div>
+              
+              <div class="job-card__actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                ${esEmpleador ? `
+                  <button type="button" class="btn btn-secondary btn-editar" data-id="${v.id}">Editar</button>
+                  <button type="button" class="btn btn--danger btn-eliminar" data-id="${v.id}" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; padding: 0.55rem 1rem; border-radius: var(--radius-md); font-weight:600; cursor:pointer;">Eliminar</button>
+                ` : `
+                  <button type="button" class="btn btn-cta btn-postularme" data-id="${v.id}" data-title="${escapeHTML(v.titulo)}">
+                    Postularme
+                  </button>
+                `}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+  `;
+
+  // Conectar eventos según rol
+  if (esEmpleador) {
+    document.getElementById("btnNuevaVacante")?.addEventListener("click", () => abrirFormulario());
+    contenedor.querySelectorAll(".btn-editar").forEach((btn) => {
+      btn.addEventListener("click", () => abrirFormulario(Number(btn.dataset.id)));
+    });
+    contenedor.querySelectorAll(".btn-eliminar").forEach((btn) => {
+      btn.addEventListener("click", () => confirmar("¿Estás seguro de eliminar esta vacante?", () => eliminarVacanteConfirmada(Number(btn.dataset.id))));
+    });
+  } else {
+    contenedor.querySelectorAll(".btn-postularme").forEach((btn) => {
+      btn.addEventListener("click", () => postularseVacante(Number(btn.dataset.id), btn.dataset.title));
+    });
+  }
 }
 
 async function cargarVacantes() {
   mostrarLoading();
   try {
     const data = await getAll("products");
-    vacantes = data.products ?? (Array.isArray(data) ? data : []);
-    renderCards(vacantes);
-  } catch {
-    mostrarToast("Error al cargar vacantes.", "error");
+    vacantesRaw = data.products ?? (Array.isArray(data) ? data : []);
+    vacantesAdaptadas = vacantesRaw.map((p, idx) => adaptarVacante(p, idx));
+
+    // Si viene con parámetros en la URL (desde el hero de inicio o landing)
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get("q");
+    const loc = urlParams.get("location") || urlParams.get("loc");
+
+    if (query && document.getElementById("searchRole")) {
+      document.getElementById("searchRole").value = query;
+    }
+    if (loc && document.getElementById("searchLocation")) {
+      document.getElementById("searchLocation").value = loc;
+    }
+
+    if (query || loc) {
+      aplicarFiltros();
+    } else {
+      renderCards(vacantesAdaptadas);
+    }
+  } catch (err) {
+    mostrarToast("Error al cargar vacantes desde DummyJSON.", "error");
   } finally {
     ocultarLoading();
   }
@@ -109,43 +153,48 @@ async function cargarVacantes() {
 function formularioHTML(v = {}) {
   return `
     <div class="form-group">
-      <label>Titulo de la vacante</label>
-      <input class="form-control" id="fTitulo" value="${escapeHTML(v.title ?? "")}" placeholder="Ej: Senior React Developer" required>
-    </div>
-    <div class="form-group">
-      <label>Categoria / Area</label>
-      <input class="form-control" id="fCategoria" value="${escapeHTML(v.category ?? "")}" placeholder="Ej: software, devops, design" required>
+      <label>Título del Puesto / Vacante</label>
+      <input class="form-control" id="fTitulo" value="${escapeHTML(v.titulo ?? v.title ?? "")}" placeholder="Ej: Desarrollador React / Node Senior" required>
     </div>
     <div class="form-group">
       <label>Empresa / Marca</label>
-      <input class="form-control" id="fBrand" value="${escapeHTML(v.brand ?? "")}" placeholder="Ej: TechCR Solutions">
+      <input class="form-control" id="fEmpresa" value="${escapeHTML(v.empresa ?? v.brand ?? "Intel Costa Rica")}" placeholder="Intel Costa Rica">
     </div>
     <div class="form-group">
-      <label>Rango Base ($)</label>
-      <input class="form-control" type="number" id="fPrecio" value="${v.price ?? ""}" placeholder="100">
+      <label>Salario Estimado Base ($ USD)</label>
+      <input class="form-control" type="number" id="fPrecio" value="${v.price ?? 95}" placeholder="95">
     </div>
     <div class="form-group">
       <label>Plazas Disponibles</label>
-      <input class="form-control" type="number" id="fStock" value="${v.stock ?? 1}" placeholder="1">
+      <input class="form-control" type="number" id="fStock" value="${v.plazas ?? v.stock ?? 2}" placeholder="2">
+    </div>
+    <div class="form-group">
+      <label>Categoría</label>
+      <input class="form-control" id="fCategoria" value="${escapeHTML(v.categoria ?? v.category ?? "Tecnología")}" placeholder="Tecnología">
+    </div>
+    <div class="form-group">
+      <label>Descripción del Puesto</label>
+      <textarea class="form-control" id="fDescripcion" rows="3" placeholder="Requisitos y responsabilidades">${escapeHTML(v.descripcion ?? v.description ?? "")}</textarea>
     </div>
   `;
 }
 
 function abrirFormulario(id = null) {
-  const vacante = id ? vacantes.find((v) => v.id === id) : {};
-  const titulo  = id ? "Editar vacante" : "Nueva vacante";
+  const vacante = id ? vacantesAdaptadas.find((v) => v.id === id) : {};
+  const tituloModal = id ? "Editar Vacante" : "Publicar Nueva Vacante";
 
-  abrirModal(titulo, formularioHTML(vacante), async () => {
+  abrirModal(tituloModal, formularioHTML(vacante), async () => {
     const datos = {
-      title:    document.getElementById("fTitulo").value.trim(),
-      category: document.getElementById("fCategoria").value.trim(),
-      brand:    document.getElementById("fBrand").value.trim(),
-      price:    Number(document.getElementById("fPrecio").value),
-      stock:    Number(document.getElementById("fStock").value),
+      title:       document.getElementById("fTitulo").value.trim(),
+      brand:       document.getElementById("fEmpresa").value.trim(),
+      price:       Number(document.getElementById("fPrecio").value) || 95,
+      stock:       Number(document.getElementById("fStock").value) || 2,
+      category:    document.getElementById("fCategoria").value.trim() || "Tecnología",
+      description: document.getElementById("fDescripcion").value.trim(),
     };
 
     if (!datos.title) {
-      mostrarToast("El titulo es obligatorio.", "warning");
+      mostrarToast("El título de la vacante es obligatorio.", "warning");
       return;
     }
 
@@ -153,18 +202,21 @@ function abrirFormulario(id = null) {
     try {
       if (id) {
         await update("products", id, datos);
-        const idx = vacantes.findIndex((v) => v.id === id);
-        if (idx !== -1) vacantes[idx] = { ...vacantes[idx], ...datos };
-        mostrarToast("Vacante actualizada.", "success");
+        const idx = vacantesAdaptadas.findIndex((v) => v.id === id);
+        if (idx !== -1) {
+          vacantesAdaptadas[idx] = { ...vacantesAdaptadas[idx], ...datos, titulo: datos.title, empresa: datos.brand };
+        }
+        mostrarToast("Vacante actualizada con éxito.", "success");
       } else {
         const nueva = await create("products", datos);
-        vacantes.unshift({ ...nueva, ...datos, id: Date.now() });
-        mostrarToast("Vacante publicada.", "success");
+        const adaptada = adaptarVacante(nueva, vacantesAdaptadas.length);
+        vacantesAdaptadas.unshift(adaptada);
+        mostrarToast("Vacante publicada con éxito.", "success");
       }
       cerrarModal();
-      renderCards(vacantes);
+      renderCards(vacantesAdaptadas);
     } catch {
-      mostrarToast("Error al guardar.", "error");
+      mostrarToast("Error al guardar vacante en el servidor.", "error");
     } finally {
       ocultarLoading();
     }
@@ -175,37 +227,95 @@ async function eliminarVacanteConfirmada(id) {
   mostrarLoading();
   try {
     await remove("products", id);
-    vacantes = vacantes.filter((v) => v.id !== id);
+    vacantesAdaptadas = vacantesAdaptadas.filter((v) => v.id !== id);
     mostrarToast("Vacante eliminada.", "success");
-    renderCards(vacantes);
+    renderCards(vacantesAdaptadas);
   } catch {
-    mostrarToast("Error al eliminar.", "error");
+    mostrarToast("Error al eliminar la vacante.", "error");
   } finally {
     ocultarLoading();
   }
 }
 
 async function postularseVacante(id, titulo) {
+  const user = getUser() || {};
+  const userId = user.id || 1;
+
+  // Evitar doble postulación a la misma vacante
+  const yaPostulado = getLocalApplications().some(
+    (p) => String(p.vacanteId) === String(id) && String(p.userId) === String(userId)
+  );
+  if (yaPostulado) {
+    mostrarToast(`Ya te postulaste a "${titulo}".`, "warning");
+    return;
+  }
+
   mostrarLoading();
   try {
-    await patch("comments", Number(id), {
-      body: "Postulacion automatica a: " + titulo
-    });
-    mostrarToast("Te has postulado con exito a: " + titulo, "success");
-  } catch {
+    const payload = {
+      title: `Postulación a: ${titulo}`,
+      body: `Candidato ${user.firstName || "Usuario"} postulado a la posición #${id} (${titulo})`,
+      userId,
+      tags: ["postulacion", "costa-rica", "ticotalent"],
+    };
+
+    // Intentar registro en DummyJSON (simulado, no persiste)
+    let remoteId = null;
     try {
-      await create("comments", {
-        postId: Number(id),
-        body: "Postulacion automatica a: " + titulo,
-        userId: 1,
-      });
-      mostrarToast("Te has postulado con exito a: " + titulo, "success");
-    } catch {
-      mostrarToast("Error al postularse.", "error");
-    }
+      const res = await create("posts", payload);
+      remoteId = res?.id;
+    } catch { /* Continuar aunque falle la API */ }
+
+    // Guardar en localStorage para que postulaciones.js lo muestre al candidato
+    const registro = {
+      ...payload,
+      id: remoteId ?? `local-${Date.now()}`,
+      vacanteId: id,
+      _local: true,
+      createdAt: Date.now(),
+    };
+    saveLocalApplication(registro);
+
+    mostrarToast(`¡Te postulaste a "${titulo}"! Revísalo en Mis Postulaciones.`, "success", 4000);
+  } catch {
+    mostrarToast("No se pudo completar la postulación.", "error");
   } finally {
     ocultarLoading();
   }
+}
+
+// ── FILTROS Y BÚSQUEDA DINÁMICA ──
+function actualizarContadoresFiltros() {
+  const total = vacantesAdaptadas.length;
+  
+  const countRemoto = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("remoto")).length;
+  const countHibrido = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("híbrido") || (v.modalidad || "").toLowerCase().includes("hibrido")).length;
+  const countPresencial = vacantesAdaptadas.filter(v => (v.modalidad || "").toLowerCase().includes("presencial")).length;
+
+  const countJunior = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("junior")).length;
+  const countMid = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("semi") || (v.nivel || "").toLowerCase().includes("mid")).length;
+  const countSenior = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("senior") && !(v.nivel || "").toLowerCase().includes("semi")).length;
+  const countLead = vacantesAdaptadas.filter(v => (v.nivel || "").toLowerCase().includes("líder") || (v.nivel || "").toLowerCase().includes("lider") || (v.nivel || "").toLowerCase().includes("arquitecto")).length;
+
+  const countCompleto = vacantesAdaptadas.filter(v => (v.jornada || "").toLowerCase().includes("completo")).length;
+  const countMedio = vacantesAdaptadas.filter(v => (v.jornada || "").toLowerCase().includes("medio")).length;
+
+  const setTxt = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setTxt("countModRemoto", countRemoto);
+  setTxt("countModHibrido", countHibrido);
+  setTxt("countModPresencial", countPresencial);
+
+  setTxt("countNivelJunior", countJunior);
+  setTxt("countNivelMid", countMid);
+  setTxt("countNivelSenior", countSenior);
+  setTxt("countNivelLead", countLead);
+
+  setTxt("countJornadaCompleta", countCompleto);
+  setTxt("countJornadaMedia", countMedio);
 }
 
 function aplicarFiltros() {
@@ -216,45 +326,57 @@ function aplicarFiltros() {
   const checkedNiveles = [...document.querySelectorAll('input[name="level"]:checked')].map(c => c.value);
   const checkedJornadas = [...document.querySelectorAll('input[name="type"]:checked')].map(c => c.value);
 
-  let resultado = [...vacantes];
+  let resultado = [...vacantesAdaptadas];
 
   if (query) {
     resultado = resultado.filter(v =>
-      (v.title && v.title.toLowerCase().includes(query)) ||
-      (v.category && v.category.toLowerCase().includes(query)) ||
-      (v.brand && v.brand.toLowerCase().includes(query))
+      (v.titulo && v.titulo.toLowerCase().includes(query)) ||
+      (v.categoria && v.categoria.toLowerCase().includes(query)) ||
+      (v.empresa && v.empresa.toLowerCase().includes(query)) ||
+      (v.tags && v.tags.some(t => t.toLowerCase().includes(query)))
     );
   }
 
-  if (location) {
+  if (location && location !== "mi ubicación") {
     resultado = resultado.filter(v =>
-      (v.brand && v.brand.toLowerCase().includes(location)) ||
-      (v.category && v.category.toLowerCase().includes(location))
+      (v.ubicacion && v.ubicacion.toLowerCase().includes(location)) ||
+      (v.empresa && v.empresa.toLowerCase().includes(location))
     );
   }
 
   if (checkedModalidades.length > 0) {
     resultado = resultado.filter(v => {
-      const cat = (v.category || "").toLowerCase();
-      return checkedModalidades.some(m => cat.includes(m));
+      const mod = (v.modalidad || "").toLowerCase();
+      return checkedModalidades.some(m => {
+        if (m === "remoto") return mod.includes("remoto");
+        if (m === "hibrido") return mod.includes("híbrido") || mod.includes("hibrido");
+        if (m === "presencial") return mod.includes("presencial");
+        return false;
+      });
     });
   }
 
   if (checkedNiveles.length > 0) {
     resultado = resultado.filter(v => {
-      const stock = v.stock || 1;
-      if (checkedNiveles.includes("junior") && stock >= 5) return true;
-      if (checkedNiveles.includes("mid") && stock >= 2 && stock <= 8) return true;
-      if (checkedNiveles.includes("senior") && stock <= 3) return true;
-      if (checkedNiveles.includes("lead") && stock <= 1) return true;
-      return false;
+      const niv = (v.nivel || "").toLowerCase();
+      return checkedNiveles.some(n => {
+        if (n === "junior") return niv.includes("junior");
+        if (n === "semi-senior" || n === "mid") return niv.includes("semi") || niv.includes("mid");
+        if (n === "senior") return niv.includes("senior") && !niv.includes("semi");
+        if (n === "lider" || n === "lead") return niv.includes("líder") || niv.includes("lider") || niv.includes("arquitecto");
+        return false;
+      });
     });
   }
 
   if (checkedJornadas.length > 0) {
     resultado = resultado.filter(v => {
-      const cat = (v.category || "").toLowerCase();
-      return checkedJornadas.some(j => cat.includes(j));
+      const jor = (v.jornada || "").toLowerCase();
+      return checkedJornadas.some(j => {
+        if (j === "completo") return jor.includes("completo");
+        if (j === "medio") return jor.includes("medio");
+        return false;
+      });
     });
   }
 
@@ -279,8 +401,13 @@ document.getElementById("btnResetFilters")?.addEventListener("click", () => {
   document.querySelectorAll('input[name="modality"], input[name="level"], input[name="type"]').forEach(cb => {
     cb.checked = false;
   });
-  renderCards(vacantes);
+  renderCards(vacantesAdaptadas);
   mostrarToast("Filtros restablecidos", "info");
 });
 
-cargarVacantes();
+async function inicializar() {
+  await cargarVacantes();
+  actualizarContadoresFiltros();
+}
+
+inicializar();

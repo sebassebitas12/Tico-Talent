@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon_32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon_192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon_192.png">
-  <title>Tico Talent - Candidatos</title>
+  <title>Tico Talent - Notificaciones</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -23,24 +23,18 @@
 </head>
 
 <body class="main-page">
-
-  <!-- ========== NAVBAR HORIZONTAL SUPERIOR ========== -->
   <header class="sidebar" id="sidebar">
     <div class="sidebar__header">
       <a href="principal.html" class="sidebar__brand">Tico Talent</a>
     </div>
-
     <nav class="sidebar__nav">
-      <div class="sidebar__nav-section">
-        <!-- Renderizado dinámicamente por ui.js según rol -->
-      </div>
+      <div class="sidebar__nav-section"></div>
     </nav>
-
     <div class="sidebar__footer">
-      <div class="sidebar__user-card" style="cursor: pointer;" title="Ver mi perfil">
+      <div class="sidebar__user-card" style="cursor:pointer;" title="Ver mi perfil">
         <div class="sidebar__user-avatar" id="userAvatar">U</div>
         <div class="sidebar__user-info">
-          <span class="sidebar__user-name" id="userName">Cargando...</span>
+          <span class="sidebar__user-name" id="userName">Usuario</span>
           <span class="sidebar__user-role" id="userRole">Rol</span>
         </div>
       </div>
@@ -50,28 +44,30 @@
     </div>
   </header>
 
-  <!-- ========== ÁREA DE CONTENIDO (DERECHA) ========== -->
   <div class="main-page__wrapper">
     <main class="main" id="main">
-      <section class="main__content" id="mainContent" aria-labelledby="viewTitle">
-        <header class="main__content-header"
-          style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-          <div>
-            <h1 class="main__title" id="viewTitle">Directorio de Candidatos</h1>
-            <p class="main__description">Búsqueda, filtrado y gestión de perfiles profesionales en Costa Rica.</p>
-          </div>
-          <div style="display: flex; gap: 0.5rem; flex: 1; max-width: 420px;">
-            <input type="text" class="login__input" id="searchCandidate"
-              placeholder="Buscar por nombre, rol o tecnología..." style="background: var(--surface-card);">
-          </div>
-        </header>
-
-        <div class="main__content-body" id="contentArea">
-          <section class="candidates" aria-labelledby="candidatesListTitle">
-            <div id="candidatesList"></div>
-          </section>
+      <div class="main__header"
+        style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1 class="main__title">Centro de Notificaciones</h1>
+          <p class="main__subtitle">Mantente al día con las últimas actualizaciones de la plataforma y tus procesos
+            activos.</p>
         </div>
-      </section>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="btnMarcarTodas">Marcar todas como leídas</button>
+          <button class="btn btn-secondary" id="btnLimpiarTodas" style="color:#b91c1c;">Limpiar todas</button>
+        </div>
+      </div>
+
+      <div class="notif-filter-bar" id="notifFiltros" role="tablist" aria-label="Filtrar notificaciones">
+        <button class="notif-filter-chip notif-filter-chip--active" data-tipo="todas" aria-selected="true" role="tab">Todas</button>
+        <button class="notif-filter-chip" data-tipo="vacante" aria-selected="false" role="tab">Vacantes</button>
+        <button class="notif-filter-chip" data-tipo="postulacion" aria-selected="false" role="tab">Postulaciones</button>
+        <button class="notif-filter-chip" data-tipo="sistema" aria-selected="false" role="tab">Sistema</button>
+        <button class="notif-filter-chip" data-tipo="capacitacion" aria-selected="false" role="tab">Desarrollo Profesional</button>
+      </div>
+
+      <div id="notificacionesContainer" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
     </main>
 
     <!-- ========== FOOTER ========== -->
@@ -141,16 +137,11 @@
     </footer>
   </div>
 
-  <!-- Toast -->
   <div class="toast-container toast-container--top-right" id="toastContainer"></div>
-
-  <!-- Loading -->
   <div class="loading loading--full d-none" id="loadingSpinner">
     <div class="loading__spinner loading__spinner--lg"></div>
     <p class="loading__text">Cargando...</p>
   </div>
-
-  <!-- Modal genérico -->
   <div class="modal-overlay d-none" id="modalOverlay">
     <div class="modal" id="modalContainer">
       <div class="modal__header">
@@ -164,26 +155,19 @@
       </div>
     </div>
   </div>
-
-  <!-- Confirm -->
   <div class="confirm-overlay d-none" id="confirmOverlay">
     <div class="confirm" id="confirmContainer">
-      <div class="confirm__icon confirm__icon--danger" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 4 21 19H3L12 4Z"></path>
-          <path d="M12 9v5M12 17h.01"></path>
-        </svg>
-      </div>
+      <div class="confirm__icon confirm__icon--danger" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4 21 20H3L12 4Z"></path><path d="M12 9v5M12 17h.01"></path></svg></div>
       <h3 class="confirm__title" id="confirmTitle">¿Estás seguro?</h3>
       <p class="confirm__message" id="confirmMessage">Esta acción no se puede deshacer.</p>
       <div class="confirm__actions">
         <button class="btn btn--secondary" id="btnConfirmNo">Cancelar</button>
-        <button class="btn btn--danger" id="btnConfirmYes">Eliminar</button>
+        <button class="btn btn--danger" id="btnConfirmYes">Confirmar</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="../js/candidatos.js"></script>
+  <script type="module" src="../js/notificaciones.js"></script>
 </body>
 
 </html>
