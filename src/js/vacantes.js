@@ -6,6 +6,7 @@ import { requireAuth, getRole, getUser } from "./auth.js";
 import { getAll, create, update, remove } from "./dummyapi.js";
 import { adaptarVacante } from "./adapters.js";
 import { mostrarToast, mostrarLoading, ocultarLoading, abrirModal, cerrarModal, confirmar, escapeHTML, initUserNav } from "./ui.js";
+import { getLocalApplications, saveLocalApplication } from "./applicationStore.js";
 
 requireAuth();
 initUserNav();
@@ -42,9 +43,10 @@ function renderCards(lista) {
   ` : `
     <div style="margin-bottom: 1.25rem; background: rgba(83, 16, 104, 0.04); border: 1px solid rgba(83, 16, 104, 0.15); padding: 0.85rem 1.25rem; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
       <span style="font-size: 0.9rem; color: var(--primary-purple); font-weight: 500;">
-        💡 Estás en modo <strong>Candidato</strong>: Explora oportunidades en Costa Rica y postúlate con un solo clic.
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v6M12 7h.01"></path></svg>
+        Estás en modo <strong>Candidato</strong>: explorá oportunidades en Costa Rica y postuláte en un solo clic.
       </span>
-      <span class="badge-match" style="background: #e6f6ee; color: #00875a;">⚡ Match Inteligente Activo</span>
+      <span class="badge-match" style="background: #e6f6ee; color: #00875a;">Match Inteligente Activo</span>
     </div>
   `;
 
@@ -55,7 +57,7 @@ function renderCards(lista) {
         return `
           <article class="job-card" data-id="${v.id}">
             <div class="job-card__header">
-              <div class="job-card__company-logo">${v.empresaLogo || "💼"}</div>
+              <div class="job-card__company-logo">${v.empresaLogo || '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5h8v2M8 12h8M8 16h5"></path></svg>'}</div>
               <div class="job-card__title-area">
                 <h3 class="job-card__title">${escapeHTML(v.titulo)}</h3>
                 <div class="job-card__company-name">
@@ -207,7 +209,7 @@ function abrirFormulario(id = null) {
         mostrarToast("Vacante actualizada con éxito.", "success");
       } else {
         const nueva = await create("products", datos);
-        const adaptada = adaptarVacante({ ...nueva, ...datos, id: Date.now() });
+        const adaptada = adaptarVacante(nueva, vacantesAdaptadas.length);
         vacantesAdaptadas.unshift(adaptada);
         mostrarToast("Vacante publicada con éxito.", "success");
       }
@@ -237,16 +239,44 @@ async function eliminarVacanteConfirmada(id) {
 
 async function postularseVacante(id, titulo) {
   const user = getUser() || {};
+  const userId = user.id || 1;
+
+  // Evitar doble postulación a la misma vacante
+  const yaPostulado = getLocalApplications().some(
+    (p) => String(p.vacanteId) === String(id) && String(p.userId) === String(userId)
+  );
+  if (yaPostulado) {
+    mostrarToast(`Ya te postulaste a "${titulo}".`, "warning");
+    return;
+  }
+
   mostrarLoading();
   try {
-    // Registra la postulación real vía POST /posts/add en DummyJSON
-    await create("posts", {
+    const payload = {
       title: `Postulación a: ${titulo}`,
       body: `Candidato ${user.firstName || "Usuario"} postulado a la posición #${id} (${titulo})`,
-      userId: user.id || 1,
+      userId,
       tags: ["postulacion", "costa-rica", "ticotalent"],
-    });
-    mostrarToast(`¡Felicidades! Te has postulado exitosamente a "${titulo}".`, "success", 4000);
+    };
+
+    // Intentar registro en DummyJSON (simulado, no persiste)
+    let remoteId = null;
+    try {
+      const res = await create("posts", payload);
+      remoteId = res?.id;
+    } catch { /* Continuar aunque falle la API */ }
+
+    // Guardar en localStorage para que postulaciones.js lo muestre al candidato
+    const registro = {
+      ...payload,
+      id: remoteId ?? `local-${Date.now()}`,
+      vacanteId: id,
+      _local: true,
+      createdAt: Date.now(),
+    };
+    saveLocalApplication(registro);
+
+    mostrarToast(`¡Te postulaste a "${titulo}"! Revísalo en Mis Postulaciones.`, "success", 4000);
   } catch {
     mostrarToast("No se pudo completar la postulación.", "error");
   } finally {
